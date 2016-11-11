@@ -1,0 +1,393 @@
+/* Fonts for reporting */
+@import url('http://fonts.googleapis.com/css?family=Ubuntu:bold');
+@import url('http://fonts.googleapis.com/css?family=Istok+Web');
+
+
+/* General */
+.button a {
+    border-bottom: 1px solid #777777;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #333333;
+    border-top: 1px solid #000000;
+    color: #000000;
+    display: block;
+    height: 2.5em;
+    padding: 0 1em;
+    width: 5em;       
+    text-decoration: none;       
+}
+
+.mainholder {
+    width: 700px;
+    font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #4d4d4d;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    font-weight: 300;
+}
+
+.mainholderMobile {
+    width: auto;
+    font: 11px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #4d4d4d;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    font-weight: 300;
+}
+
+.hideMe {
+    display: none;
+} 
+
+.newNoteLi {
+     padding: 5px 10px 12px 15px!important;
+}
+
+.newNoteLabel {
+    font-weight: 700;
+    padding-bottom: 5px;
+}
+
+.newNoteTextarea {
+    display: inline-block;
+}
+
+#sortable { 
+  list-style-type: none; 
+  margin: 0; 
+  padding: 0; 
+/*  width: 60%; */
+}
+
+#sortable li { 
+  margin: 0 3px 3px 3px; 
+  padding: 0.4em; 
+  border-radius: 3px;
+  min-height: 16px;
+/*  padding-left: 10px; */
+/*  font-size: 1.4em; */
+/*  height: 18px; */
+}
+
+/*#sortable li span { 
+   position: absolute; 
+   margin-left: -1.3em; 
+}*/
+
+.view {
+    height: 35px;
+    line-height: 35px;
+    border-bottom: 1px solid #ededed;
+    border-left: 1px solid #ededed;
+    border-right: 1px solid #ededed;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.noteTitle {
+    color: #5b4f4f;
+}
+
+
+input[type=text] {
+    display: inline-block;
+    width: 80%;
+    font-size: 16px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0);
+    padding: 0px 0px;
+    margin-top: 0px;
+    height: auto;
+    padding-left: 10px;
+}
+
+input[type=text]:focus {
+    color: #000;
+    border-color: rgba(82,168,236,.8);
+    outline: 0;
+    border-bottom: 1px solid gray;
+    box-shadow: none;
+}
+
+.noteTitleLabel {
+    margin-top: 0px;
+    padding-left: 10px;
+}
+
+.noteDescriptionClass {
+    padding: 5px 10px 0px 40px;
+    color: #7a7a7a;
+    font-size: 15px;
+    min-height: 16px;
+/*    display: inline;*/
+/*    display: none;*/
+} 
+
+.showDetails {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.showDetailsNew {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.newNoteSave {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+div .newNoteSaveHolder {
+    padding: 5px 0px 10px 20px;
+}
+
+.singleNoteToTask {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 10px;
+}
+
+.singleNoteDelete {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 10px;
+}
+
+.settingsDeleteAllDone  {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+/*    margin-right: 10px; */
+}
+
+.settingsAnalytics  {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 10px;
+}
+
+.settingsReport  {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 10px;
+}
+
+
+div .singleNoteDeleteHolder {
+    padding: 5px 0px 10px 20px;
+}
+
+.checkDone {
+    float: left;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-left: 10px;
+    padding-right: 10px;
+    color: #4f4545;
+}
+
+.noteDoneDesignText {
+    color: #b1b0b0;
+    text-decoration: line-through;
+}
+
+#item-0 .noteDescriptionClass {
+    padding: 5px 10px 0px 0px;
+}
+
+textarea {
+    height: 70px;
+    width: 280px;
+    padding: 5px;
+    color: #6d6c6c;
+    margin-top: 5px;
+}
+
+
+.categories {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+}
+
+.textareaDescription {
+    display: inline-block;
+    min-width: 265px;
+    width: 350px;
+    background: none;
+    border: none;
+    white-space:pre-wrap;
+}
+
+.catSelector {
+    margin-top: 3px;
+}
+
+.catLabel {
+    cursor: default;
+    margin-top: 0px;
+    padding: 0px 5px 0px 5px;
+    border-radius: 5px;
+    background: rgba(95, 92, 92, 0.2);
+}
+
+label {
+    display: inline-block;
+}
+
+
+/* Style for report.php */
+
+
+.page-headerName {
+ font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+ font-size: 50px;
+ line-height: 55px;
+}
+
+.reportTitleLabel {
+    margin-top: 0px;
+    padding-left: 10px;
+    max-width: 90%;
+}
+
+.reportTitle {
+    color: #5b4f4f;
+}
+
+.singleReportHide {
+    float: right;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 10px;
+}
+
+.reportDescriptionClass {
+    padding: 5px 10px 0px 20px;
+    color: #7a7a7a;
+    font-size: 12px;
+    min-height: 16px;
+/*    display: inline;*/
+/*    display: none;*/
+} 
+
+.tableReport {
+    border-bottom: none;
+    border-left: 1px solid #CCC;
+    border-right: none;
+    border-top: none;
+}
+
+.theadReport {
+   font-family: 'Istok Web', Helvetica, Arial, sans-serif;
+   font-size: 14px;
+   line-height: 16px;
+}
+
+.thReport {
+   border-top: 1px solid #CCC;
+   padding-left: 10px;
+   border-left: none;
+   border-bottom: 1px solid #CCC;
+}
+
+.thReportNr {
+   padding-left: 7px;
+}
+
+.thReportStatus {
+    border-right: 1px solid #CCC;
+    width: 45px;
+}
+
+.thReportResponsible {
+    width: 45px;
+}
+
+.tdReportId {
+    border-left: none;
+    padding-left: 10px;
+    font-weight: 600;
+}
+
+.tdReportInfo {
+    border-left:none;
+    padding-left: 0px;
+}
+
+.tdReportResponsible {
+    border-left:none;
+}
+
+.tdReportStatus {
+    border-left:none;
+    border-right: 1px solid #CCC;;
+}
+
+.tdReportButton {
+   border-left: none;
+   border-bottom: none;
+}
+
+
+
+
+
+@media (max-width : 751px) {
+.mainholder {
+    width: auto;
+    font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #4d4d4d;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+    font-weight: 300;
+}
+
+}
+

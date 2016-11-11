@@ -1,0 +1,30 @@
+Version 0.0.5
+-------------
+
+* Filtering options for report generation
+
+Version 0.0.4
+-------------
+
+* Create report over task (todo: add filter)
+* JS encodeURIComponent() added to title and description on export note
+* Minor testing with changes in style.css
+
+
+Version 0.0.3
+-------------
+
+* Export notes to task (categories is not exported)
+
+
+Version 0.0.2
+-------------
+
+* Un-doing note (note done, click again, undone) - wrong variable in sql call
+* Font size made smaller on desktop (13px) and mobile (11px)
+
+
+Version 0.0.1
+-------------
+
+* Initial release
