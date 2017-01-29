@@ -8,7 +8,7 @@ class Plugin extends Base
 {
     public function initialize()
     {
-
+    $this->setContentSecurityPolicy(array('default-src' => '* \'unsafe-inline\' \'unsafe-eval\''));
 	$this->template->hook->attach('template:dashboard:sidebar', 'Boardnotes:boardnotes/dashboardsidebar');
 	$this->template->hook->attach('template:project:dropdown', 'Boardnotes:boardnotes/dropdown');
 	$this->template->hook->attach('template:project:sidebar', 'Boardnotes:boardnotes/sidebar');

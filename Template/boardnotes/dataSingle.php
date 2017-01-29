@@ -49,7 +49,6 @@
 </script>
 
 <?php
-
 print '<section class="mainholder" id="mainholderP';
 print $project['id'];
 print '">';
@@ -125,7 +124,7 @@ if(!empty($categories)) {
   print $project['id'];
   print '" data-project="';
   print $project['id'];
-  print '">';
+  print '" class="ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
   print '<option selected="selected"></option>'; // Insert emptyline  for keeping non category
   print $listCat;
   print '</select>';
@@ -298,7 +297,9 @@ foreach($data as $u){
     if (!empty($listCat)){
         print '<option></option>';
     }
-    print $listCat;
+    if (!empty($listCat)){
+        print $listCat;
+    }
     print '</select>';
     print '</p>';
     print '</div>';
@@ -440,7 +441,9 @@ if(!empty($categories)) {
   if (!empty($listCat)){
     print '<option></option>';
   }
-  print $listCat;
+  if (!empty($listCat)){
+      print $listCat;
+  }
   ?>
   </select>
   </div>

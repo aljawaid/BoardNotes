@@ -6,16 +6,43 @@ use Kanboard\Core\Security\Token;
 use Kanboard\Core\Security\Role;
 use PDO;
 
-const VERSION = 7;
+const VERSION = 9;
 
-function version_7(PDO $pdo)
+
+function version_10($pdo)
 {
-    $pdo->exec("ALTER TABLE boardnotes ADD COLUMN category TEXT");
+
+    $pdo->exec('INSERT INTO boardnotes_cus (
+        project_id,
+        project_name)
+        VALUES (
+            9998,
+            "General"
+        )
+    ');
+    $pdo->exec('INSERT INTO boardnotes_cus (
+        project_id,
+        project_name)
+        VALUES (
+            9997,
+            "Todo"
+        )
+    ');
 }
 
-
-function version_6($pdo)
+function version_9($pdo)
 {
+
+    $pdo->exec('CREATE TABLE IF NOT EXISTS boardnotes_cus (
+        "id" INTEGER PRIMARY KEY,
+        "project_id" INTEGER NOT NULL,
+        "project_name" TEXT
+    )');
+}
+
+function version_8($pdo)
+{
+
     $pdo->exec('CREATE TABLE IF NOT EXISTS boardnotes (
         "id" INTEGER PRIMARY KEY,
         "project_id" INTEGER NOT NULL,
@@ -23,10 +50,11 @@ function version_6($pdo)
         "position" INTEGER,
         "is_active" INTEGER,
         "title" TEXT,
+        "category" TEXT,
         "description" TEXT,
         "date_created" INTEGER,
-        "date_modified" INTEGER,
-        FOREIGN KEY(project_id) REFERENCES projects(id) ON DELETE CASCADE
+        "date_modified" INTEGER
     )');
+
 }
 

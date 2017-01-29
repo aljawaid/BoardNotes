@@ -13,37 +13,43 @@ class BoardnotesController extends BaseController
         $user = $this->getUser();
 
         $data = $this->boardnotesModel->modelBoardnotesShowProject($project['id'], $user['id']);
-	$projectAccess = $this->boardnotesModel->modelBoardnotesGetProjectid($user['id']);
-	$categories = $this->boardnotesModel->modelBoardnotesGetCategories($project['id']);
-	$columns = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataCol($project['id']);
-	$swimlanes = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataSwi($project['id']);
+    	$projectAccess = $this->boardnotesModel->modelBoardnotesGetProjectid($user['id']);
+
+        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
+        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
+    	
+        $categories = $this->boardnotesModel->modelBoardnotesGetCategories($project['id']);
+    	$columns = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataCol($project['id']);
+    	$swimlanes = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataSwi($project['id']);
 
 
         return $this->response->html($this->helper->layout->project('Boardnotes:boardnotes/show', array('title' => t('Boardnotes'),
             'project' => $project,
             'data' => $data,
-	    'categories' => $categories,
-	    'columns' => $columns,
-	    'swimlanes' => $swimlanes,
+    	    'categories' => $categories,
+    	    'columns' => $columns,
+    	    'swimlanes' => $swimlanes,
         )));
     }
 
+
     public function BoardnotesShowProjectRefresh()
     {
-        $project = $this->getProject();
-        $user = $this->getUser();
+        $project = $this->request->getStringParam('project_id');
+        $project = array("id" => $project);
 
+        $user = $this->getUser();
         $data = $this->boardnotesModel->modelBoardnotesShowProject($project['id'], $user['id']);
-	$categories = $this->boardnotesModel->modelBoardnotesGetCategories($project['id']);
-	$columns = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataCol($project['id']);
-	$swimlanes = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataSwi($project['id']);
+        $categories = $this->boardnotesModel->modelBoardnotesGetCategories($project['id']);
+        $columns = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataCol($project['id']);
+        $swimlanes = $this->boardnotesModel->modelBoardnotesToTaskSupplyDataSwi($project['id']);
 
         return $this->response->html($this->helper->layout->app('Boardnotes:boardnotes/dataSingle', array('title' => t('Boardnotes'),
             'project' => $project,
             'data' => $data,
-	    'categories' => $categories,
-	    'columns' => $columns,
-	    'swimlanes' => $swimlanes,
+    	    'categories' => $categories,
+    	    'columns' => $columns,
+    	    'swimlanes' => $swimlanes,
         )));
     }
 
@@ -53,15 +59,19 @@ class BoardnotesController extends BaseController
         //$project = $this->getProject();
         $user = $this->getUser();
 
-	$projectAccess = $this->boardnotesModel->modelBoardnotesGetProjectid($user['id']);
+	    $projectAccess = $this->boardnotesModel->modelBoardnotesGetProjectid($user['id']);
+
+        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
+        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
+
         $data = $this->boardnotesModel->modelBoardnotesShowAll($projectAccess, $user['id']);
 
         return $this->response->html($this->helper->layout->dashboard('Boardnotes:boardnotes/showAll', array('title' => t('Boardnotes'),
             'project' => 'Notes',
-	    'projectAccess' => $projectAccess,
-            //'project' => $project,
+	        'projectAccess' => $projectAccess,
             'data' => $data,
-	    'allProjects' => '1',
+	        'allProjects' => '1',
+            'custom' => $custom,
         )));
     }
 
@@ -71,7 +81,9 @@ class BoardnotesController extends BaseController
         $project = $this->getProject();
         $user = $this->getUser();
 
-	$projectAccess = $this->boardnotesModel->modelBoardnotesGetProjectid($user['id']);
+	    $projectAccess = $this->boardnotesModel->modelBoardnotesGetProjectid($user['id']);
+        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
+        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
         $data = $this->boardnotesModel->modelBoardnotesShowAll($projectAccess, $user['id']);
 
         return $this->response->html($this->helper->layout->app('Boardnotes:project_overview/data', array('title' => t('Boardnotes'),
@@ -106,11 +118,11 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesUpdate()
     {
-	$note_id = $this->request->getStringParam('note_id');
-	$is_active = $this->request->getStringParam('is_active');
-	$title = $this->request->getStringParam('title');
-	$description = $this->request->getStringParam('description');
-	$category = $this->request->getStringParam('category');
+    	$note_id = $this->request->getStringParam('note_id');
+    	$is_active = $this->request->getStringParam('is_active');
+    	$title = $this->request->getStringParam('title');
+    	$description = $this->request->getStringParam('description');
+    	$category = $this->request->getStringParam('category');
         $project = $this->getProject();
         $user = $this->getUser();
 
@@ -118,17 +130,18 @@ class BoardnotesController extends BaseController
     }
 
 
-    public function BoardnotesAdd($is_active, $title, $description, $category)
+    public function BoardnotesAdd()
     {
-	$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+        //$project = $this->getProject();
         $user = $this->getUser();
-	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
-	$title = $this->request->getStringParam('title');
-	$description = $this->request->getStringParam('description');
-	$category = $this->request->getStringParam('category');
+    	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
+    	$title = $this->request->getStringParam('title');
+    	$description = $this->request->getStringParam('description');
+    	$category = $this->request->getStringParam('category');
 
 
-	$validation = $this->boardnotesModel->modelBoardnotesAddNote($project['id'], $user['id'], $is_active, $title, $description, $category);
+    	$validation = $this->boardnotesModel->modelBoardnotesAddNote($project, $user['id'], $is_active, $title, $description, $category);
     }
 
     public function BoardnotesAnalytic()
@@ -136,18 +149,18 @@ class BoardnotesController extends BaseController
         $project = $this->getProject();
         $user = $this->getUser();
 
-	$analyticData = $this->boardnotesModel->modelBoardnotesAnalytics($project['id'], $user['id']);
+        $analyticData = $this->boardnotesModel->modelBoardnotesAnalytics($project['id'], $user['id']);
 
-	return $this->response->html($this->helper->layout->app('Boardnotes:boardnotes/analytics', array('title' => t('Analytics'),
-                'project' => $project,
-		'analyticData' => $analyticData
-                )));
+        return $this->response->html($this->helper->layout->app('Boardnotes:boardnotes/analytics', array('title' => t('Analytics'),
+            'project' => $project,
+        	'analyticData' => $analyticData
+        )));
     }
 
 
-     public function BoardnotesToTask()
-     {
-	$project = $this->getProject();
+    public function BoardnotesToTask()
+    {
+	    $project = $this->getProject();
         $user = $this->getUser();
 
         $title = $this->request->getStringParam('title');
@@ -156,14 +169,14 @@ class BoardnotesController extends BaseController
         $swimlanes = $this->request->getStringParam('swimlanes');
         $category = $this->request->getStringParam('category');
 
-	return $this->response->html($this->helper->layout->app('Boardnotes:boardnotes/post', array('title' => t('post'),
-                'title' => $title,
-		'description' => $description,
-		'column_id' => $columns,
-		'swimlane_id' => $swimlanes,
-		'category_id' => $category,
-		'project_id' => $project['id']
-                )));
+    	return $this->response->html($this->helper->layout->app('Boardnotes:boardnotes/post', array('title' => t('post'),
+            'title' => $title,
+    		'description' => $description,
+    		'column_id' => $columns,
+    		'swimlane_id' => $swimlanes,
+    		'category_id' => $category,
+    		'project_id' => $project['id']
+        )));
 
 
      }
@@ -184,7 +197,7 @@ class BoardnotesController extends BaseController
         $user = $this->getUser();
         $category = $this->request->getStringParam('category');
         if (empty($category)) {
-          $category = "";
+            $category = "";
         }
 
         $data = $this->boardnotesModel->modelBoardnotesShowReport($project['id'], $user['id'], $category);

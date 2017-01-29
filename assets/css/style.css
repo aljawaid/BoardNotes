@@ -255,9 +255,9 @@ textarea {
 .textareaDescription {
     display: inline-block;
     min-width: 265px;
-    width: 350px;
+    width: auto;
     background: none;
-    border: none;
+    border: 1px solid #aaaaaa;
     white-space:pre-wrap;
 }
 
@@ -376,6 +376,22 @@ label {
 }
 
 
+
+/* Tabs jquery */
+
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+    padding: 4.5px 4px 1px 5px;
+    font-size: 13px;
+}
+
+.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active {
+    height: 25px;
+    margin: 0 -1px .2em 0;
+}
+.ui-tabs-vertical .ui-tabs-nav li {
+    height: 25px;
+    overflow:hidden;
+}
 
 
 

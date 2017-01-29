@@ -31,6 +31,11 @@ or
 - Add your kanboard url in the post.php.config file
 - Rename the post.php.config to post.php (mv post.php.config post.php)
 
+Requirements
+------------
+
+All of the links are pointing to kanboard/ which means, that your Kanboard installations need to be here: 127.0.0.1/kanboard.
+
 Use
 ---
 
