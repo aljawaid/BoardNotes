@@ -76,7 +76,7 @@ class BoardnotesModel extends Base
 				)
 				->eq('user_id', $user_id)
 				->left(self::TABLEprojects, 'tblPro', 'id', self::TABLEaccess, 'project_id')
-				->asc('project_id')
+				->asc('project_name')
            		->findAll();
     }
 
