@@ -70,8 +70,7 @@ class BoardnotesController extends BaseController
             'project' => 'Notes',
 	        'projectAccess' => $projectAccess,
             'data' => $data,
-	        'allProjects' => '1',
-            'custom' => $custom,
+	        'allProjects' => '1'
         )));
     }
 
@@ -96,7 +95,9 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesDelete()
     {
-        $project = $this->getProject();
+        //$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+
         $user = $this->getUser();
         $note_id = $this->request->getStringParam('note_id');
 
@@ -107,7 +108,9 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesDeleteAllDone()
     {
-        $project = $this->getProject();
+        //$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+
         $user = $this->getUser();
         $note_id = $this->request->getStringParam('project_id');
 
@@ -123,7 +126,10 @@ class BoardnotesController extends BaseController
     	$title = $this->request->getStringParam('title');
     	$description = $this->request->getStringParam('description');
     	$category = $this->request->getStringParam('category');
-        $project = $this->getProject();
+        
+        //$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+
         $user = $this->getUser();
 
         $validation = $this->boardnotesModel->modelBoardnotesUpdateNote($user['id'], $note_id, $is_active, $title, $description, $category); 
@@ -132,8 +138,9 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesAdd()
     {
-    	$project = $this->request->getStringParam('project_id');
         //$project = $this->getProject();
+        $project = $this->request->getStringParam('project_id');
+
         $user = $this->getUser();
     	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
     	$title = $this->request->getStringParam('title');
@@ -146,7 +153,9 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesAnalytic()
     {
-        $project = $this->getProject();
+        //$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+
         $user = $this->getUser();
 
         $analyticData = $this->boardnotesModel->modelBoardnotesAnalytics($project['id'], $user['id']);
@@ -160,7 +169,9 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesToTask()
     {
-	    $project = $this->getProject();
+	    //$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+        
         $user = $this->getUser();
 
         $title = $this->request->getStringParam('title');
@@ -193,7 +204,9 @@ class BoardnotesController extends BaseController
 
     public function BoardnotesShowReport()
     {
-        $project = $this->getProject();
+        //$project = $this->getProject();
+    	$project = $this->request->getStringParam('project_id');
+
         $user = $this->getUser();
         $category = $this->request->getStringParam('category');
         if (empty($category)) {
