@@ -1,3 +1,5 @@
+# NOT MAINTAINED
+
 Kanboard Plugin for notes
 ==========================
 
