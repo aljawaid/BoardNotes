@@ -17,7 +17,7 @@
       var project_id = $(this).attr('data-project');
       showDetailsNew(project_id);
     });
-  });	
+  });
 
 
   // Show details menu for new note (toggle class)
@@ -108,10 +108,10 @@
       var description = "";
     }
     var is_active = "1";
-    var title = $('#newNote' +  project_id).val(); 
+    var title = $('#newNote' +  project_id).val();
     $('.newNoteInput').val("");
     var category = $('#catP' + project_id + ' option:selected').text();
-  
+
     $.ajax({
       type: "POST",
       url: '/kanboard/?controller=BoardnotesController&action=BoardnotesAdd&plugin=boardnotes' + '&project_id=' + project_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
@@ -120,7 +120,7 @@
      });
     sqlRefreshNotesProject(project_id);
     return false;
-  } 
+  }
 
 
   function sqlNoteDeleteSingle(project_id, note_id){
@@ -160,7 +160,7 @@
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
     var loadUrl = "/kanboard/?controller=BoardnotesController&action=BoardnotesShowProjectRefresh&plugin=boardnotes&project_id=" + project_id;
     $("#result" + project_id).html(ajax_load).load(loadUrl);
-    
+
   }
 
 
@@ -183,7 +183,7 @@
       var id = $(this).attr('data-id');
       if (event.keyCode == 13) {
       var title = $('#noteTitleInputP' + project_id + "-" + id).val(); //attr('value');
-	$( "#noteTitleInputP" + project_id + "-" + id).blur();
+    $( "#noteTitleInputP" + project_id + "-" + id).blur();
         sqlNoteUpdate(project_id, id);
         $("#noteTitleInputP" + project_id + "-" + id).hide();
         $("#noteTitleLabelP" + project_id + "-" + id).html(title);
@@ -200,9 +200,9 @@
         $('.newNoteInput').blur();
         var project_id = $(this).attr('data-project');
         sqlNoteAdd(project_id);
-	if (!$('#noteDescription0').hasClass('hideMe') ) {
+    if (!$('#noteDescription0').hasClass('hideMe') ) {
           $('#noteDescription0').toggleClass('hideMe', 10 );
-	}
+    }
       }
     });
   });
@@ -237,7 +237,7 @@
       var csrf_token = $('[name=csrf_token]').val();
       var id = $(this).attr('data-id');
       if (!id) {
-        alert ("You need to refresh the page before exporting");	
+        alert ("You need to refresh the page before exporting");
       }
       var note_id = $(this).attr('data-note');
       var project_id = $(this).attr('data-project');
