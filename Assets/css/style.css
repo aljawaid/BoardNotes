@@ -95,8 +95,8 @@ input[type=text] {
     font-size: 16px;
     border: none;
     background-color: rgba(255, 255, 255, 0);
-    padding: 0px 0px;
-    margin-top: 0px;
+    padding: 0 0;
+    margin-top: 0;
     height: auto;
     padding-left: 10px;
 }
@@ -110,12 +110,12 @@ input[type=text]:focus {
 }
 
 .noteTitleLabel {
-    margin-top: 0px;
+    margin-top: 0;
     padding-left: 10px;
 }
 
 .noteDescriptionClass {
-    padding: 5px 10px 0px 40px;
+    padding: 5px 10px 0 40px;
     color: #7a7a7a;
     font-size: 15px;
     min-height: 16px;
@@ -154,7 +154,7 @@ input[type=text]:focus {
 }
 
 div .newNoteSaveHolder {
-    padding: 5px 0px 10px 20px;
+    padding: 5px 0 10px 20px;
 }
 
 .singleNoteToTask {
@@ -214,7 +214,7 @@ div .newNoteSaveHolder {
 
 
 div .singleNoteDeleteHolder {
-    padding: 5px 0px 10px 20px;
+    padding: 5px 0 10px 20px;
 }
 
 .checkDone {
@@ -234,7 +234,7 @@ div .singleNoteDeleteHolder {
 }
 
 #item-0 .noteDescriptionClass {
-    padding: 5px 10px 0px 0px;
+    padding: 5px 10px 0 0;
 }
 
 textarea {
@@ -267,8 +267,8 @@ textarea {
 
 .catLabel {
     cursor: default;
-    margin-top: 0px;
-    padding: 0px 5px 0px 5px;
+    margin-top: 0;
+    padding: 0 5px 0 5px;
     border-radius: 5px;
     background: rgba(95, 92, 92, 0.2);
 }
@@ -288,7 +288,7 @@ label {
 }
 
 .reportTitleLabel {
-    margin-top: 0px;
+    margin-top: 0;
     padding-left: 10px;
     max-width: 90%;
 }
@@ -309,7 +309,7 @@ label {
 }
 
 .reportDescriptionClass {
-    padding: 5px 10px 0px 20px;
+    padding: 5px 10px 0 20px;
     color: #7a7a7a;
     font-size: 12px;
     min-height: 16px;
@@ -358,7 +358,7 @@ label {
 
 .tdReportInfo {
     border-left:none;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 .tdReportResponsible {
