@@ -2,14 +2,14 @@
 
 namespace Kanboard\Plugin\Boardnotes\Schema;
 
-use Kanboard\Core\Security\Token;
-use Kanboard\Core\Security\Role;
+//use Kanboard\Core\Security\Token;
+//use Kanboard\Core\Security\Role;
 use PDO;
 
-const VERSION = 9;
+const VERSION = 1;
 
 
-function version_10($pdo)
+function version_1(PDO $pdo)
 {
 
     $pdo->exec('INSERT INTO boardnotes_cus (
@@ -28,20 +28,12 @@ function version_10($pdo)
             "Todo"
         )
     ');
-}
-
-function version_9($pdo)
-{
 
     $pdo->exec('CREATE TABLE IF NOT EXISTS boardnotes_cus (
         "id" INTEGER PRIMARY KEY,
         "project_id" INTEGER NOT NULL,
         "project_name" TEXT
     )');
-}
-
-function version_8($pdo)
-{
 
     $pdo->exec('CREATE TABLE IF NOT EXISTS boardnotes (
         "id" INTEGER PRIMARY KEY,
@@ -55,6 +47,4 @@ function version_8($pdo)
         "date_created" INTEGER,
         "date_modified" INTEGER
     )');
-
 }
-
