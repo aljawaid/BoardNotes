@@ -18,8 +18,8 @@ class Plugin extends Base
     public function getClasses()
     {
         return array(
-            'Plugin\Boardnotes\Model' => array(
-                'BoardnotesModel'
+            'Plugin\BoardNotes\Model' => array(
+                'BoardNotesModel'
              )
          );
     }

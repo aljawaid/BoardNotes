@@ -1,13 +1,13 @@
 <?php
 
-namespace Kanboard\Plugin\Boardnotes\Model;
+namespace Kanboard\Plugin\BoardNotes\Model;
 
-use PDO;
+//use PDO;
 use Kanboard\Core\Base;
-use Kanboard\Controller\BaseController;
+//use Kanboard\Controller\BaseController;
 
 
-class BoardnotesModel extends Base
+class BoardnNotesModel extends Base
 {
 
 	const TABLEnotes = 'boardnotes';
