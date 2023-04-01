@@ -1,6 +1,6 @@
 <?php
 
-namespace Kanboard\Plugin\Boardnotes;
+namespace Kanboard\Plugin\BoardNotes;
 
 use Kanboard\Core\Plugin\Base;
 
@@ -9,9 +9,9 @@ class Plugin extends Base
     public function initialize()
     {
     $this->setContentSecurityPolicy(array('default-src' => '* \'unsafe-inline\' \'unsafe-eval\''));
-	$this->template->hook->attach('template:dashboard:sidebar', 'Boardnotes:boardnotes/dashboardsidebar');
-	$this->template->hook->attach('template:project:dropdown', 'Boardnotes:boardnotes/dropdown');
-	$this->template->hook->attach('template:project:sidebar', 'Boardnotes:boardnotes/sidebar');
+	$this->template->hook->attach('template:dashboard:sidebar', 'boardNotes:boardnotes/dashboardsidebar');
+	$this->template->hook->attach('template:project:dropdown', 'boardNotes:boardnotes/dropdown');
+	$this->template->hook->attach('template:project:sidebar', 'boardNotes:boardnotes/sidebar');
 
     }
 
@@ -26,7 +26,7 @@ class Plugin extends Base
 
     public function getPluginName()
     {
-        return 'Boardnotes';
+        return 'BoardNotes';
     }
     public function getPluginAuthor()
     {
