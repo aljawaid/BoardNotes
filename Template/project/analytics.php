@@ -16,7 +16,7 @@ $( document ).ready(function() {
 </script>
 
 <?php
-// Working the data from $analyticData before visualizing
+// Working the data from $analyticsData before visualizing
 // Note to self - change bad php loop to sql in model
 
 
@@ -24,7 +24,7 @@ $( document ).ready(function() {
 $ana_active0 = "0";
 $ana_active1 = "0";
 $ana_total = "0";
-foreach ($analyticData as $qq) {
+foreach ($analyticsData as $qq) {
   if ($qq['is_active'] == "0") {
     $ana_active0++;
   } else {

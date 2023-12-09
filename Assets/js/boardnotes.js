@@ -91,7 +91,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdate&plugin=boardnotes' + '&project_id=' + project_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=boardnotes' + '&project_id=' + project_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
       success: function(data) { // Implement failure procedure
       }
     });
@@ -114,7 +114,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAdd&plugin=boardnotes' + '&project_id=' + project_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=boardnotes' + '&project_id=' + project_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
       success: function(data) {  // Implement failure procedure
       }
      });
@@ -126,7 +126,7 @@
   function sqlNoteDeleteSingle(project_id, note_id){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDelete&plugin=boardnotes' + '&project_id=' + project_id + '&note_id=' + note_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=boardnotes' + '&project_id=' + project_id + '&note_id=' + note_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -140,7 +140,7 @@
   function sqlDeleteAllDone(project_id){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDone&plugin=boardnotes' + '&project_id=' + project_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=boardnotes' + '&project_id=' + project_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -315,7 +315,7 @@
         cache: false
     });
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytic&plugin=boardnotes' + '&project_id=' + project_id;
+    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=boardnotes' + '&project_id=' + project_id;
     $('#dialogAnalyticsInside').html(ajax_load).load(loadUrl);
 
     $( "#dialogAnalytics" ).dialog({
@@ -342,12 +342,12 @@
       buttons: {
         Ok: function() {
       var category = $('#reportCatP' + project_id + ' option:selected').text();
-var url = '/kanboard/?controller=BoardNotesController&action=boardNotesShowReport&plugin=boardnotes' + '&project_id=' + project_id + '&category=' + category;
+var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=boardnotes' + '&project_id=' + project_id + '&category=' + category;
 window.location = url;
 /*
           $.ajax({
             type: "POST",
-            url: '/kanboard/?controller=BoardNotesController&action=boardNotesShowReport&plugin=boardnotes' + '&project_id=' + project_id + '&category=' + category,
+            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=boardnotes' + '&project_id=' + project_id + '&category=' + category,
             success: function(response) {
             },
               error: function(xhr,textStatus,e) {

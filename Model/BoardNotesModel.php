@@ -3,26 +3,43 @@
 namespace Kanboard\Plugin\BoardNotes\Model;
 
 use Kanboard\Core\Base;
+use Kanboard\Model\ProjectModel;
+use Kanboard\Model\TaskModel;
+use Kanboard\Model\ColumnModel;
+use Kanboard\Model\SwimlaneModel;
+use Kanboard\Model\ProjectUserRoleModel;
+use Kanboard\Model\CategoryModel;
 
 class BoardNotesModel extends Base
 {
     const TABLEnotes = 'boardnotes';
     const TABLEnotescus = 'boardnotes_cus';
-    const TABLEaccess = 'project_has_users';
-    const TABLEcategories = 'project_has_categories';
-    const TABLEprojects = 'projects';
-    const TABLEtasks = 'tasks';
-    const TABLEcolumns = 'columns';
-    const TABLEswimlanes = 'swimlanes';
+    const TABLEprojects = ProjectModel::TABLE;
+    const TABLEtasks = TaskModel::TABLE;
+    const TABLEcolumns = ColumnModel::TABLE;
+    const TABLEswimlanes = SwimlaneModel::TABLE;
+    const TABLEaccess = ProjectUserRoleModel::TABLE;
+    const TABLEcategories = CategoryModel::TABLE;
+
+    // Show single note
+    public function boardNotesShowNote($note_id)
+    {
+        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->findAll();
+    }
 
     // Show all notes related to project
     public function boardNotesShowProject($project_id, $user_id)
     {
-        return $this->db->table(self::TABLEnotes)->eq('user_id', $user_id)->eq('project_id', $project_id)->desc('is_active')->desc('position')->findAll();
+        return $this->db->table(self::TABLEnotes)
+            ->eq('user_id', $user_id)
+            ->eq('project_id', $project_id)
+            ->desc('is_active')
+            ->desc('position')
+            ->findAll();
     }
 
     // Show report
-    public function boardNotesShowReport($project_id, $user_id, $category)
+    public function boardNotesReport($project_id, $user_id, $category)
     {
         if (empty($category)) {
             return $this->db->table(self::TABLEnotes)
@@ -43,18 +60,18 @@ class BoardNotesModel extends Base
     }
 
     // Get all project_id where user has access
-    public function boardNotesGetProjectID($user_id)
+    public function boardNotesGetProjectIds($user_id)
     {
         return $this->db->table(self::TABLEaccess)
-            ->columns(self::TABLEaccess.'.project_id', 'tblPro.name AS project_name')
+            ->columns(self::TABLEaccess.'.project_id', 'alias_projects_table.name AS project_name')
             ->eq('user_id', $user_id)
-            ->left(self::TABLEprojects, 'tblPro', 'id', self::TABLEaccess, 'project_id')
+            ->left(self::TABLEprojects, 'alias_projects_table', 'id', self::TABLEaccess, 'project_id')
             ->asc('project_name')
             ->findAll();
     }
 
     // Get all project_id where user has access
-    public function boardNotesGetProjectIDCustom()
+    public function boardNotesGetProjectIdsCustom()
     {
         return $this->db->table(self::TABLEnotescus)->findAll();
     }
@@ -100,19 +117,19 @@ class BoardNotesModel extends Base
     }
 
     // Delete note
-    public function boardNotesDeleteNote($note_id, $user_id)
+    public function boardNotesDeleteNoteNote($note_id, $user_id)
     {
         return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('user_id', $user_id)->remove();
     }
 
     // Delete note
-    public function boardNotesDeleteAllDone($project_id, $user_id)
+    public function boardNotesDeleteAllDoneNotes($project_id, $user_id)
     {
         return $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->eq('user_id', $user_id)->eq('is_active', "0")->remove();
     }
 
     // Update note
-    public function boardNotesUpdateNote($user_id, $note_id, $is_active, $title, $description, $category)
+    public function boardNotesUpdateNoteNote($user_id, $note_id, $is_active, $title, $description, $category)
     {
         // Get current unixtime
         $t = time();
@@ -122,7 +139,7 @@ class BoardNotesModel extends Base
     }
 
     // Add note
-    public function boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category)
+    public function boardNotesAddNoteNote($project_id, $user_id, $is_active, $title, $description, $category)
     {
         // Get last position number
         $lastPosition = $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->desc('position')->findOneColumn('position');
@@ -189,7 +206,7 @@ class BoardNotesModel extends Base
     }
 
     // Delete note ???
-    public function boardNotesAnalytics($project_id, $user_id)
+    public function boardNotesAnalyticss($project_id, $user_id)
     {
         return $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->eq('user_id', $user_id)->findAll();
     }
