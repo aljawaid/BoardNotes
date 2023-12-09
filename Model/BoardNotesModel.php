@@ -2,11 +2,9 @@
 
 namespace Kanboard\Plugin\BoardNotes\Model;
 
-//use PDO;
 use Kanboard\Core\Base;
-//use Kanboard\Controller\BaseController;
 
-class BoardnNotesModel extends Base
+class BoardNotesModel extends Base
 {
     const TABLEnotes = 'boardnotes';
     const TABLEnotescus = 'boardnotes_cus';
@@ -16,12 +14,6 @@ class BoardnNotesModel extends Base
     const TABLEtasks = 'tasks';
     const TABLEcolumns = 'columns';
     const TABLEswimlanes = 'swimlanes';
-
-    // Show single note
-    public function boardNotesShowNote($note_id)
-    {
-        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->findAll();
-    }
 
     // Show all notes related to project
     public function boardNotesShowProject($project_id, $user_id)

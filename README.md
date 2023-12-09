@@ -20,7 +20,7 @@ Installation
 
 or
 
-- Create a folder **plugins/Boardnotes**
+- Create a folder **plugins/BoardNotes**
 - Copy all files under this directory
 
 or
@@ -90,7 +90,7 @@ Issues
 - Exporting note to task: Swimlanes not working. Category not working.
 - Div modal for "Delete all done" and "Analytic" is repeated on every reload
 - Should disabled projects show on all boardnotes page?
-- Functions in controller (BoardnotesController) missing variables in () - needed?
+- Functions in controller (BoardNotesController) missing variables in () - needed?
 - Markups as Kanboard
 
 Tested on

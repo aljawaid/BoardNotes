@@ -1,6 +1,6 @@
-<?= $this->asset->css('plugins/Boardnotes/assets/css/style.css') ?>
-<?= $this->asset->js('plugins/Boardnotes/assets/js/boardnotes.js') ?>
-<link rel="stylesheet" href="/kanboard/plugins/Boardnotes/assets/css/style.css" media="print">
+<?= $this->asset->css('plugins/BoardNotes/Assets/css/style.css') ?>
+<?= $this->asset->js('plugins/BoardNotes/Assets/js/boardnotes.js') ?>
+<link rel="stylesheet" href="/kanboard/plugins/BoardNotes/Assets/css/style.css" media="print">
 
 <script>
  // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)

@@ -72,7 +72,7 @@ $( function() {
 
 
 
-<p class="page-headerName">Boardnotes</p>
+<p class="page-headerName">BoardNotes</p>
 <br>
 <section class="mainholderQ" id="mainholderQ">
 
@@ -90,7 +90,7 @@ $( function() {
     print '" data-id="';
     print $num;
     print '" data-project="9998"><a href="';
-    print '/kanboard/?controller=BoardnotesController&action=BoardnotesShowProjectRefresh&plugin=boardnotes&project_id=9998';
+    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=boardnotes&project_id=9998';
     print '">';
     print 'General';
     print '</a></li>';
@@ -103,7 +103,7 @@ $( function() {
     print '" data-id="';
     print $num;
     print '" data-project="9997"><a href="';
-    print '/kanboard/?controller=BoardnotesController&action=BoardnotesShowProjectRefresh&plugin=boardnotes&project_id=9997';
+    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=boardnotes&project_id=9997';
     print '">';
     print 'Todo';
     print '</a></li>';
@@ -121,7 +121,7 @@ $( function() {
         print $o['project_id'];
         print '"><a href="';
 
-        print '/kanboard/?controller=BoardnotesController&action=BoardnotesShowProjectRefresh&plugin=boardnotes&project_id=' . $o['project_id'];
+        print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=boardnotes&project_id=' . $o['project_id'];
 
         print '">';
         print $o['project_name'];

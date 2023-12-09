@@ -6,6 +6,7 @@ use Kanboard\Controller\BaseController;
 
 class BoardNotesController extends BaseController
 {
+
     public function boardNotesShowProject()
     {
         $project = $this->getProject();
@@ -22,28 +23,7 @@ class BoardNotesController extends BaseController
     	$swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project['id']);
 
 
-        return $this->response->html($this->helper->layout->project('boardNotes:project/show', array(
-            'title' => t('BoardNotes'),
-            'project' => $project,
-            'data' => $data,
-    	    'categories' => $categories,
-    	    'columns' => $columns,
-    	    'swimlanes' => $swimlanes,
-        )));
-    }
-
-    public function boardNotesShowProjectRefresh()
-    {
-        $project = $this->request->getStringParam('project_id');
-        $project = array("id" => $project);
-
-        $user = $this->getUser();
-        $data = $this->boardNotesModel->boardNotesShowProject($project['id'], $user['id']);
-        $categories = $this->boardNotesModel->boardNotesGetCategories($project['id']);
-        $columns = $this->boardNotesModel->boardNotesToTaskSupplyDataCol($project['id']);
-        $swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project['id']);
-
-        return $this->response->html($this->helper->layout->app('boardNotes:project/dataSingle', array(
+        return $this->response->html($this->helper->layout->project('BoardNotes:project/data', array(
             'title' => t('BoardNotes'),
             'project' => $project,
             'data' => $data,
@@ -65,29 +45,12 @@ class BoardNotesController extends BaseController
 
         $data = $this->boardNotesModel->boardNotesShowAll($projectAccess, $user['id']);
 
-        return $this->response->html($this->helper->layout->dashboard('boardNotes:boardnotes/showAll', array(
+        return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
             'title' => t('BoardNotes'),
             'project' => 'Notes',
 	        'projectAccess' => $projectAccess,
             'data' => $data,
 	        'allProjects' => '1'
-        )));
-    }
-
-    public function boardNotesShowAllRefresh()
-    {
-        $project = $this->getProject();
-        $user = $this->getUser();
-
-	    $projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
-        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
-        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
-        $data = $this->boardNotesModel->boardNotesShowAll($projectAccess, $user['id']);
-
-        return $this->response->html($this->helper->layout->app('boardNotes:project_overview/data', array(
-            'title' => t('BoardNotes'),
-            'project' => $project,
-            'data' => $data,
         )));
     }
 
@@ -153,7 +116,7 @@ class BoardNotesController extends BaseController
 
         $analyticData = $this->boardNotesModel->boardNotesAnalytics($project['id'], $user['id']);
 
-        return $this->response->html($this->helper->layout->app('boardNotes:boardnotes/analytics', array(
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/analytics', array(
             'title' => t('Analytics'),
             'project' => $project,
         	'analyticData' => $analyticData
@@ -173,7 +136,7 @@ class BoardNotesController extends BaseController
         $swimlanes = $this->request->getStringParam('swimlanes');
         $category = $this->request->getStringParam('category');
 
-    	return $this->response->html($this->helper->layout->app('boardNotes:boardnotes/post', array(
+    	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
             'title' => t('Post'),
             'title' => $title,
     		'description' => $description,
@@ -208,7 +171,7 @@ class BoardNotesController extends BaseController
         $data = $this->boardNotesModel->boardNotesShowReport($project['id'], $user['id'], $category);
         $projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
 
-        return $this->response->html($this->helper->layout->project('boardNotes:boardnotes/report', array(
+        return $this->response->html($this->helper->layout->project('BoardNotes:project/report', array(
             'title' => t('BoardNotes Report'),
             'project' => $project,
             'data' => $data,
