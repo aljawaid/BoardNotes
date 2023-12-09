@@ -54,25 +54,19 @@ class BoardNotesController extends BaseController
 
     public function boardNotesDeleteNote()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
-
-        $user = $this->getUser();
         $note_id = $this->request->getStringParam('note_id');
+    	$project_id = $this->request->getStringParam('project_id');
+        $user_id = $this->getUser()['id'];
 
-
-        $validation = $this->boardNotesModel->boardNotesDeleteNoteNote($note_id, $user['id']);
+        $validation = $this->boardNotesModel->boardNotesDeleteNote($note_id, $project_id, $user_id);
     }
 
     public function boardNotesDeleteAllDoneNotes()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$project_id = $this->request->getStringParam('project_id');
+        $user_id = $this->getUser()['id'];
 
-        $user = $this->getUser();
-        $note_id = $this->request->getStringParam('project_id');
-
-        $validation = $this->boardNotesModel->boardNotesDeleteAllDoneNotes($project['id'], $user['id']);
+        $validation = $this->boardNotesModel->boardNotesDeleteAllDoneNotes($project_id, $user_id);
     }
 
     public function boardNotesUpdateNote()
@@ -83,41 +77,34 @@ class BoardNotesController extends BaseController
     	$description = $this->request->getStringParam('description');
     	$category = $this->request->getStringParam('category');
         
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$project_id = $this->request->getStringParam('project_id');
+        $user_id = $this->getUser()['id'];
 
-        $user = $this->getUser();
-
-        $validation = $this->boardNotesModel->boardNotesUpdateNoteNote($user['id'], $note_id, $is_active, $title, $description, $category);
+        $validation = $this->boardNotesModel->boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category);
     }
 
     public function boardNotesAddNote()
     {
-        //$project = $this->getProject();
-        $project = $this->request->getStringParam('project_id');
-
-        $user = $this->getUser();
+        $project_id = $this->request->getStringParam('project_id');
+        $user_id = $this->getUser()['id'];
     	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
     	$title = $this->request->getStringParam('title');
     	$description = $this->request->getStringParam('description');
     	$category = $this->request->getStringParam('category');
 
-    	$validation = $this->boardNotesModel->boardNotesAddNoteNote($project, $user['id'], $is_active, $title, $description, $category);
+    	$validation = $this->boardNotesModel->boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category);
     }
 
     public function boardNotesAnalytics()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$project_id = $this->request->getStringParam('project_id');
+        $user_id = $this->getUser()['id'];
 
-        $user = $this->getUser();
-
-        $analyticsData = $this->boardNotesModel->boardNotesAnalyticss($project['id'], $user['id']);
+        $analyticsData = $this->boardNotesModel->boardNotesAnalytics($project_id, $user_id);
 
         return $this->response->html($this->helper->layout->app('BoardNotes:project/analytics', array(
-            'title' => t('Analytics'),
-            'project' => $project,
-        	'analyticsData' => $analyticsData
+            //'title' => t('Analytics'),
+            'analyticsData' => $analyticsData
         )));
     }
 

@@ -81,7 +81,6 @@ class BoardNotesModel extends Base
     {
         return $this->db->table(self::TABLEcategories)
             ->columns(self::TABLEcategories.'.id', self::TABLEcategories.'.name', self::TABLEcategories.'.project_id')
-            //->in(self::TABLEcategories.'.project_id', $projectAccess)
             ->eq('project_id', $project_id)
             ->asc('name')
             ->findAll();
@@ -91,9 +90,6 @@ class BoardNotesModel extends Base
     public function boardNotesGetCategoriesID($project_id, $category)
     {
         return $this->db->table(self::TABLEcategories)
-            // ->columns(
-            //         self::TABLEcategories.'.id',
-            // )
             ->eq('project_id', $project_id)
             ->eq('name', $category)
             ->findOneColumn('id');
@@ -117,9 +113,9 @@ class BoardNotesModel extends Base
     }
 
     // Delete note
-    public function boardNotesDeleteNoteNote($note_id, $user_id)
+    public function boardNotesDeleteNote($note_id, $project_id, $user_id)
     {
-        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('user_id', $user_id)->remove();
+        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('project_id', $project_id)->eq('user_id', $user_id)->remove();
     }
 
     // Delete note
@@ -129,23 +125,23 @@ class BoardNotesModel extends Base
     }
 
     // Update note
-    public function boardNotesUpdateNoteNote($user_id, $note_id, $is_active, $title, $description, $category)
+    public function boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category)
     {
         // Get current unixtime
         $t = time();
         $values = array('is_active' => $is_active, 'title' => $title, 'description' => $description, 'category' => $category, 'date_modified' => $t,);
-
-        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('user_id', $user_id)->update($values);
+        
+        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('project_id', $project_id)->eq('user_id', $user_id)->update($values);
     }
 
     // Add note
-    public function boardNotesAddNoteNote($project_id, $user_id, $is_active, $title, $description, $category)
+    public function boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category)
     {
         // Get last position number
         $lastPosition = $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->desc('position')->findOneColumn('position');
 
         if (empty($lastPosition)) {
-            $lastPosition = 1;
+            $lastPosition = 0;
         }
 
         // Add 1 to position
@@ -206,7 +202,7 @@ class BoardNotesModel extends Base
     }
 
     // Delete note ???
-    public function boardNotesAnalyticss($project_id, $user_id)
+    public function boardNotesAnalytics($project_id, $user_id)
     {
         return $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->eq('user_id', $user_id)->findAll();
     }
