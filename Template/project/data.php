@@ -1,5 +1,5 @@
-<?= $this->asset->css('plugins/Boardnotes/assets/css/style.css') ?>
-<?= $this->asset->js('plugins/Boardnotes/assets/js/boardnotes.js') ?>
+<?= $this->asset->css('plugins/BoardNotes/Assets/css/style.css') ?>
+<?= $this->asset->js('plugins/BoardNotes/Assets/js/boardnotes.js') ?>
 
 <script>
  // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
