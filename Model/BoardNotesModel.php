@@ -167,7 +167,7 @@ class BoardNotesModel extends Base
     }
 
     // Update note positions
-    public function boardNotesUpdatePosition($notePositions, $nrNotes)
+    public function boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes)
     {
         unset($num);
         unset($note_id);
@@ -182,7 +182,11 @@ class BoardNotesModel extends Base
         foreach ($note_id as $row) {
             $values = array('position' => $num);
 
-            $this->db->table(self::TABLEnotes)->eq('id', $row)->update($values);
+            $this->db->table(self::TABLEnotes)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->eq('id', $row)
+            ->update($values);
             $num--;
         }
     }

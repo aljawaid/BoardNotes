@@ -7,7 +7,7 @@ use Kanboard\Controller\BaseController;
 class BoardNotesController extends BaseController
 {
 
-    public function boardNotesShowProject()
+    private function boardNotesShowProject_Internal($is_refresh)
     {
         $project = $this->getProject();
         $project_id = $project['id'];
@@ -29,11 +29,22 @@ class BoardNotesController extends BaseController
             'project_id' => $project_id,
             'user' => $user,
             'user_id' => $user_id,
+            'is_refresh' => $is_refresh,
             'data' => $data,
     	    'categories' => $categories,
     	    'columns' => $columns,
     	    'swimlanes' => $swimlanes,
         )));
+    }
+
+    public function boardNotesShowProject()
+    {
+        $this->boardNotesShowProject_Internal(False);
+    }
+
+    public function boardNotesRefreshProject()
+    {
+        $this->boardNotesShowProject_Internal(True);
     }
 
     public function boardNotesShowAll()
@@ -57,9 +68,9 @@ class BoardNotesController extends BaseController
 
     public function boardNotesDeleteNote()
     {
-        $note_id = $this->request->getStringParam('note_id');
     	$project_id = $this->request->getStringParam('project_id');
-        $user_id = $this->getUser()['id'];
+    	$user_id = $this->request->getStringParam('user_id');
+        $note_id = $this->request->getStringParam('note_id');
 
         $validation = $this->boardNotesModel->boardNotesDeleteNote($note_id, $project_id, $user_id);
     }
@@ -67,29 +78,30 @@ class BoardNotesController extends BaseController
     public function boardNotesDeleteAllDoneNotes()
     {
     	$project_id = $this->request->getStringParam('project_id');
-        $user_id = $this->getUser()['id'];
+    	$user_id = $this->request->getStringParam('user_id');
 
         $validation = $this->boardNotesModel->boardNotesDeleteAllDoneNotes($project_id, $user_id);
     }
 
     public function boardNotesUpdateNote()
     {
+    	$project_id = $this->request->getStringParam('project_id');
+    	$user_id = $this->request->getStringParam('user_id');
     	$note_id = $this->request->getStringParam('note_id');
+
     	$is_active = $this->request->getStringParam('is_active');
     	$title = $this->request->getStringParam('title');
     	$description = $this->request->getStringParam('description');
     	$category = $this->request->getStringParam('category');
         
-    	$project_id = $this->request->getStringParam('project_id');
-        $user_id = $this->getUser()['id'];
-
         $validation = $this->boardNotesModel->boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category);
     }
 
     public function boardNotesAddNote()
     {
         $project_id = $this->request->getStringParam('project_id');
-        $user_id = $this->getUser()['id'];
+    	$user_id = $this->request->getStringParam('user_id');
+
     	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
     	$title = $this->request->getStringParam('title');
     	$description = $this->request->getStringParam('description');
@@ -101,7 +113,7 @@ class BoardNotesController extends BaseController
     public function boardNotesAnalytics()
     {
     	$project_id = $this->request->getStringParam('project_id');
-        $user_id = $this->getUser()['id'];
+    	$user_id = $this->request->getStringParam('user_id');
 
         $analyticsData = $this->boardNotesModel->boardNotesAnalytics($project_id, $user_id);
 
@@ -134,10 +146,13 @@ class BoardNotesController extends BaseController
 
     public function boardNotesUpdatePosition()
     {
+    	$project_id = $this->request->getStringParam('project_id');
+    	$user_id = $this->request->getStringParam('user_id');
+
         $nrNotes = $this->request->getStringParam('nrNotes');
         $notePositions = $this->request->getStringParam('order');
 
-        $validation = $this->boardNotesModel->boardNotesUpdatePosition($notePositions, $nrNotes);
+        $validation = $this->boardNotesModel->boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes);
     }
 
     public function boardNotesReport()
