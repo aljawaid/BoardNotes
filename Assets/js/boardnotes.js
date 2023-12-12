@@ -252,20 +252,26 @@
     $.ajaxSetup ({
       cache: false
     });
-    $( "#dialogToTaskP" + project_id).dialog({
+    $("#dialogToTaskP" + project_id).removeClass( 'hideMe' );
+    $("#dialogToTaskP" + project_id).dialog({
       buttons: {
         Ok: function() {
           var category = $('#listCatToTask' + project_id + ' option:selected').val();
-          var columns = $('#listCol' + project_id +' option:selected').val();
-          var swimlanes = $('#listSwim' + project_id +' option:selected').val();
-          $('#listCatToTask' + project_id).remove();
-          $('#listCol' + project_id).remove();
-          $('#listSwim' + project_id).remove();
+          var column = $('#listCol' + project_id +' option:selected').val();
+          var swimlane = $('#listSwim' + project_id +' option:selected').val();
+          
+          //alert('modalNoteToTask PRE TEST');
+
           var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-// Category is missing
-          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=boardnotes' + '&project_id=' + project_id + '&title=' + title + '&description=' + description + '&swimlanes=' + swimlanes + '&columns=' + columns + '&category_id=' + category;
+          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes' + '&project_id=' + project_id + '&task_title=' + title + '&task_description=' + description + '&swimlane=' + swimlane + '&column=' + columns + '&category=' + category;
           $('#deadloading').html(ajax_load).load(loadUrl);
-          sqlNoteDeleteSingle(project_id, note_id);   
+
+          //alert('modalNoteToTask POST TEST');
+
+          //$('#listCatToTask' + project_id).remove();
+          //$('#listCol' + project_id).remove();
+          //$('#listSwim' + project_id).remove();
+          //sqlDeleteNote(project_id, note_id);   
           $( this ).dialog( "destroy" ).remove();
         }
       }
@@ -315,9 +321,10 @@
         cache: false
     });
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=boardnotes' + '&project_id=' + project_id;
+    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes' + '&project_id=' + project_id;
     $('#dialogAnalyticsInside').html(ajax_load).load(loadUrl);
 
+    $( "#dialogAnalytics" ).removeClass( 'hideMe' );
     $( "#dialogAnalytics" ).dialog({
       buttons: {
         Ok: function() {
@@ -338,26 +345,29 @@
 
 
   function modalReport(project_id) {
+    $( "#dialogReportP" + project_id ).removeClass( 'hideMe' );
     $( "#dialogReportP" + project_id ).dialog({
       buttons: {
         Ok: function() {
-      var category = $('#reportCatP' + project_id + ' option:selected').text();
-var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=boardnotes' + '&project_id=' + project_id + '&category=' + category;
-window.location = url;
-/*
+          var category = $('#reportCatP' + project_id + ' option:selected').text();
+          var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&category=' + category;
+          window.location = url;
+          /*
           $.ajax({
             type: "POST",
-            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=boardnotes' + '&project_id=' + project_id + '&category=' + category,
+            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&category=' + category,
             success: function(response) {
             },
-              error: function(xhr,textStatus,e) {
-              }
-            });*/
-            $( this ).dialog( "close" );
+            error: function(xhr,textStatus,e) {
+              alert(e);
+            }
+          });
+          */
+          $( this ).dialog( "close" );
         }
       }
     });
-return true;
+    return true;
   };
 
 

@@ -1,4 +1,5 @@
 /* General */
+
 .button a {
     border-bottom: 1px solid #777777;
     border-left: 1px solid #000000;
@@ -298,19 +299,18 @@ label {
 }
 
 .reportTitle {
-    color: #5b4f4f;
+    color: #ccc;
 }
 
 .singleReportHide {
-    float: right;
+    float: left;
     appearance: none;
     -webkit-appearance: none;
     outline: none;
     border: 0;
     background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
+    padding: 5px 5px 5px 5px;
+    margin-right: 15px;
 }
 
 .reportDescriptionClass {
@@ -318,13 +318,11 @@ label {
     color: #7a7a7a;
     font-size: 12px;
     min-height: 16px;
-/*    display: inline;*/
-/*    display: none;*/
-} 
+}
 
 .tableReport {
     border-bottom: none;
-    border-left: 1px solid #CCC;
+    border-left: 1px solid #ccc;
     border-right: none;
     border-top: none;
 }
@@ -333,21 +331,23 @@ label {
    font-family: 'Helvetica', Arial, sans-serif;
    font-size: 14px;
    line-height: 16px;
+   background-color: rgba(37, 37, 37, 0.75);
 }
 
 .thReport {
-   border-top: 1px solid #CCC;
+   border-top: 1px solid #ccc;
    padding-left: 10px;
    border-left: none;
-   border-bottom: 1px solid #CCC;
+   border-bottom: 1px solid #ccc;
 }
 
 .thReportNr {
-   padding-left: 7px;
+   padding-left: 60px;
+   width: 80px;
 }
 
 .thReportStatus {
-    border-right: 1px solid #CCC;
+    border-right: 1px solid #ccc;
     width: 45px;
 }
 
@@ -355,7 +355,21 @@ label {
     width: 45px;
 }
 
-.tdReportId {
+.textareaReportDescription {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 10px 10px 10px 10px;
+    background-color: rgba(37, 37, 37, 0.50);
+    border: 0px;
+    white-space:pre-wrap;
+}
+
+
+.tdReport {
+   background-color: rgba(92, 92, 92, 0.50);
+}
+
+.tdReportNr {
     border-left: none;
     padding-left: 10px;
     font-weight: 600;
@@ -372,14 +386,8 @@ label {
 
 .tdReportStatus {
     border-left:none;
-    border-right: 1px solid #CCC;;
+    border-right: 1px solid #ccc;;
 }
-
-.tdReportButton {
-   border-left: none;
-   border-bottom: none;
-}
-
 
 
 /* Tabs jquery */
@@ -397,7 +405,6 @@ label {
     height: 25px;
     overflow:hidden;
 }
-
 
 
 @media (max-width : 751px) {

@@ -110,29 +110,24 @@ class BoardNotesController extends BaseController
 
     public function boardNotesToTask()
     {
-	    //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$project_id = $this->request->getStringParam('project_id');
         
-        $user = $this->getUser();
-
-        $title = $this->request->getStringParam('title');
-        $description = $this->request->getStringParam('description');
-        $columns = $this->request->getStringParam('columns');
-        $swimlanes = $this->request->getStringParam('swimlanes');
+        $task_title = $this->request->getStringParam('task_title');
+        $task_description = $this->request->getStringParam('task_description');
+        $column = $this->request->getStringParam('column');
+        $swimlane = $this->request->getStringParam('swimlane');
         $category = $this->request->getStringParam('category');
 
     	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
             'title' => t('Post'),
-            'title' => $title,
-    		'description' => $description,
-    		'column_id' => $columns,
-    		'swimlane_id' => $swimlanes,
+            'task_title' => $task_title,
+    		'task_description' => $task_description,
+    		'column_id' => $column,
+    		'swimlane_id' => $swimlane,
     		'category_id' => $category,
-    		'project_id' => $project['id']
+    		'project_id' => $project_id
         )));
-
-
-     }
+    }
 
     public function boardNotesUpdatePosition()
     {
@@ -144,21 +139,22 @@ class BoardNotesController extends BaseController
 
     public function boardNotesReport()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+        $project = $this->getProject();
+        $project_id = $project['id'];
+        $user_id = $this->getUser()['id'];
 
-        $user = $this->getUser();
         $category = $this->request->getStringParam('category');
         if (empty($category)) {
             $category = "";
         }
 
-        $data = $this->boardNotesModel->boardNotesReport($project['id'], $user['id'], $category);
-        $projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
+        $data = $this->boardNotesModel->boardNotesReport($project_id, $user_id, $category);
+        $projectAccess = $this->boardNotesModel->boardNotesGetProjectIds($user_id);
 
-        return $this->response->html($this->helper->layout->project('BoardNotes:project/report', array(
-            'title' => t('BoardNotes Report'),
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/report', array(
+            'title' => $project['name'], // rather keep the project name as title
             'project' => $project,
+            'project_id' => $project_id,
             'data' => $data,
         )));
     }

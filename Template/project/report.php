@@ -19,30 +19,29 @@
 
 </script>
 
-<p class="page-headerName"><?= t('Reporting') ?></p>
-  <br>
+<?= $this->projectHeader->render($project, 'BoardNotesController', 'boardNotesShowProject', false, 'BoardNotes') ?>
+
+<div align="center">
+<div class="page-header"><h2>Notes Report</h2></div>
 
 <?php
-
 print '<section class="mainholder" id="mainholderP';
-print $project['id'];
+print $project_id;
 print '">';
 
-print '<div id="result';
-print $project['id'];
+print '<div align="left" id="result';
+print $project_id;
 print '">';
 
 print '<br>';
-
 ?>
-
 
 <table class="tableReport">
 <thead class="theadReport">
 <tr>
-<th class="thReport thReportNr">Nr</th>
+<th class="thReport thReportNr">#</th>
 <th class="thReport">Info</th>
-<th class="thReport thReportResponsible">Resp</th>
+<th class="thReport thReportResponsible">Responsible</th>
 <th class="thReport thReportStatus">Status</th>
 </tr>
 </thead>
@@ -51,27 +50,26 @@ print '<br>';
 $num = "1";
 
 foreach($data as $u){
-    print '<tr id="trReportId';
+    print '<tr id="trReportNr';
     print $num;
     print '">';
 
-    print '<td class="tdReportId">';
-//    print '<span class="fa-stack fa-lg">';
-//    print '<i class="fa fa-circle-thin fa-stack-2x"></i>';
-//    print '<i class="fa fa-inverse fa-stack-1x">';
+    print '<td class="tdReport tdReportNr">';
+     // Hide button
+    print '<button id="singleReportHide" class="singleReportHide" data-id="';
     print $num;
-//    print '</i>';
-//    print '</span>';
-
+    print '"><i class="fa fa-minus-square-o" style="color:#CCC" aria-hidden="true" title="Hide"></i></button>';
+    // Report #
+    print '<span class="fa-stack fa-lg">';
+    print '<i class="fa fa-circle-thin fa-stack-2x"></i>';
+    print '<i class="fa fa-inverse fa-stack-1x">';
+    print $num;
+    print '</i>';
+    print '</span>';
     print '</td>';
 
-    // Category label
-    print '<td class="tdReportInfo">';
-    if(!empty($u['category'])){
-        print '<label class="catLabel">';
-        print $u['category'];
-        print '</label>';
-    }
+    // Report Info
+    print '<td class="tdReport tdReportInfo">';
 
     // Note title label - visual. Changes on click to input
     print '<label id="reportTitleLabelP';
@@ -87,41 +85,44 @@ foreach($data as $u){
     if($u['is_active'] == "1"){
         print '" class="reportTitleLabel reportTitle" value="">';
     } else {
-        print '" class="reportTitleLabel reportTitle" value="">';
+        print '" class="reportTitleLabel reportTitle noteDoneDesignText" value="">';
     }
     print $u['title'];
     print '</label>';
 
+    // Category label
+    print '<label class="catLabel">';
+    print $u['category'];
+    print '</label>';
+
     // Detailed view
     if(!empty($u['description'])) {
+        print '<div id="noteDescriptionP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" data-id="';
+        print $num;
+        print '" data-project="';
+        print $u['project_id'];
+        print '" class="details reportDescriptionClass ui-corner-all">';
 
-    print '<div id="noteDescriptionP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" data-id="';
-    print $num;
-    print '" data-project="';
-    print $u['project_id'];
-    print '" ';
-    if($u['is_active'] == "1"){
-        print 'class="details reportDescriptionClass ui-corner-all">';
-    } else {
-        print 'class="details reportDescriptionClass ui-corner-all noteDoneDesignText">';
-    }
-
-      print '<span title="Press tab to save changes" class="textareaDescription" id="textareaDescriptionP';
-      print $u['project_id'];
-      print '-';
-      print $num;
-      print '" data-id="';
-      print $num;
-      print '" data-project="';
-      print $u['project_id'];
-      print '">';
-      $description = str_ireplace("<br >", "\r\n", $u['description']); 
-      print $description;
-      print '</span>';
+        print '<span id="textareaDescriptionP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" data-id="';
+        print $num;
+        print '" data-project="';
+        print $u['project_id'];
+        if($u['is_active'] == "1"){
+            print '" class="textareaReportDescription reportTitle">';
+        } else {
+            print '" class="textareaReportDescription reportTitle noteDoneDesignText">';
+        }
+        $description = str_ireplace("<br >", "\r\n", $u['description']);
+        print $description;
+        print '</span>';
     }
 
     // Project_id (hidden, for reference)
@@ -142,22 +143,21 @@ foreach($data as $u){
     print '" class="hideMe">';
     print '</div>';
 
-
-    print '</td><td class="tdReportResponsible">';
-    print '</td><td class="tdReportStatus">';
-
     print '</td>';
 
-    // Delete button viewed in detailed view
-    print '<td class="noprint tdReportButton">';
-    print '<button id="singleReportHide" class="singleReportHide" data-id="';
-    print $num;
-    print '"><i class="fa fa-minus-square-o" aria-hidden="true"></i></button>';
+    print '<td class="tdReport tdReportResponsible reportTitle">';
+    print '</td>';
+    print '<td class="tdReport tdReportStatus reportTitle">';
+        if($u['is_active'] == "1"){
+            print 'Active';
+        } else {
+            print 'DONE';
+        }
     print '</td>';
 
     print '</tr>';
 
-    // Id
+    // #
     $num++;
 }
 ?>
@@ -167,3 +167,4 @@ foreach($data as $u){
 </div>
 
 </section>
+</div>
