@@ -22,11 +22,13 @@ class BoardNotesController extends BaseController
     	$columns = $this->boardNotesModel->boardNotesToTaskSupplyDataCol($project_id);
     	$swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project_id);
 
+        //error_log("yupee0");
         return $this->response->html($this->helper->layout->app('BoardNotes:project/data', array(
             'title' => $project['name'], // rather keep the project name as title
             'project' => $project,
             'project_id' => $project_id,
             'user' => $user,
+            'user_id' => $user_id,
             'data' => $data,
     	    'categories' => $categories,
     	    'columns' => $columns,
@@ -48,6 +50,7 @@ class BoardNotesController extends BaseController
         return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
             'title' => t('Notes overview for %s', $this->helper->user->getFullname($user)),
             'user' => $user,
+            'user_id' => $user_id,
             'projectAccess' => $projectAccess,
         )));
     }
@@ -155,6 +158,7 @@ class BoardNotesController extends BaseController
             'title' => $project['name'], // rather keep the project name as title
             'project' => $project,
             'project_id' => $project_id,
+            'user_id' => $user_id,
             'data' => $data,
         )));
     }

@@ -27,8 +27,8 @@
   // Show details menu
   $(function() {
     $( "button" + ".showDetails" ).click(function() {
-      var id = $(this).attr('data-id');
       var project_id = $(this).attr('data-project');
+      var id = $(this).attr('data-id');
       toggleDetails(project_id, id);
     });
   });
@@ -57,10 +57,11 @@
     $('.textareaDescription').keydown(function(event) {
       if (event.keyCode == 9) {
         var project_id = $(this).attr('data-project');
+        var user_id = $(this).attr('data-user');
         var id = $(this).attr('data-id');
         showTitleInput(project_id, id, false);
         showDescriptionInput(project_id, id, false);
-        sqlUpdateNote(project_id, id);
+        sqlUpdateNote(project_id, user_id, id);
         blinkNote(project_id, id);
       }
     });
@@ -94,21 +95,21 @@
   $(function() {
     $( "button" + ".checkDone" ).click(function() {
       var project_id = $(this).attr('data-project');
+      var user_id = $(this).attr('data-user');
       var id = $(this).attr('data-id');
       $("#noteDoneCheckmarkP" + project_id + "-" + id).toggleClass( "fa-circle-thin" );
       $("#noteDoneCheckmarkP" + project_id + "-" + id).toggleClass( "fa-check" );
       isNoteDone(project_id, id);
       showTitleInput(project_id, id, false);
       showDescriptionInput(project_id, id, false);
-      sqlUpdateNote(project_id, id);
+      sqlUpdateNote(project_id, user_id, id);
       blinkNote(project_id, id);
     });
   });
 
 
   // SQL note update (title etc. and done)
-  function sqlUpdateNote(project_id, id){
-    var project_id = project_id;
+  function sqlUpdateNote(project_id, user_id, id){
     var note_id = $('#note_idP' + project_id + "-" + id).attr('data-id');
     var is_active = $('#noteDoneCheckmarkP' + project_id + "-" + id).attr('data-id');
     var title = $('#noteTitleInputP' + project_id + "-" + id).val();
@@ -117,7 +118,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=BoardNotes' + '&project_id=' + project_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -128,7 +129,7 @@
   }
 
 
-  function sqlAddNote(project_id){
+  function sqlAddNote(project_id, user_id){
     var descriptionQ = $('#textareaNewNote' + project_id).val();
     if (descriptionQ) {
       var description = $('#textareaNewNote' + project_id).val().replace(/\n/g, '<br >');
@@ -143,7 +144,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=BoardNotes' + '&project_id=' + project_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -154,10 +155,10 @@
   }
 
 
-  function sqlDeleteNote(project_id, note_id){
+  function sqlDeleteNote(project_id, user_id, note_id){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=BoardNotes' + '&project_id=' + project_id + '&note_id=' + note_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -168,10 +169,10 @@
   }
 
 
-  function sqlDeleteAllDoneNotes(project_id){
+  function sqlDeleteAllDoneNotes(project_id, user_id){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=BoardNotes' + '&project_id=' + project_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -182,13 +183,13 @@
   }
 
 
-  function sqlRefreshNotes(project_id){
+  function sqlRefreshNotes(project_id, user_id){
     // don't cache ajax or content won't be fresh
     $.ajaxSetup ({
       cache: false
     });
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=" + project_id;
+    var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=" + project_id + "&user_id=" + user_id;
     $("#result" + project_id).html(ajax_load).load(loadUrl);
 
   }
@@ -234,13 +235,14 @@
   $(function() {
     $(document).on('keypress', '.noteTitle', function(e) {
       var project_id = $(this).attr('data-project');
+      var user_id = $(this).attr('data-user');
       var id = $(this).attr('data-id');
       if (event.keyCode == 13) {
         var title = $('#noteTitleInputP' + project_id + "-" + id).val(); //attr('value');
         $("#noteTitleLabelP" + project_id + "-" + id).html(title);
         showTitleInput(project_id, id, false);
         showDescriptionInput(project_id, id, false);
-        sqlUpdateNote(project_id, id);
+        sqlUpdateNote(project_id, user_id, id);
         blinkNote(project_id, id);
       }
     });
@@ -252,12 +254,13 @@
     $('.inputNewNote').keypress(function(event) {
       if (event.keyCode == 13) {
 	      var project_id = $(this).attr('data-project');
+	      var user_id = $(this).attr('data-user');
 	      $('.inputNewNote').blur();
-	      sqlAddNote(project_id);
+	      sqlAddNote(project_id, user_id);
 	      if (!$('#noteDescription0').hasClass('hideMe') ) {
 	        $('#noteDescription0').toggleClass('hideMe' );
 	      }
-	      sqlRefreshNotes(project_id);
+	      sqlRefreshNotes(project_id, user_id);
       }
     });
   });
@@ -267,12 +270,13 @@
   $(function() {
     $( "button" + ".saveNewNote" ).click(function() {
       var project_id = $(this).attr('data-project');
+      var user_id = $(this).attr('data-user');
       $('.inputNewNote').blur();
-      sqlAddNote(project_id);
+      sqlAddNote(project_id, user_id);
       if (!$('#noteDescription0').hasClass('hideMe') ) {
         $('#noteDescription0').toggleClass('hideMe' );
       }
-      sqlRefreshNotes(project_id);
+      sqlRefreshNotes(project_id, user_id);
     });
   });
 
@@ -281,10 +285,11 @@
   $(function() {
     $( "button" + ".singleNoteSave" ).click(function() {
       var project_id = $(this).attr('data-project');
+      var user_id = $(this).attr('data-user');
       var id = $(this).attr('data-id');
       showTitleInput(project_id, id, false);
       showDescriptionInput(project_id, id, false);
-      sqlUpdateNote(project_id, id);
+      sqlUpdateNote(project_id, user_id, id);
       blinkNote(project_id, id);
     });
   });
@@ -295,8 +300,9 @@
     $( "button" + ".singleNoteDelete" ).click(function() {
       var note_id = $(this).attr('data-id');
       var project_id = $(this).attr('data-project');
-      sqlDeleteNote(project_id, note_id);
-      sqlRefreshNotes(project_id);
+      var user_id = $(this).attr('data-user');
+      sqlDeleteNote(project_id, user_id, note_id);
+      sqlRefreshNotes(project_id, user_id);
     });
   });
 
@@ -311,14 +317,15 @@
       }
       var note_id = $(this).attr('data-note');
       var project_id = $(this).attr('data-project');
+      var user_id = $(this).attr('data-user');
       var is_active = $('#noteDoneCheckmarkP' + project_id + "-" + id).attr('data-id');
       var title = encodeURIComponent($('#noteTitleLabelP' + project_id + "-" + id).text());
       var description = encodeURIComponent($('#textareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >'));
-      modalNoteToTask(csrf_token, note_id, project_id, is_active, title, description);
+      modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description);
     });
   });
 
-  function modalNoteToTask(csrf_token, note_id, project_id, is_active, title, description) {
+  function modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description) {
     $.ajaxSetup ({
       cache: false
     });
@@ -333,7 +340,7 @@
           //alert('modalNoteToTask PRE TEST');
 
           var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes' + '&project_id=' + project_id + '&task_title=' + title + '&task_description=' + description + '&swimlane=' + swimlane + '&column=' + columns + '&category=' + category;
+          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&task_title=' + title + '&task_description=' + description + '&swimlane=' + swimlane + '&column=' + columns + '&category=' + category;
           $('#deadloading').html(ajax_load).load(loadUrl);
 
           //alert('modalNoteToTask POST TEST');
@@ -341,7 +348,7 @@
           //$('#listCatToTask' + project_id).remove();
           //$('#listCol' + project_id).remove();
           //$('#listSwim' + project_id).remove();
-          //sqlDeleteNote(project_id, note_id);   
+          //sqlDeleteNote(project_id, user_id, note_id);
           $( this ).dialog( "destroy" ).remove();
         }
       }
@@ -354,12 +361,13 @@
   $(function() {
     $( "button" + ".settingsDeleteAllDone" ).click(function() {
       var project_id = $(this).attr('data-project');
-      modalDeleteAllDoneNotes(project_id);
+      var user_id = $(this).attr('data-user');
+      modalDeleteAllDoneNotes(project_id, user_id);
     });
   });
 
 
-  function modalDeleteAllDoneNotes(project_id) {
+  function modalDeleteAllDoneNotes(project_id, user_id) {
  	$( "#dialogDeleteAllDone" ).removeClass( 'hideMe' );
     $( "#dialogDeleteAllDone" ).dialog({
       resizable: false,
@@ -367,9 +375,9 @@
       modal: true,
       buttons: {
         "Delete all done notes!": function() {
-          sqlDeleteAllDoneNotes(project_id);
+          sqlDeleteAllDoneNotes(project_id, user_id);
           $( this ).dialog( "close" );
-          sqlRefreshNotes(project_id);
+          sqlRefreshNotes(project_id, user_id);
         },
         Cancel: function() {
           $( this ).dialog( "close" );
@@ -383,17 +391,18 @@
   $(function() {
     $( "button" + ".settingsAnalytics" ).click(function() {
       var project_id = $(this).attr('data-project');
-      modalAnalytics(project_id);
+      var user_id = $(this).attr('data-user');
+      modalAnalytics(project_id, user_id);
     });
   });
 
 
-  function modalAnalytics(project_id) {
+  function modalAnalytics(project_id, user_id) {
     $.ajaxSetup ({
         cache: false
     });
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes' + '&project_id=' + project_id;
+    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id;
     $('#dialogAnalyticsInside').html(ajax_load).load(loadUrl);
 
     $( "#dialogAnalytics" ).removeClass( 'hideMe' );
@@ -411,23 +420,24 @@
   $(function() {
     $( "button" + ".settingsReport" ).click(function() {
       var project_id = $(this).attr('data-project');
-      modalReport(project_id);
+      var user_id = $(this).attr('data-user');
+      modalReport(project_id, user_id);
     });
   });
 
 
-  function modalReport(project_id) {
+  function modalReport(project_id, user_id) {
     $( "#dialogReportP" + project_id ).removeClass( 'hideMe' );
     $( "#dialogReportP" + project_id ).dialog({
       buttons: {
         Ok: function() {
           var category = $('#reportCatP' + project_id + ' option:selected').text();
-          var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&category=' + category;
+          var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&category=' + category;
           window.location = url;
           /*
           $.ajax({
             type: "POST",
-            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&category=' + category,
+            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&category=' + category,
             success: function(response) {
             },
             error: function(xhr,textStatus,e) {
@@ -444,10 +454,10 @@
 
 
   // SQL update positions
-  function sqlNotesUpdatePosition(project_id, order, nrNotes){
+  function sqlNotesUpdatePosition(project_id, user_id, order, nrNotes){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdatePosition&plugin=BoardNotes' + '&project_id=' + project_id + '&order=' + order + '&nrNotes=' + nrNotes,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdatePosition&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&order=' + order + '&nrNotes=' + nrNotes,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -465,11 +475,12 @@
         var id = $(this).attr('data-id');
         if (id > 0) { // exclude handling the category drop down for new note
             var project_id = $(this).attr('data-project');
+            var user_id = $(this).attr('data-user');
             var category = $('#catP' + project_id + "-" + id + ' option:selected').text();
             $("#noteCatLabelP" + project_id + "-" + id).html(category);
             showTitleInput(project_id, id, false);
             showDescriptionInput(project_id, id, false);
-            sqlUpdateNote(project_id, id);
+            sqlUpdateNote(project_id, user_id, id);
             blinkNote(project_id, id);
         }
       }

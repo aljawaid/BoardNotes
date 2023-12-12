@@ -72,18 +72,23 @@ print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Cre
 // Settings delete all done
 print '<button id="settingsDeleteAllDone" class="settingsDeleteAllDone" data-id="0" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
 // Settings analytics
 print '<button id="settingsAnalytics" class="settingsAnalytics" data-id="0" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>';
 
 // Open report
 print '<button id="settingsReport" class="settingsReport" data-id="0" data-project="';
 print $project_id;
-print '">';
-print '<i class="fa fa-file-text-o" aria-hidden="true"></i>';
+print '" data-user="';
+print $user_id;
+print '"><i class="fa fa-file-text-o" aria-hidden="true"></i>';
 print '</button>';
 
 // Newline after heading and top settings
@@ -94,16 +99,22 @@ print '<input id="newNote';
 print $project_id;
 print '" name="newNote" type="text" placeholder="What needs to be done" class="inputNewNote" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '">';
 
 // Show details button
 print '<button id="showDetailsNew" class="showDetailsNew" data-id="0" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
 
 // Save button
 print '<button class="hideMe saveNewNote" id="saveNewNote" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
 
 // Detailed view
@@ -133,6 +144,8 @@ print '<select name="cat" id="catP';
 print $project_id;
 print '" data-id="0" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
 print '<option selected="selected"></option>'; // Insert emptyline for keeping non category by default
 print $listCat;
@@ -155,6 +168,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '" class="checkDone"><i id="noteDoneCheckmarkP';
     print $u['project_id'];
     print '-';
@@ -175,6 +190,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '"><i class="fa fa-plus" aria-hidden="true"></i></button>';
 
     // Note title input - typing. Changes after submit to label below.
@@ -186,6 +203,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '" name="noteTitle';
     print $num;
     if($u['is_active'] == "1"){
@@ -205,6 +224,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '" name="noteTitleLabel';
     print $num;
     if($u['is_active'] == "1"){
@@ -224,6 +245,8 @@ foreach($data as $u){
     print $u['id'];
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
     // Add note to tasks table (in detailed view)
@@ -237,6 +260,8 @@ foreach($data as $u){
     print $u['id'];
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
 
     // Save button (in detailed view)
@@ -248,6 +273,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
 
     // Category label (in simple view)
@@ -268,6 +295,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '" ';
     if($u['is_active'] == "1"){
         print 'class="hideMe details noteDescriptionClass ui-corner-all">';
@@ -282,6 +311,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
     print '">';
     $description = str_ireplace("<br >", "\r\n", $u['description']); 
     print $description;
@@ -299,6 +330,8 @@ foreach($data as $u){
     print $num;
     print '" data-project="';
     print $project_id;
+    print '" data-user="';
+    print $user_id;
     print '">';
     
     $emptyCatList = empty($listCat);
@@ -360,6 +393,8 @@ print '"></div>';
 
 print '<div id="projectidref" class="hideMe" data-project="';
 print $project_id;
+print '" data-user="';
+print $user_id;
 print '"></div>';
 
 $listSwim = '';
@@ -458,6 +493,8 @@ print '</div>';
   print $project_id;
   print '" data-project="';
   print $project_id;
+  print '" data-user="';
+  print $user_id;
   print '">';
   
   print '<option></option>'; // add an empty category option
