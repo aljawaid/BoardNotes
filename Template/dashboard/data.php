@@ -33,14 +33,18 @@
 <script>
 
 // Choose mobile view
-$( document ).ready(function() {
+function PrepareMobile() {
   $('.noteTitleInput').hide();
   var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? true : false;
   if(isMobile) {
     $('.sidebar').hide();
     $('#mainholderQ').removeClass('mainholderQ').addClass('mainholderMobileQ');
   }
-});
+};
+
+
+window.onload = PrepareMobile;
+$( document ).ready( PrepareMobile );
 
 
 $(function() {
@@ -121,7 +125,7 @@ $( function() {
         print $o['project_id'];
         print '"><a href="';
 
-        print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=boardnotes&project_id=' . $o['project_id'];
+        print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=' . $o['project_id'].'&user_id='.$user['id'];
 
         print '">';
         print $o['project_name'];
