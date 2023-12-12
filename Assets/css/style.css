@@ -1,11 +1,11 @@
 /* General */
 
 .button a {
-    border-bottom: 1px solid #777777;
-    border-left: 1px solid #000000;
-    border-right: 1px solid #333333;
-    border-top: 1px solid #000000;
-    color: #000000;
+    border-bottom: 1px solid #777;
+    border-left: 1px solid #000;
+    border-right: 1px solid #333;
+    border-top: 1px solid #000;
+    color: #000;
     display: block;
     height: 2.5em;
     padding: 0 1em;
@@ -16,7 +16,7 @@
 .mainholder {
     width: 700px;
     font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #777;
+    color: #999;
     -webkit-font-smoothing: antialiased;
     position: relative;
     font-weight: 300;
@@ -46,8 +46,8 @@ input[type="text"] {
     width: 80%;
     font-size: 16px;
     border: none;
-    color: #999 !important;
-    background-color: rgba(255, 255, 255, 0);
+    color: #000 !important;
+    background-color: #777 !important;
     padding: 0 0;
     margin-top: 0;
     height: auto;
@@ -63,7 +63,7 @@ input[type=text]:focus {
 }
 
 input::placeholder {
-  color: #999 !important;
+  color: #bbb !important;
 }
 
 label {
@@ -293,7 +293,12 @@ textarea {
 
 .textareaDescriptionSelected {
     display: inline-block;
-    color: #999;
+    color: #000 !important;
+    background-color: #777;
+}
+
+.textareaDescriptionSelected:focus {
+    color: #fff !important;
 }
 
 .catSelector {
@@ -326,7 +331,7 @@ textarea {
 }
 
 .reportTitle {
-    color: #ccc;
+    color: #ddd;
 }
 
 .singleReportHide {
@@ -358,7 +363,6 @@ textarea {
    font-family: 'Helvetica', Arial, sans-serif;
    font-size: 14px;
    line-height: 16px;
-   background-color: rgba(37, 37, 37, 0.75);
 }
 
 .thReport {
@@ -366,6 +370,7 @@ textarea {
    padding-left: 10px;
    border-left: none;
    border-bottom: 1px solid #ccc;
+   background-color: rgba(37, 37, 37, 0.75);
 }
 
 .thReportNr {
@@ -386,7 +391,7 @@ textarea {
     display: inline-block;
     margin-left: 10px;
     padding: 10px 10px 10px 10px;
-    background-color: rgba(37, 37, 37, 0.50);
+    background-color: #555;
     border: 0px;
     white-space:pre-wrap;
 }
@@ -438,7 +443,7 @@ textarea {
     .mainholder {
         width: auto;
         font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        color: #777;
+        color: #999;
         -webkit-font-smoothing: antialiased;
         position: relative;
         font-weight: 300;
