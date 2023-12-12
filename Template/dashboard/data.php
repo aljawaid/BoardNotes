@@ -72,7 +72,7 @@ $( function() {
 
 
 
-<p class="page-headerName">BoardNotes</p>
+<div class="page-header"><h2>My notes</h2></div>
 <br>
 <section class="mainholderQ" id="mainholderQ">
 
@@ -90,7 +90,7 @@ $( function() {
     print '" data-id="';
     print $num;
     print '" data-project="9998"><a href="';
-    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=boardnotes&project_id=9998';
+    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=9998&user_id='.$user['id'];
     print '">';
     print 'General';
     print '</a></li>';
@@ -103,7 +103,7 @@ $( function() {
     print '" data-id="';
     print $num;
     print '" data-project="9997"><a href="';
-    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=boardnotes&project_id=9997';
+    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=9997&user_id='.$user['id'];
     print '">';
     print 'Todo';
     print '</a></li>';

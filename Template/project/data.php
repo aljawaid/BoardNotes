@@ -48,37 +48,40 @@
 
 </script>
 
+<?= $this->projectHeader->render($project, 'BoardNotesController', 'boardNotesShowProject', false, 'BoardNotes') ?>
+
 <?php
+print '<div align="center">';
 print '<section class="mainholder" id="mainholderP';
-print $project['id'];
+print $project_id;
 print '">';
 
-print '<div id="result';
-print $project['id'];
+print '<div align="left" id="result';
+print $project_id;
 print '">';
 
 print '<ul id="sortable" class="sortableRef';
-print $project['id'];
+print $project_id;
 print '">';
 
-print '<li id="item-0" class="ui-state-default newNote newNoteLi" data-id="';
-print $project['id'];
+print '<li id="item-0" class="ui-state-default liNewNote" data-id="';
+print $project_id;
 print '">';
-print '<label class="newNote newNoteLabel" for="textinput" style="font-weight: 700;">Note</label>';
+print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Create New Note</label>';
 
 // Settings delete all done
 print '<button id="settingsDeleteAllDone" class="settingsDeleteAllDone" data-id="0" data-project="';
-print $project['id'];
+print $project_id;
 print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
 // Settings analytics
 print '<button id="settingsAnalytics" class="settingsAnalytics" data-id="0" data-project="';
-print $project['id'];
+print $project_id;
 print '"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>';
 
 // Open report
 print '<button id="settingsReport" class="settingsReport" data-id="0" data-project="';
-print $project['id'];
+print $project_id;
 print '">';
 print '<i class="fa fa-file-text-o" aria-hidden="true"></i>';
 print '</button>';
@@ -88,66 +91,64 @@ print '<br>';
 
 // Input line
 print '<input id="newNote';
-print $project['id'];
-print '" name="newNote" type="text" placeholder="What needs to be done" class="newNote newNoteInput" data-project="';
-print $project['id'];
+print $project_id;
+print '" name="newNote" type="text" placeholder="What needs to be done" class="inputNewNote" data-project="';
+print $project_id;
 print '">';
 
 // Show details button
 print '<button id="showDetailsNew" class="showDetailsNew" data-id="0" data-project="';
-print $project['id'];
+print $project_id;
 print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
+
+// Save button
+print '<button class="hideMe saveNewNote" id="saveNewNote" data-project="';
+print $project_id;
+print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
 
 // Detailed view
 print '<div id="noteDescriptionP';
-print $project['id'];
+print $project_id;
 print '" data-id="0" class="hideMe details noteDescriptionClass ui-corner-all">';
 print '<textarea id="textareaNewNote';
-print $project['id'];
-print '" class="newNote newNoteTextarea"></textarea>';
+print $project_id;
+print '" class="textareaNewNote"></textarea>';
 
+$listCat = '';
 // Create category select menu as var
 if(!empty($categories)) {
-  $listCat = '';
-  foreach($categories as $a) {
+  foreach($categories as $cat) {
     $listCat .= '<option value="';
-    $listCat .= $a['name'];
+    $listCat .= $cat['name'];
     $listCat .= '">';
-    $listCat .= $a['name'];
+    $listCat .= $cat['name'];
     $listCat .= '</option>';
   }
-
-  // Print category select menu
-  print '<p class="categories">';
-  print '<label for="cat">Category</label><br>';
-  print '<select name="cat" id="catP';
-  print $project['id'];
-  print '" data-project="';
-  print $project['id'];
-  print '" class="ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
-  print '<option selected="selected"></option>'; // Insert emptyline  for keeping non category
-  print $listCat;
-  print '</select>';
-  print '</p>';
 }
 
-// Save button
-print '<div class="newNoteSaveHolder"><button id="newNoteSave" class="newNoteSave" data-project="';
-print $project['id'];
-print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button></div>';
+// Print category select menu
+print '<p class="categories">';
+print '<label for="cat">Category</label><br>';
+print '<select name="cat" id="catP';
+print $project_id;
+print '" data-id="0" data-project="';
+print $project_id;
+print '" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
+print '<option selected="selected"></option>'; // Insert emptyline for keeping non category by default
+print $listCat;
+print '</select>';
+print '</p>';
 print '</div>';
 
-?>
+print '</li>';
 
-</li>
 
-<?php
 $num = "1";
 foreach($data as $u){
     print '<li id="item';
     print '-';
     print $u['id']; 
-    print '" class="ui-state-default">';
+    print '" class="ui-state-default liNote">';
 
     // Checkbox for done note
     print '<button id="checkDone" data-id="';
@@ -161,11 +162,11 @@ foreach($data as $u){
     if($u['is_active'] == "1"){
         print '" data-id="';
         print $u['is_active'];
-        print '" class="fa fa-circle-thin" aria-hidden="ture"></i></button>';
+        print '" class="fa fa-circle-thin" aria-hidden="true"></i></button>';
     } else {
         print '" data-id="';
         print $u['is_active'];
-        print '" class="fa fa-check" aria-hidden="ture"></i></button>';
+        print '" class="fa fa-check" aria-hidden="true"></i></button>';
     }
 
     // Show details button
@@ -175,14 +176,6 @@ foreach($data as $u){
     print '" data-project="';
     print $u['project_id'];
     print '"><i class="fa fa-plus" aria-hidden="true"></i></button>';
-
-
-    // Category label
-    if(!empty($u['category'])){
-        print '<label class="catLabel">';
-        print $u['category'];
-        print '</label>';
-    }
 
     // Note title input - typing. Changes after submit to label below.
     print '<input id="noteTitleInputP';
@@ -196,9 +189,9 @@ foreach($data as $u){
     print '" name="noteTitle';
     print $num;
     if($u['is_active'] == "1"){
-        print '" class="noteTitleInput noteTitle" value="';
+        print '" class="hideMe noteTitle" value="';
     } else {
-        print '" class="noteTitleInput noteTitle noteDoneDesignText" value="';
+        print '" class="hideMe noteTitle noteDoneDesignText" value="';
     }
     print $u['title'];
     print '">';
@@ -222,7 +215,18 @@ foreach($data as $u){
     print $u['title'];
     print '</label>';
 
-    // Add note to tasks table
+    // Delete button viewed (in detailed view)
+    print '<button id="singleNoteDeleteP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '" class="hideMe singleNoteDelete" data-id="';
+    print $u['id'];
+    print '" data-project="';
+    print $u['project_id'];
+    print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+
+    // Add note to tasks table (in detailed view)
     print '<button id="singleNoteToTaskP';
     print $u['project_id'];
     print '-';
@@ -235,16 +239,25 @@ foreach($data as $u){
     print $u['project_id'];
     print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
 
-    // Delete button viewed in detailed view
-    print '<button id="singleNoteDeleteP';
+    // Save button (in detailed view)
+    print '<button id="singleNoteSaveP';
     print $u['project_id'];
     print '-';
     print $num;
-    print '" class="hideMe singleNoteDelete" data-id="';
-    print $u['id'];
+    print '" class="hideMe singleNoteSave" data-id="';
+    print $num;
     print '" data-project="';
     print $u['project_id'];
-    print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+    print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
+
+    // Category label (in simple view)
+    print '<label class="catLabel" id="noteCatLabelP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '"">';
+    print $u['category'];
+    print '</label>';
 
     // Detailed view
     print '<div id="noteDescriptionP';
@@ -274,32 +287,42 @@ foreach($data as $u){
     print $description;
     print '</textarea>';
 
+	//print '<br>';
     print '<p class="categories">';
     print '<label for="cat">Category</label><br>';
-    print '<select name="cat" class="catSelector" id="catP';
-    print $project['id'];
+    print '<select name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
+    print ' id="catP';
+    print $project_id;
     print '-';
     print $num;
     print '" data-id="';
     print $num;
     print '" data-project="';
-    print $project['id'];
+    print $project_id;
     print '">';
     
-    // If there is a category - print. Otherwise wait just for blank selected. Would be double without 'if'
-    if (!empty($u['category'])) { 
-        print '<option selected="selected">';
-        print $u['category'];
-        print '</option>';
-    }
+    $emptyCatList = empty($listCat);
+    $emptyCat = empty($u['category']);
     
-    // Only allow blank select if there's other selectable options
-    if (!empty($listCat)){
-        print '<option></option>';
+    if ($emptyCatList || $emptyCat){ // If no categories available or none selected
+        print '<option selected="selected"></option>'; // None category selected
     }
-    if (!empty($listCat)){
+    if (!$emptyCat && !$emptyCatList){
+        print '<option></option>'; // add an empty category option
+        foreach($categories as $cat) { // detect the selected category
+        	if ($cat['name'] == $u['category']){
+        		print '<option selected="selected">';
+        	}else{
+        		print '<option>';
+        	}
+	        print $cat['name'];
+	        print '</option>';
+        }
+    }
+    if ($emptyCat && !$emptyCatList){
         print $listCat;
     }
+
     print '</select>';
     print '</p>';
     print '</div>';
@@ -327,18 +350,16 @@ foreach($data as $u){
     // Id
     $num++;
 }
-?>
 
-</ul>
+print '</ul>';
 
-<?php
 print '<div id="nrNotes" class="hideMe" data-id="';
 $num = --$num;
 print $num;
 print '"></div>';
 
 print '<div id="projectidref" class="hideMe" data-project="';
-print $project['id'];
+print $project_id;
 print '"></div>';
 
 $listSwim = '';
@@ -371,27 +392,27 @@ if(!empty($categories)) {
   }
 }
 
+print '</div>';
 ?>
 
 <?php
 /* id=resultX ending. This is the refresh zone */
 ?>
-</div>
 
 <div class="hideMe" id="dialogDeleteAllDone" title="Delete all done notes?">
   <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
 </div>
 
-<div class="hideMe" id="dialogAnalytics" title="Note analytics">
+<div class="hideMe" id="dialogAnalytics" title="Notes Analytics">
   <div id="dialogAnalyticsInside"></div>
 </div>
 
-<div class="hideMe" id="dialogToTaskP<?php print $project['id']; ?>" title="Data for creating task">
+<div class="hideMe" id="dialogToTaskP<?php print $project_id; ?>" title="Data for creating task">
   <div id="">
   <label for="listCatToTask">Category</label>
   <?php
   print '<select name="listCatToTask" id="listCatToTask';
-  print $project['id'];
+  print $project_id;
   print '">';
   // Only allow blank select if there's other selectable options
   if (!empty($listCatToTask)){
@@ -400,11 +421,12 @@ if(!empty($categories)) {
   print $listCatToTask;
   ?>
   </select>
+  <br>
 
   <label for="listSwim">Swimlane</label>
   <?php
   print '<select name="listSwim" id="listSwim';
-  print $project['id'];
+  print $project_id;
   print '">';
   // Only allow blank select if there's other selectable options
   if (!empty($listSwim)){
@@ -413,11 +435,12 @@ if(!empty($categories)) {
   print $listSwim;
   ?>
   </select>
+  <br>
 
   <label for="listCol">Column</label>
   <?php
   print '<select name="listCol" id="listCol';
-  print $project['id'];
+  print $project_id;
   print '">';
   print $listCol;
   ?>
@@ -427,20 +450,17 @@ if(!empty($categories)) {
 </div>
 
 
-
-<div class="hideMe" id="dialogReportP<?php print $project['id']; ?>" title="Sorting and filter for reports">
+<div class="hideMe" id="dialogReportP<?php print $project_id; ?>" title="Sorting and filter for reports">
   <div id="">
   <label for="reportCat">Category</label><br>
   <?php
   print '<select name="reportCat" id="reportCatP';
-  print $project['id'];
+  print $project_id;
   print '" data-project="';
-  print $project['id'];
+  print $project_id;
   print '">';
-  // Only allow blank select if there's other selectable options
-  if (!empty($listCat)){
-    print '<option></option>';
-  }
+  
+  print '<option></option>'; // add an empty category option
   if (!empty($listCat)){
       print $listCat;
   }
@@ -450,3 +470,4 @@ if(!empty($categories)) {
 </div>
 
 </section>
+</div>

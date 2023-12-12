@@ -16,7 +16,7 @@
 .mainholder {
     width: 700px;
     font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #4d4d4d;
+    color: #777;
     -webkit-font-smoothing: antialiased;
     position: relative;
     font-weight: 300;
@@ -31,45 +31,6 @@
     font-weight: 300;
 }
 
-.hideMe {
-    display: none;
-} 
-
-.newNoteLi {
-     padding: 5px 10px 12px 15px!important;
-}
-
-.newNoteLabel {
-    font-weight: 700;
-    padding-bottom: 5px;
-}
-
-.newNoteTextarea {
-    display: inline-block;
-}
-
-#sortable { 
-  list-style-type: none; 
-  margin: 0; 
-  padding: 0; 
-/*  width: 60%; */
-}
-
-#sortable li { 
-  margin: 0 3px 3px 3px; 
-  padding: 0.4em; 
-  border-radius: 3px;
-  min-height: 16px;
-/*  padding-left: 10px; */
-/*  font-size: 1.4em; */
-/*  height: 18px; */
-}
-
-/*#sortable li span { 
-   position: absolute; 
-   margin-left: -1.3em; 
-}*/
-
 .view {
     height: 35px;
     line-height: 35px;
@@ -80,16 +41,12 @@
     padding-right: 10px;
 }
 
-.noteTitle {
-    color: #5b4f4f;
-}
-
-
-input[type=text] {
+input[type="text"] {
     display: inline-block;
     width: 80%;
     font-size: 16px;
     border: none;
+    color: #999 !important;
     background-color: rgba(255, 255, 255, 0);
     padding: 0 0;
     margin-top: 0;
@@ -98,16 +55,73 @@ input[type=text] {
 }
 
 input[type=text]:focus {
-    color: #000;
+    color: #fff !important;
     border-color: rgba(82,168,236,.8);
     outline: 0;
     border-bottom: 1px solid gray;
     box-shadow: none;
 }
 
+input::placeholder {
+  color: #999 !important;
+}
+
+label {
+    display: inline-block;
+}
+
+#sortable {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#sortable li {
+  margin: 0 3px 3px 3px;
+  padding: 0.4em;
+  border-radius: 3px;
+  min-height: 16px;
+}
+
+.hideMe {
+    display:none !important;
+} 
+
+.blurMe {
+    filter: blur(15px);
+}
+
+
+/* Notes elements */
+
+.liNote {
+    padding: 5px 10px 12px 15px!important;
+    background-color: rgba(246, 246, 246, 0.7);
+}
+
+.liNewNote {
+    padding: 5px 10px 12px 15px!important;
+    background-color: rgba(246, 246, 246, 0.9);
+}
+
+.labelNewNote {
+    font-weight: 700;
+    padding-bottom: 5px;
+}
+
+.textareaNewNote {
+    display: inline-block;
+    color: #999;
+}
+
+.noteTitle {
+    color: #1f1f1f;
+}
+
 .noteTitleLabel {
     margin-top: 0;
     padding-left: 10px;
+    height: 20px;
 }
 
 .noteDescriptionClass {
@@ -115,9 +129,7 @@ input[type=text]:focus {
     color: #7a7a7a;
     font-size: 15px;
     min-height: 16px;
-/*    display: inline;*/
-/*    display: none;*/
-} 
+}
 
 .showDetails {
     float: right;
@@ -141,7 +153,7 @@ input[type=text]:focus {
     padding-right: 5px;
 }
 
-.newNoteSave {
+.saveNewNote {
     float: right;
     appearance: none;
     -webkit-appearance: none;
@@ -152,7 +164,7 @@ input[type=text]:focus {
     padding-right: 5px;
 }
 
-div .newNoteSaveHolder {
+div .saveNoteHolder {
     padding: 5px 0 10px 20px;
 }
 
@@ -180,6 +192,18 @@ div .newNoteSaveHolder {
     margin-right: 10px;
 }
 
+.singleNoteSave {
+    float: right;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-right: 5px;
+    padding-left: 5px;
+    margin-right: 10px;
+}
+
 .settingsDeleteAllDone  {
     float: right;
     appearance: none;
@@ -189,7 +213,6 @@ div .newNoteSaveHolder {
     background: transparent;
     padding-right: 5px;
     padding-left: 5px;
-/*    margin-right: 10px; */
 }
 
 .settingsAnalytics  {
@@ -230,23 +253,26 @@ div .singleNoteDeleteHolder {
     background: transparent;
     padding-left: 10px;
     padding-right: 10px;
-    color: #4f4545;
+    color: #1f1f1f;
 }
 
 .noteDoneDesignText {
-    color: #b1b0b0;
+    color: #777;
     text-decoration: line-through;
 }
 
 #item-0 .noteDescriptionClass {
-    padding: 5px 10px 0 0;
+    padding: 5px 10px 0 40px;
 }
 
 textarea {
-    height: 70px;
-    width: 280px;
+    resize: vertical;
+    min-height: 50px;
+    max-height: 350px;
+    height: 50px;
+    width: 320px;
     padding: 5px;
-    color: #6d6c6c;
+    color: #777;
     margin-top: 5px;
 }
 
@@ -255,15 +281,19 @@ textarea {
     display: inline-block;
     vertical-align: top;
     margin-left: 20px;
+    color: #1f1f1f;
 }
 
 .textareaDescription {
     display: inline-block;
-    min-width: 265px;
-    width: auto;
     background: none;
-    border: 1px solid #aaaaaa;
+    border: 1px solid #777;
     white-space:pre-wrap;
+}
+
+.textareaDescriptionSelected {
+    display: inline-block;
+    color: #999;
 }
 
 .catSelector {
@@ -271,20 +301,17 @@ textarea {
 }
 
 .catLabel {
+    float: right;
     cursor: default;
     margin-top: 0;
     padding: 0 5px 0 5px;
     border-radius: 5px;
-    background: rgba(95, 92, 92, 0.2);
-}
-
-label {
-    display: inline-block;
+    color: #1f1f1f;
+    background: #999;
 }
 
 
 /* Style for report.php */
-
 
 .page-headerName {
  font-family: 'Helvetica', Arial, sans-serif;
@@ -411,7 +438,7 @@ label {
     .mainholder {
         width: auto;
         font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        color: #4d4d4d;
+        color: #777;
         -webkit-font-smoothing: antialiased;
         position: relative;
         font-weight: 300;
