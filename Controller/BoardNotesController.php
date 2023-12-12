@@ -7,12 +7,37 @@ use Kanboard\Controller\BaseController;
 class BoardNotesController extends BaseController
 {
 
+    private function ResolveUserId()
+    {
+        $user_id = ''; // init empty string
+        $use_cached = $this->request->getStringParam('use_cached');
+
+        if (!empty($use_cached)) // use cached
+        {
+            $user_id = $_SESSION['cached_user_id'];
+        }
+
+        if (empty($user_id)) // try get param from URL
+        {
+            $user_id = $this->request->getStringParam('user_id');
+        }
+
+        if (empty($user_id)) // as last resort get the current user
+        {
+            $user_id = $this->getUser()['id'];
+        }
+
+        $_SESSION['cached_user_id'] = $user_id;
+
+        return $user_id;
+    }
+
     private function boardNotesShowProject_Internal($is_refresh)
     {
         $project = $this->getProject();
         $project_id = $project['id'];
         $user = $this->getUser();
-        $user_id = $user['id'];
+        $user_id = $this->ResolveUserId();
 
         $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
         $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
@@ -50,7 +75,7 @@ class BoardNotesController extends BaseController
     public function boardNotesShowAll()
     {
         $user = $this->getUser();
-        $user_id = $user['id'];
+        $user_id = $this->ResolveUserId();
 
         $projectAccess = $this->boardNotesModel->boardNotesGetProjectIds($user_id);
         $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
@@ -149,8 +174,8 @@ class BoardNotesController extends BaseController
     	$project_id = $this->request->getStringParam('project_id');
     	$user_id = $this->request->getStringParam('user_id');
 
-        $nrNotes = $this->request->getStringParam('nrNotes');
         $notePositions = $this->request->getStringParam('order');
+        $nrNotes = $this->request->getStringParam('nrNotes');
 
         $validation = $this->boardNotesModel->boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes);
     }
@@ -159,7 +184,7 @@ class BoardNotesController extends BaseController
     {
         $project = $this->getProject();
         $project_id = $project['id'];
-        $user_id = $this->getUser()['id'];
+        $user_id = $this->ResolveUserId();
 
         $category = $this->request->getStringParam('category');
         if (empty($category)) {

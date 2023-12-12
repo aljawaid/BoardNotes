@@ -15,6 +15,7 @@
   function PrepareMobile(){
     var nrNotes = $('#nrNotes').attr('data-id');
     var project_id = <?php print $project_id; ?>;
+    var user_id = <?php print $user_id; ?>;
     var isMobile = IsMobile();
 
     // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
@@ -34,8 +35,7 @@
             var regex = new RegExp('item-', 'g');
             order = order.replace(regex, '');
             var order = order.split(',');
-            sqlNotesUpdatePosition(project_id, order, nrNotes);
-            //console.log(order, nrNotes);
+            sqlNotesUpdatePosition(project_id, user_id, order, nrNotes);
           }
         });
         $( "#sortable" ).disableSelection();

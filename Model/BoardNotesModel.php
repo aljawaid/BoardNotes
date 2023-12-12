@@ -176,10 +176,11 @@ class BoardNotesModel extends Base
         $num = $nrNotes;
 
         //  Explode all positions
-        $note_id = explode(',', $notePositions);
+        $note_ids = explode(',', $notePositions);
+
 
         // Loop through all positions
-        foreach ($note_id as $row) {
+        foreach ($note_ids as $row) {
             $values = array('position' => $num);
 
             $this->db->table(self::TABLEnotes)
