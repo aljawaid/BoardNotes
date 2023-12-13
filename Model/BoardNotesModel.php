@@ -59,7 +59,7 @@ class BoardNotesModel extends Base
         }
     }
 
-    // Get all project_id where user has access
+    // Get all project_id where user has assigned access
     public function boardNotesGetProjectIds($user_id)
     {
         return $this->db->table(self::TABLEaccess)
@@ -70,13 +70,24 @@ class BoardNotesModel extends Base
             ->findAll();
     }
 
-    // Get all project_id where user has access
-    public function boardNotesGetProjectIdsCustom()
+    // Get all project_id where user has custom access
+    public function boardNotesGetCustomProjectIds()
     {
-        return $this->db->table(self::TABLEnotescus)->findAll();
+        return $this->db->table(self::TABLEnotescus)
+            ->columns(self::TABLEnotescus.'.project_id', self::TABLEnotescus.'.project_name')
+            ->findAll();
     }
 
-    // Get all project_id where user has access
+    // Get all project_id where user has assigned or custom access
+    public function boardNotesGetAllProjectIds($user_id)
+    {
+        $projectAssignedAccess = $this->boardNotesGetProjectIds($user_id);
+        $projectCustomAccess = $this->boardNotesGetCustomProjectIds();
+        $projectAccess = array_merge($projectAssignedAccess, $projectCustomAccess);
+        return $projectAccess;
+    }
+
+    // Get a list of all categories in project
     public function boardNotesGetCategories($project_id)
     {
         return $this->db->table(self::TABLEcategories)
@@ -86,8 +97,8 @@ class BoardNotesModel extends Base
             ->findAll();
     }
 
-    // Get all project_id where user has access
-    public function boardNotesGetCategoriesID($project_id, $category)
+    // Get the Id of a category in project
+    public function boardNotesGetCategoryId($project_id, $category)
     {
         return $this->db->table(self::TABLEcategories)
             ->eq('project_id', $project_id)

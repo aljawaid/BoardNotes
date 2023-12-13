@@ -7,12 +7,12 @@ use Kanboard\Controller\BaseController;
 class BoardNotesController extends BaseController
 {
 
-    private function ResolveUserId()
+    private function resolveUserId()
     {
         $user_id = ''; // init empty string
         $use_cached = $this->request->getStringParam('use_cached');
 
-        if (!empty($use_cached)) // use cached
+        if (!empty($use_cached) && isset($_SESSION['cached_user_id'])) // use cached
         {
             $user_id = $_SESSION['cached_user_id'];
         }
@@ -37,17 +37,13 @@ class BoardNotesController extends BaseController
         $project = $this->getProject();
         $project_id = $project['id'];
         $user = $this->getUser();
-        $user_id = $this->ResolveUserId();
-
-        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
-        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
+        $user_id = $this->resolveUserId();
 
         $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
         $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
     	$columns = $this->boardNotesModel->boardNotesToTaskSupplyDataCol($project_id);
     	$swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project_id);
 
-        //error_log("yupee0");
         return $this->response->html($this->helper->layout->app('BoardNotes:project/data', array(
             'title' => $project['name'], // rather keep the project name as title
             'project' => $project,
@@ -75,11 +71,9 @@ class BoardNotesController extends BaseController
     public function boardNotesShowAll()
     {
         $user = $this->getUser();
-        $user_id = $this->ResolveUserId();
+        $user_id = $this->resolveUserId();
 
-        $projectAccess = $this->boardNotesModel->boardNotesGetProjectIds($user_id);
-        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
-        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
+        $projectAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
         $data = $this->boardNotesModel->boardNotesShowAll($projectAccess, $user_id);
 
@@ -182,9 +176,9 @@ class BoardNotesController extends BaseController
 
     public function boardNotesReport()
     {
-        $project = $this->getProject();
+        $project = $this->resolveProject();
         $project_id = $project['id'];
-        $user_id = $this->ResolveUserId();
+        $user_id = $this->resolveUserId();
 
         $category = $this->request->getStringParam('category');
         if (empty($category)) {
@@ -192,7 +186,6 @@ class BoardNotesController extends BaseController
         }
 
         $data = $this->boardNotesModel->boardNotesReport($project_id, $user_id, $category);
-        $projectAccess = $this->boardNotesModel->boardNotesGetProjectIds($user_id);
 
         return $this->response->html($this->helper->layout->app('BoardNotes:project/report', array(
             'title' => $project['name'], // rather keep the project name as title
