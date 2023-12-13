@@ -81,9 +81,9 @@ class BoardNotesModel extends Base
     // Get all project_id where user has assigned or custom access
     public function boardNotesGetAllProjectIds($user_id)
     {
-        $projectAssignedAccess = $this->boardNotesGetProjectIds($user_id);
         $projectCustomAccess = $this->boardNotesGetCustomProjectIds();
-        $projectAccess = array_merge($projectAssignedAccess, $projectCustomAccess);
+        $projectAssignedAccess = $this->boardNotesGetProjectIds($user_id);
+        $projectAccess = array_merge($projectCustomAccess, $projectAssignedAccess);
         return $projectAccess;
     }
 
