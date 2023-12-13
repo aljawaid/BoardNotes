@@ -88,35 +88,8 @@ $( function() {
     $num = "1";
     $tab_id = "1";
 
-    // Ensure General tab is at top
-    print '<li class="singleTab" id="singletab';
-    print $num;
-    print '" data-id="';
-    print $num;
-    print '" data-project="9998"><a href="';
-    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=9998&user_id='.$user_id;
-    print '">';
-    print 'General';
-    print '</a></li>';
-
-    $num++;
-
-    // Ensure Todo tab is at top
-    print '<li class="singleTab" id="singletab';
-    print $num;
-    print '" data-id="';
-    print $num;
-    print '" data-project="9997"><a href="';
-    print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id=9997&user_id='.$user_id;
-    print '">';
-    print 'Todo';
-    print '</a></li>';
-
-    $num++;
-
     // Loop through all projects
     foreach($projectAccess as $o){
-      if ($o['project_id'] != '9997' && $o['project_id'] != '9998'){
         print '<li class="singleTab" id="singletab';
         print $num;
         print '" data-id="';
@@ -132,7 +105,6 @@ $( function() {
         print '</a></li>';
 
         $num++;
-      }
     }
 
     ?>
