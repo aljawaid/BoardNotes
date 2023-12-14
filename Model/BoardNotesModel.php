@@ -59,23 +59,35 @@ class BoardNotesModel extends Base
         }
     }
 
+    // Get project data by project_id
+    public function boardNotesGetProjectById($project_id)
+    {
+        return $this->db->table(self::TABLEprojects)
+            ->eq('id', $project_id)
+            ->findAll();
+    }
+
     // Get all project_id where user has assigned access
     public function boardNotesGetProjectIds($user_id)
     {
-        return $this->db->table(self::TABLEaccess)
+        $projectIds = $this->db->table(self::TABLEaccess)
             ->columns(self::TABLEaccess.'.project_id', 'alias_projects_table.name AS project_name')
             ->eq('user_id', $user_id)
             ->left(self::TABLEprojects, 'alias_projects_table', 'id', self::TABLEaccess, 'project_id')
             ->asc('project_name')
             ->findAll();
+        foreach($projectIds as &$projectId){ $projectId['is_custom'] = False; }
+        return $projectIds;
     }
 
     // Get all project_id where user has custom access
     public function boardNotesGetCustomProjectIds()
     {
-        return $this->db->table(self::TABLEnotescus)
+        $projectIds = $this->db->table(self::TABLEnotescus)
             ->columns(self::TABLEnotescus.'.project_id', self::TABLEnotescus.'.project_name')
             ->findAll();
+        foreach($projectIds as &$projectId){ $projectId['is_custom'] = True; }
+        return $projectIds;
     }
 
     // Get all project_id where user has assigned or custom access
@@ -83,8 +95,8 @@ class BoardNotesModel extends Base
     {
         $projectCustomAccess = $this->boardNotesGetCustomProjectIds();
         $projectAssignedAccess = $this->boardNotesGetProjectIds($user_id);
-        $projectAccess = array_merge($projectCustomAccess, $projectAssignedAccess);
-        return $projectAccess;
+        $projectsAccess = array_merge($projectCustomAccess, $projectAssignedAccess);
+        return $projectsAccess;
     }
 
     // Get a list of all categories in project
@@ -107,16 +119,16 @@ class BoardNotesModel extends Base
     }
 
     // Show all notes
-    public function boardNotesShowAll($projectAccess, $user_id)
+    public function boardNotesShowAll($projectsAccess, $user_id)
     {
-        foreach ($projectAccess as $u) $uids[] = $u['project_id'];
-        $projectAccess = implode(", ", $uids);
-        substr_replace($projectAccess, "", -2);
-        $projectAccess = explode(', ', $projectAccess);
+        foreach ($projectsAccess as $u) $uids[] = $u['project_id'];
+        $projectsAccess = implode(", ", $uids);
+        substr_replace($projectsAccess, "", -2);
+        $projectsAccess = explode(', ', $projectsAccess);
 
         return $this->db->table(self::TABLEnotes)
             ->eq('user_id', $user_id)
-            ->in(self::TABLEnotes.'.project_id', $projectAccess)
+            ->in(self::TABLEnotes.'.project_id', $projectsAccess)
             ->desc('project_id')
             ->desc('is_active')
             ->desc('position')
@@ -126,13 +138,21 @@ class BoardNotesModel extends Base
     // Delete note
     public function boardNotesDeleteNote($note_id, $project_id, $user_id)
     {
-        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('project_id', $project_id)->eq('user_id', $user_id)->remove();
+        return $this->db->table(self::TABLEnotes)
+            ->eq('id', $note_id)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->remove();
     }
 
     // Delete note
     public function boardNotesDeleteAllDoneNotes($project_id, $user_id)
     {
-        return $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->eq('user_id', $user_id)->eq('is_active', "0")->remove();
+        return $this->db->table(self::TABLEnotes)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->eq('is_active', "0")
+            ->remove();
     }
 
     // Update note
@@ -142,14 +162,21 @@ class BoardNotesModel extends Base
         $t = time();
         $values = array('is_active' => $is_active, 'title' => $title, 'description' => $description, 'category' => $category, 'date_modified' => $t,);
         
-        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->eq('project_id', $project_id)->eq('user_id', $user_id)->update($values);
+        return $this->db->table(self::TABLEnotes)
+            ->eq('id', $note_id)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->update($values);
     }
 
     // Add note
     public function boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category)
     {
         // Get last position number
-        $lastPosition = $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->desc('position')->findOneColumn('position');
+        $lastPosition = $this->db->table(self::TABLEnotes)
+            ->eq('project_id', $project_id)
+            ->desc('position')
+            ->findOneColumn('position');
 
         if (empty($lastPosition)) {
             $lastPosition = 0;
@@ -206,7 +233,11 @@ class BoardNotesModel extends Base
     public function boardNotesToTaskSupplyDataSwi($project_id)
     {
         // Get swimlanes
-        $swimlanes = $this->db->table(self::TABLEswimlanes)->columns(self::TABLEswimlanes.'.id', self::TABLEswimlanes.'.name')->eq('project_id', $project_id)->asc('position')->findAll();
+        $swimlanes = $this->db->table(self::TABLEswimlanes)
+            ->columns(self::TABLEswimlanes.'.id', self::TABLEswimlanes.'.name')
+            ->eq('project_id', $project_id)
+            ->asc('position')
+            ->findAll();
 
         return $swimlanes;
     }
@@ -214,12 +245,19 @@ class BoardNotesModel extends Base
     public function boardNotesToTaskSupplyDataCol($project_id)
     {
         // Get first column_id
-        return $this->db->table(self::TABLEcolumns)->columns(self::TABLEcolumns.'.id', self::TABLEcolumns.'.title')->eq('project_id', $project_id)->asc('position')->findAll();
+        return $this->db->table(self::TABLEcolumns)
+            ->columns(self::TABLEcolumns.'.id', self::TABLEcolumns.'.title')
+            ->eq('project_id', $project_id)
+            ->asc('position')
+            ->findAll();
     }
 
     // Delete note ???
     public function boardNotesAnalytics($project_id, $user_id)
     {
-        return $this->db->table(self::TABLEnotes)->eq('project_id', $project_id)->eq('user_id', $user_id)->findAll();
+        return $this->db->table(self::TABLEnotes)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->findAll();
     }
 }

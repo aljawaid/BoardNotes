@@ -25,6 +25,8 @@
 .ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active { padding-bottom: 0; padding-right: .1em; border-right-width: 1px; }
 .ui-tabs-vertical .ui-tabs-panel { padding: 1em; float: right; width: 40em;}
 
+.tabs { padding-left: 20px; }
+
 .mainholder {
   display: initial;
 }
@@ -77,10 +79,10 @@ $( function() {
 
 
 <div class="page-header"><h2>My notes</h2></div>
-<br>
+
 <section class="mainholderQ" id="mainholderQ">
 
-<div id="tabs">
+<div id="tabs" class="tabs">
   <ul>
 
     <?php
@@ -89,7 +91,7 @@ $( function() {
     $tab_id = "1";
 
     // Loop through all projects
-    foreach($projectAccess as $o){
+    foreach($projectsAccess as $o){
         print '<li class="singleTab" id="singletab';
         print $num;
         print '" data-id="';
@@ -98,7 +100,14 @@ $( function() {
         print $o['project_id'];
         print '"><a href="';
 
-        print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id='.$o['project_id'].'&user_id='.$user_id;
+        if ($o['is_custom'])
+        {
+            print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_cus_id='.$o['project_id'].'&user_id='.$user_id;
+        }
+        else
+        {
+            print '/kanboard/?controller=BoardNotesController&action=boardNotesShowProject&plugin=BoardNotes&project_id='.$o['project_id'].'&user_id='.$user_id;
+        }
 
         print '">';
         print $o['project_name'];

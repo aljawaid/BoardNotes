@@ -48,7 +48,7 @@
 
 </script>
 
-<?= $is_refresh ? '' : $this->projectHeader->render($project, 'BoardNotesController', 'boardNotesShowProject', false, 'BoardNotes') ?>
+<?= ($is_refresh || $is_custom) ? '' : $this->projectHeader->render($project, 'BoardNotesController', 'boardNotesShowProject', false, 'BoardNotes') ?>
 
 <?php
 print '<div align="center">';
