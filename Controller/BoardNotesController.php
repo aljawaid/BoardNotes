@@ -133,6 +133,7 @@ class BoardNotesController extends BaseController
             'user' => $user,
             'user_id' => $user_id,
             'projectsAccess' => $projectsAccess,
+            'data' => $data,
         )));
     }
 

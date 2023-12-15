@@ -67,6 +67,10 @@
     }
 
     adjustAllNotesPlaceholders();
+
+    if ( $.isFunction(prepareDocumentQ) ) {
+        prepareDocumentQ();
+    }
   }
 
   window.onresize = adjustAllNotesPlaceholders;
@@ -190,6 +194,8 @@ print '</li>';
 
 $num = "1";
 foreach($data as $u){
+    if (!empty($project_id) && $u['project_id'] != $project_id) continue;
+
     print '<li id="item';
     print '-';
     print $u['id']; 
