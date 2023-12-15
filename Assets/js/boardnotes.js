@@ -1,3 +1,15 @@
+  // Adjust notePlaceholderDescription container
+  function adjustNotePlaceholders(project_id, id) {
+    var offsetCheck = $("#checkDone" + project_id + "-" + id).offset().top;
+    var offsetDetails = $("#showDetails" + project_id + "-" + id).offset().top;
+    if (offsetCheck == offsetDetails) {
+      $("#notePlaceholderDescriptionP" + project_id + "-" + id).addClass( 'hideMe' );
+    }
+    else {
+      $("#notePlaceholderDescriptionP" + project_id + "-" + id).removeClass( 'hideMe' );
+    }
+  }
+
   // Show details menu for existing notes (toggle class)
   function toggleDetails(project_id, id) {
     $("#noteDescriptionP" + project_id + "-" + id).toggleClass( "hideMe" );
@@ -5,12 +17,28 @@
     $("#singleNoteToTaskP" + project_id + "-" + id).toggleClass( "hideMe" );
     $("#singleNoteSaveP" + project_id + "-" + id).toggleClass( "hideMe" );
     $("#noteCatLabelP" + project_id + "-" + id).toggleClass( "hideMe" );
+
+    $("#showDetails" + project_id + "-" + id).find('i').toggleClass( "fa-angle-double-down" );
+    $("#showDetails" + project_id + "-" + id).find('i').toggleClass( "fa-angle-double-up" );
+    adjustNotePlaceholders(project_id, id);
   };
 
   // Show details menu for new note (toggle class)
   function toggleDetailsNew(project_id) {
+    if ( !$('#noteDescriptionP' + project_id).hasClass( 'hideMe' ) ) {
+        $("#newNote" + project_id).width( $('#textareaNewNote' + project_id).width() );
+    }
+
     $("#noteDescriptionP" + project_id).toggleClass( "hideMe" );
     $("#saveNewNote").toggleClass( "hideMe" );
+
+    if ( !$('#noteDescriptionP' + project_id).hasClass( 'hideMe' ) ) {
+        $("#newNote" + project_id).width( $('#textareaNewNote' + project_id).width() );
+    }
+
+    $("#showDetailsNew").find('i').toggleClass( "fa-angle-double-down" );
+    $("#showDetailsNew").find('i').toggleClass( "fa-angle-double-up" );
+
     setTimeout(function() { $( "#textareaNewNote" + project_id).focus(); }, 0);
   };
 
@@ -201,12 +229,23 @@
       $("#noteTitleLabelP" + project_id + "-" + id).addClass( 'hideMe' );
       $("#noteTitleInputP" + project_id + "-" + id).removeClass( 'hideMe' );
       $("#noteTitleInputP" + project_id + "-" + id).focus();
+
+      // get current width of the description textarea
+      var inputWidth = $('#textareaDescriptionP' + project_id + "-" + id).width();
+      if ( $('#noteDescriptionP' + project_id + "-" + id).hasClass( 'hideMe' ) ) {
+        $('#noteDescriptionP' + project_id + "-" + id).toggleClass( 'hideMe' );
+        inputWidth = $('#textareaDescriptionP' + project_id + "-" + id).width();
+        $('#noteDescriptionP' + project_id + "-" + id).toggleClass( 'hideMe' );
+      }
+
+      $("#noteTitleInputP" + project_id + "-" + id).width( inputWidth );
     }
     else {
       $("#noteTitleInputP" + project_id + "-" + id).blur();
       $("#noteTitleInputP" + project_id + "-" + id).addClass( 'hideMe' );
       $("#noteTitleLabelP" + project_id + "-" + id).removeClass( 'hideMe' );
     }
+    adjustNotePlaceholders(project_id, id);
   };
 
   // Show input or textarea visuals for descriptions of existing notes

@@ -12,39 +12,66 @@
     return false;
   }
 
-  function PrepareMobile(){
+  function adjustAllNotesPlaceholders(){
+    // adjust notePlaceholderDescription containers where not needed
+    $('button' + '.checkDone').each(function() {
+      var project_id = $(this).attr('data-project');
+      var id = $(this).attr('data-id');
+      adjustNotePlaceholders(project_id, id);
+    })
+  }
+
+  function prepareDocument(){
     var nrNotes = $('#nrNotes').attr('data-id');
     var project_id = <?php print $project_id; ?>;
     var user_id = <?php print $user_id; ?>;
     var isMobile = IsMobile();
 
-    // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
-    if(isMobile) {
-      $('.sidebar').hide();
+    // handle notes reordering
+    function updateNotesOrder(event, ui) {
+        var order = $(this).sortable('toArray');
+        order = order.join(",");
+        var regex = new RegExp('item-', 'g');
+        order = order.replace(regex, '');
+        var order = order.split(',');
+        sqlNotesUpdatePosition(project_id, user_id, order, nrNotes);
     }
 
-    // If mobile disable sorting
-    if(!isMobile) {
-      $('.sortableRef' + project_id).sortable({ items: 'li[id!=item-0]' });
+    if (isMobile){
+      // show explicit reorder handles for mobile
+      $( '.sortableHandle').removeClass( "hideMe" );
       $(function() {
-        $( ".sortableRef" + project_id ).sortable({
+        $( '#sortable').sortable({
+          handle: '.sortableHandle',
           placeholder: "ui-state-highlight",
-          update: function (event, ui) {
-            var order = $(this).sortable('toArray');
-            order = order.join(",");
-            var regex = new RegExp('item-', 'g');
-            order = order.replace(regex, '');
-            var order = order.split(',');
-            sqlNotesUpdatePosition(project_id, user_id, order, nrNotes);
-          }
+          update: updateNotesOrder
         });
         $( "#sortable" ).disableSelection();
       });
     }
+    else{
+      // drag entire notes for non-mobile
+      $( '.sortableRef' + project_id ).sortable({ items: 'li[id!=item-0]' });
+      $(function() {
+        $( '.sortableRef' + project_id ).sortable({
+          placeholder: "ui-state-highlight",
+          update: updateNotesOrder
+        });
+        $( "#sortable" ).disableSelection();
+      });
+    }
+
+    if(isMobile) {
+      // choose mobile view
+      $('#mainholderP' + project_id).removeClass('mainholder').addClass('mainholderMobile');
+    }
+
+    adjustAllNotesPlaceholders();
   }
 
-  window.onload = PrepareMobile;
-  $( document ).ready( PrepareMobile );
+  window.onresize = adjustAllNotesPlaceholders;
+  window.onload = prepareDocument;
+  $( document ).ready( prepareDocument );
 
 </script>
 
@@ -94,14 +121,7 @@ print '</button>';
 // Newline after heading and top settings
 print '<br>';
 
-// Input line
-print '<input id="newNote';
-print $project_id;
-print '" name="newNote" type="text" placeholder="What needs to be done" class="inputNewNote" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '">';
+print '<div class="containerNoWrap containerFloatRight">';
 
 // Show details button
 print '<button id="showDetailsNew" class="showDetailsNew" data-id="0" data-project="';
@@ -117,10 +137,21 @@ print '" data-user="';
 print $user_id;
 print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
 
+print '</div>';
+
+// Input line
+print '<input id="newNote';
+print $project_id;
+print '" name="newNote" type="text" placeholder="What needs to be done" class="inputNewNote" data-project="';
+print $project_id;
+print '" data-user="';
+print $user_id;
+print '">';
+
 // Detailed view
 print '<div id="noteDescriptionP';
 print $project_id;
-print '" data-id="0" class="hideMe details noteDescriptionClass ui-corner-all">';
+print '" data-id="0" class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
 print '<textarea id="textareaNewNote';
 print $project_id;
 print '" class="textareaNewNote"></textarea>';
@@ -151,6 +182,7 @@ print '<option selected="selected"></option>'; // Insert emptyline for keeping n
 print $listCat;
 print '</select>';
 print '</p>';
+
 print '</div>';
 
 print '</li>';
@@ -163,78 +195,24 @@ foreach($data as $u){
     print $u['id']; 
     print '" class="ui-state-default liNote">';
 
-    // Checkbox for done note
-    print '<button id="checkDone" data-id="';
-    print $num;
-    print '" data-project="';
-    print $u['project_id'];
-    print '" data-user="';
-    print $user_id;
-    print '" class="checkDone"><i id="noteDoneCheckmarkP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    if($u['is_active'] == "1"){
-        print '" data-id="';
-        print $u['is_active'];
-        print '" class="fa fa-circle-thin" aria-hidden="true"></i></button>';
-    } else {
-        print '" data-id="';
-        print $u['is_active'];
-        print '" class="fa fa-check" aria-hidden="true"></i></button>';
-    }
+    // Here goes the icon bar for all note buttons
+    print '<div class="containerNoWrap containerFloatRight">';
+
+    // explicit reorder handle for mobile
+    print '<div class="hideMe sortableHandle"><i class="fa fa-arrows-alt" aria-hidden="true"></i></div>';
 
     // Show details button
     print '<button id="showDetails';
+    print $u['project_id'];
+    print '-';
+    print $num;
     print '" class="showDetails" data-id="';
     print $num;
     print '" data-project="';
     print $u['project_id'];
     print '" data-user="';
     print $user_id;
-    print '"><i class="fa fa-plus" aria-hidden="true"></i></button>';
-
-    // Note title input - typing. Changes after submit to label below.
-    print '<input id="noteTitleInputP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" type="text" placeholder="" data-id="';
-    print $num;
-    print '" data-project="';
-    print $u['project_id'];
-    print '" data-user="';
-    print $user_id;
-    print '" name="noteTitle';
-    print $num;
-    if($u['is_active'] == "1"){
-        print '" class="hideMe noteTitle" value="';
-    } else {
-        print '" class="hideMe noteTitle noteDoneDesignText" value="';
-    }
-    print $u['title'];
-    print '">';
-
-    // Note title label - visual. Changes on click to input
-    print '<label id="noteTitleLabelP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" type="text" placeholder="" data-id="';
-    print $num;
-    print '" data-project="';
-    print $u['project_id'];
-    print '" data-user="';
-    print $user_id;
-    print '" name="noteTitleLabel';
-    print $num;
-    if($u['is_active'] == "1"){
-        print '" class="noteTitleLabel noteTitle" value="">';
-    } else {
-        print '" class="noteTitleLabel noteTitle noteDoneDesignText" value="">';
-    }
-    print $u['title'];
-    print '</label>';
+    print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
 
     // Delete button viewed (in detailed view)
     print '<button id="singleNoteDeleteP';
@@ -282,11 +260,93 @@ foreach($data as $u){
     print $u['project_id'];
     print '-';
     print $num;
-    print '"">';
+    print '">';
     print $u['category'];
     print '</label>';
 
-    // Detailed view
+    print '</div>';
+
+    // Here goes the title row with checkbox
+    print '<div class="containerNoWrap containerFloatLeft">';
+
+    // Checkbox for done note
+    print '<button id="checkDone';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '" data-id="';
+    print $num;
+    print '" data-project="';
+    print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
+    print '" class="checkDone"><i id="noteDoneCheckmarkP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    if($u['is_active'] == "1"){
+        print '" data-id="';
+        print $u['is_active'];
+        print '" class="fa fa-circle-thin" aria-hidden="true"></i></button>';
+    } else {
+        print '" data-id="';
+        print $u['is_active'];
+        print '" class="fa fa-check" aria-hidden="true"></i></button>';
+    }
+
+    // Note title input - typing. Changes after submit to label below.
+    print '<input id="noteTitleInputP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '" type="text" placeholder="" data-id="';
+    print $num;
+    print '" data-project="';
+    print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
+    print '" name="noteTitle';
+    print $num;
+    if($u['is_active'] == "1"){
+        print '" class="hideMe noteTitle" value="';
+    } else {
+        print '" class="hideMe noteTitle noteDoneDesignText" value="';
+    }
+    print $u['title'];
+    print '">';
+
+    // Note title label - visual. Changes on click to input
+    print '<label id="noteTitleLabelP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '" type="text" placeholder="" data-id="';
+    print $num;
+    print '" data-project="';
+    print $u['project_id'];
+    print '" data-user="';
+    print $user_id;
+    print '" name="noteTitleLabel';
+    print $num;
+    if($u['is_active'] == "1"){
+        print '" class="noteTitleLabel noteTitle" value="">';
+    } else {
+        print '" class="noteTitleLabel noteTitle noteDoneDesignText" value="">';
+    }
+    print $u['title'];
+    print '</label>';
+
+    print '</div>';
+
+    // Here goes the detailed view
+    print '<div id="notePlaceholderDescriptionP';
+    print $project_id;
+    print '-';
+    print $num;
+    print '" class="containerFloatClear hideMe">';
+    print '&nbsp';
+    print '</div>';
+
     print '<div id="noteDescriptionP';
     print $u['project_id'];
     print '-';
@@ -299,9 +359,9 @@ foreach($data as $u){
     print $user_id;
     print '" ';
     if($u['is_active'] == "1"){
-        print 'class="hideMe details noteDescriptionClass ui-corner-all">';
+        print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
     } else {
-        print 'class="hideMe details noteDescriptionClass ui-corner-all noteDoneDesignText">';
+        print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all noteDoneDesignText">';
     }
     print '<textarea title="Press tab to save changes" class="textareaDescription" id="textareaDescriptionP';
     print $u['project_id'];
@@ -318,7 +378,6 @@ foreach($data as $u){
     print $description;
     print '</textarea>';
 
-	//print '<br>';
     print '<p class="categories">';
     print '<label for="cat">Category</label><br>';
     print '<select name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
@@ -358,6 +417,7 @@ foreach($data as $u){
 
     print '</select>';
     print '</p>';
+
     print '</div>';
 
     // Project_id (hidden, for reference)
