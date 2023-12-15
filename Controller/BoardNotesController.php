@@ -227,9 +227,9 @@ class BoardNotesController extends BaseController
 
     public function boardNotesReport()
     {
-        $project = $this->resolveProject();
-        $project_id = $project['id'];
         $user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
         $category = $this->request->getStringParam('category');
         if (empty($category)) {
