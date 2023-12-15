@@ -71,6 +71,11 @@ foreach($data as $u){
     // Report Info
     print '<td class="tdReport tdReportInfo">';
 
+    // Category label
+    print '<label class="catLabel">';
+    print $u['category'];
+    print '</label>';
+
     // Note title label - visual. Changes on click to input
     print '<label id="reportTitleLabelP';
     print $u['project_id'];
@@ -88,11 +93,6 @@ foreach($data as $u){
         print '" class="reportTitleLabel reportTitle noteDoneDesignText" value="">';
     }
     print $u['title'];
-    print '</label>';
-
-    // Category label
-    print '<label class="catLabel">';
-    print $u['category'];
     print '</label>';
 
     // Detailed view
