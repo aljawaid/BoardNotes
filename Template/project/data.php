@@ -91,7 +91,7 @@ print '<ul id="sortable" class="sortableRef';
 print $project_id;
 print '">';
 
-print '<li id="item-0" class="ui-state-default liNewNote" data-id="';
+print '<li id="item-0" class="ui-state-default liNewNote" data-id="0" data-project="';
 print $project_id;
 print '">';
 print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Create New Note</label>';
@@ -193,7 +193,11 @@ foreach($data as $u){
     print '<li id="item';
     print '-';
     print $u['id']; 
-    print '" class="ui-state-default liNote">';
+    print '" class="ui-state-default liNote" data-id="';
+    print $num;
+    print '" data-project="';
+    print $u['project_id'];
+    print '">';
 
     // Here goes the icon bar for all note buttons
     print '<div class="containerNoWrap containerFloatRight">';

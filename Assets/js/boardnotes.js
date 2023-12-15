@@ -52,7 +52,16 @@
   };
 
 
-  // Show details menu
+  // Show details for note by dblclick the note
+  $(function() {
+    $( ".liNote" ).dblclick(function() {
+      var project_id = $(this).attr('data-project');
+      var id = $(this).attr('data-id');
+      toggleDetails(project_id, id);
+    });
+  });
+
+  // Show details for note by menu button
   $(function() {
     $( "button" + ".showDetails" ).click(function() {
       var project_id = $(this).attr('data-project');
@@ -61,7 +70,15 @@
     });
   });
 
-  // Show details menu for new note
+  // Show details for new note by dblclick the new note
+  $(function() {
+    $( ".liNewNote" ).dblclick(function() {
+      var project_id = $(this).attr('data-project');
+      toggleDetailsNew(project_id);
+    });
+  });
+
+  // Show details for new note by menu button
   $(function() {
     $( "button" + ".showDetailsNew" ).click(function() {
       var project_id = $(this).attr('data-project');
