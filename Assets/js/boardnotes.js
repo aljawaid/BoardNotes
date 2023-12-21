@@ -163,7 +163,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -189,7 +189,7 @@
 
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -203,7 +203,7 @@
   function sqlDeleteNote(project_id, user_id, note_id){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -217,7 +217,7 @@
   function sqlDeleteAllDoneNotes(project_id, user_id){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -234,7 +234,7 @@
       cache: false
     });
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesRefreshProject&plugin=BoardNotes&project_id=" + project_id + "&user_id=" + user_id;
+    var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesRefreshProject&plugin=BoardNotes&project_cus_id=" + project_id + "&user_id=" + user_id;
     $("#result" + project_id).html(ajax_load).load(loadUrl);
 
   }
@@ -280,6 +280,7 @@
   // Change from label to input on click
   $(function() {
     $( "label" + ".noteTitle" ).click(function() {
+      if ($(this).hasAttr('disabled')) return;
       var project_id = $(this).attr('data-project');
       var id = $(this).attr('data-id');
       showTitleInput(project_id, id, true);
@@ -396,7 +397,7 @@
           //alert('modalNoteToTask PRE TEST');
 
           var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&task_title=' + title + '&task_description=' + description + '&swimlane=' + swimlane + '&column=' + columns + '&category=' + category;
+          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&task_title=' + title + '&task_description=' + description + '&swimlane=' + swimlane + '&column=' + columns + '&category=' + category;
           $('#deadloading').html(ajax_load).load(loadUrl);
 
           //alert('modalNoteToTask POST TEST');
@@ -458,7 +459,7 @@
         cache: false
     });
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id;
+    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id;
     $('#dialogAnalyticsInside').html(ajax_load).load(loadUrl);
 
     $( "#dialogAnalytics" ).removeClass( 'hideMe' );
@@ -488,12 +489,12 @@
       buttons: {
         Ok: function() {
           var category = $('#reportCatP' + project_id + ' option:selected').text();
-          var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&category=' + category;
+          var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&category=' + category;
           window.location = url;
           /*
           $.ajax({
             type: "POST",
-            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&category=' + category,
+            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&category=' + category,
             success: function(response) {
             },
             error: function(xhr,textStatus,e) {
@@ -513,7 +514,7 @@
   function sqlNotesUpdatePosition(project_id, user_id, order, nrNotes){
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdatePosition&plugin=BoardNotes' + '&project_id=' + project_id + '&user_id=' + user_id + '&order=' + order + '&nrNotes=' + nrNotes,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdatePosition&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&order=' + order + '&nrNotes=' + nrNotes,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
