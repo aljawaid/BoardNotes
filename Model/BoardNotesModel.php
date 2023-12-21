@@ -99,6 +99,15 @@ class BoardNotesModel extends Base
         return $projectsAccess;
     }
 
+    // Get the Id of a category in project
+    public function boardNotesGetCategoryId($project_id, $category)
+    {
+        return $this->db->table(self::TABLEcategories)
+            ->eq('project_id', $project_id)
+            ->eq('name', $category)
+            ->findOneColumn('id');
+    }
+
     // Get a list of all categories in project
     public function boardNotesGetCategories($project_id)
     {
@@ -109,13 +118,26 @@ class BoardNotesModel extends Base
             ->findAll();
     }
 
-    // Get the Id of a category in project
-    public function boardNotesGetCategoryId($project_id, $category)
+    // Get a list of all columns in project
+    public function boardNotesGetColumns($project_id)
     {
-        return $this->db->table(self::TABLEcategories)
+        return $this->db->table(self::TABLEcolumns)
+            ->columns(self::TABLEcolumns.'.id', self::TABLEcolumns.'.title')
             ->eq('project_id', $project_id)
-            ->eq('name', $category)
-            ->findOneColumn('id');
+            ->asc('position')
+            ->findAll();
+    }
+
+    // Get a list of all swimlanes in project
+    public function boardNotesGetSwimlanes($project_id)
+    {
+        $swimlanes = $this->db->table(self::TABLEswimlanes)
+            ->columns(self::TABLEswimlanes.'.id', self::TABLEswimlanes.'.name')
+            ->eq('project_id', $project_id)
+            ->asc('position')
+            ->findAll();
+
+        return $swimlanes;
     }
 
     // Show all notes
@@ -228,28 +250,6 @@ class BoardNotesModel extends Base
             ->update($values);
             $num--;
         }
-    }
-
-    public function boardNotesToTaskSupplyDataSwi($project_id)
-    {
-        // Get swimlanes
-        $swimlanes = $this->db->table(self::TABLEswimlanes)
-            ->columns(self::TABLEswimlanes.'.id', self::TABLEswimlanes.'.name')
-            ->eq('project_id', $project_id)
-            ->asc('position')
-            ->findAll();
-
-        return $swimlanes;
-    }
-
-    public function boardNotesToTaskSupplyDataCol($project_id)
-    {
-        // Get first column_id
-        return $this->db->table(self::TABLEcolumns)
-            ->columns(self::TABLEcolumns.'.id', self::TABLEcolumns.'.title')
-            ->eq('project_id', $project_id)
-            ->asc('position')
-            ->findAll();
     }
 
     // Delete note ???

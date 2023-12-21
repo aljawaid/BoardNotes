@@ -77,8 +77,8 @@ class BoardNotesController extends BaseController
 
         $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
         $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
-    	$columns = $this->boardNotesModel->boardNotesToTaskSupplyDataCol($project_id);
-    	$swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project_id);
+    	$columns = $this->boardNotesModel->boardNotesGetColumns($project_id);
+    	$swimlanes = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
 
         $params = array(
                 'project' => $project,
