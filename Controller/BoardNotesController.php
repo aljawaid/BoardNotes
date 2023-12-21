@@ -80,33 +80,19 @@ class BoardNotesController extends BaseController
     	$columns = $this->boardNotesModel->boardNotesGetColumns($project_id);
     	$swimlanes = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
 
-        $params = array(
-                'project' => $project,
-                'project_id' => $project_id,
-                'user' => $user,
-                'user_id' => $user_id,
-                'is_refresh' => $is_refresh,
-                'is_custom' => $project['is_custom'],
-                'data' => $data,
-                'categories' => $categories,
-                'columns' => $columns,
-                'swimlanes' => $swimlanes,
-        );
-
-        if ($project['is_custom'])
-        {
-            // show notes for regular projects at dashboard level
-            $params['title'] = t('My notes > %s', $project['name']);
-            $params['description'] = $this->helper->text->markdown('Predefined custom notes list for <strong>'.$this->helper->user->getFullname($user).'</strong>');
-            return $this->response->html($this->helper->layout->dashboard('BoardNotes:project/data', $params));
-        }
-        else
-        {
-            // show notes for regular projects at project level
-            $params['title'] = $project['name']; // rather keep the project name as title
-            $params['description'] = $this->helper->projectHeader->getDescription($project);
-            return $this->response->html($this->helper->layout->app('BoardNotes:project/data', $params));
-        }
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/data', array(
+            'title' => $project['name'], // rather keep the project name as title
+            'project' => $project,
+            'project_id' => $project_id,
+            'user' => $user,
+            'user_id' => $user_id,
+            'is_refresh' => $is_refresh,
+            'is_dashboard_view' => 0,
+            'data' => $data,
+            'categories' => $categories,
+            'columns' => $columns,
+            'swimlanes' => $swimlanes,
+        )));
     }
 
     public function boardNotesShowProject()
@@ -124,9 +110,26 @@ class BoardNotesController extends BaseController
         $user = $this->getUser();
         $user_id = $this->resolveUserId();
 
+        $tab_id = $this->request->getIntegerParam('tab_id');
+        if (empty($tab_id))
+        {
+            $tab_id = 0;
+        }
+
         $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
         $data = $this->boardNotesModel->boardNotesShowAll($projectsAccess, $user_id);
+        $categories = array();
+    	$columns  = array();
+    	$swimlanes  = array();
+
+    	if ($tab_id > 0 && !$projectsAccess[$tab_id - 1]['is_custom'])
+    	{
+    	    $project_id = $projectsAccess[$tab_id - 1]['project_id'];
+            $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
+            $columns  = $this->boardNotesModel->boardNotesGetColumns($project_id);
+            $swimlanes  = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
+    	}
 
         return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
             'title' => t('Notes overview for %s', $this->helper->user->getFullname($user)),
@@ -134,6 +137,9 @@ class BoardNotesController extends BaseController
             'user_id' => $user_id,
             'projectsAccess' => $projectsAccess,
             'data' => $data,
+            'categories' => $categories,
+            'columns' => $columns,
+            'swimlanes' => $swimlanes,
         )));
     }
 

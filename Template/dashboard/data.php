@@ -100,10 +100,10 @@
 <div id="content" class="sidebar-content">
 
     <?php
-        $project = array('id' => 0, 'name' => 'All', 'is_custom' => True);
+        $project = array('id' => 0, 'name' => 'All');
         if ($tab_id > 0) {
             $projectAccess = $projectsAccess[$tab_id - 1];
-            $project = array('id' => $projectAccess['project_id'], 'name' => $projectAccess['project_name'], 'is_custom' => True);
+            $project = array('id' => $projectAccess['project_id'], 'name' => $projectAccess['project_name']);
         }
     ?>
 
@@ -113,11 +113,11 @@
         'user' => $user,
         'user_id' => $user_id,
         'is_refresh' => False,
-        'is_custom' => $project['is_custom'],
+        'is_dashboard_view' => 1,
         'data' => $data,
-        //'categories' => $categories,
-        //'columns' => $columns,
-        //'swimlanes' => $swimlanes,
+        'categories' => $categories,
+        'columns' => $columns,
+        'swimlanes' => $swimlanes,
     )) ?>
 
 </div>
