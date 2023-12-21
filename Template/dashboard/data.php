@@ -44,14 +44,6 @@
     }
 
     updateNotesTabs();
-
-    $(function() {
-      $( ".singleTab" ).click(function() {
-        var tab_id = $(this).attr('data-id');
-        location.replace(location.href + "&tab_id=" + tab_id);
-      });
-    });
-
   }
 
 </script>
@@ -79,7 +71,9 @@
         print $num;
         print '" data-id="';
         print $num;
-        print '" data-project="0"><a>All</a></li>';
+        print '" data-project="0"><a href="';
+        print '/?controller=BoardNotesController&action=boardNotesShowAll&plugin=BoardNotes&user_id='.$user_id.'&tab_id='.$num;
+        print '">All</a></li>';
         $num++;
 
         // Loop through all projects
@@ -90,7 +84,9 @@
             print $num;
             print '" data-project="';
             print $o['project_id'];
-            print '"><a>';
+            print '"><a href="';
+            print '/?controller=BoardNotesController&action=boardNotesShowAll&plugin=BoardNotes&user_id='.$user_id.'&tab_id='.$num;
+            print '">';
             print $o['project_name'];
             print '</a></li>';
             $num++;
