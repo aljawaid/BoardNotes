@@ -488,19 +488,9 @@
       buttons: {
         Ok: function() {
           var category = $('#reportCatP' + project_id + ' option:selected').text();
-          var url = '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&category=' + category;
-          window.location = url;
-          /*
-          $.ajax({
-            type: "POST",
-            url: '/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&category=' + category,
-            success: function(response) {
-            },
-            error: function(xhr,textStatus,e) {
-              alert(e);
-            }
-          });
-          */
+          var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
+          var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes" + "&project_cus_id=" + project_id + "&user_id=" + user_id + "&category=" + category;
+          $("#result" + project_id).html(ajax_load).load(loadUrl);
           $( this ).dialog( "close" );
         }
       }

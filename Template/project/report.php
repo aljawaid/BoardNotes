@@ -19,23 +19,6 @@
 
 </script>
 
-<?= $this->projectHeader->render($project, 'BoardNotesController', 'boardNotesShowProject', false, 'BoardNotes') ?>
-
-<div align="center">
-<div class="page-header"><h2>Notes Report</h2></div>
-
-<?php
-print '<section class="mainholder" id="mainholderP';
-print $project_id;
-print '">';
-
-print '<div align="left" id="result';
-print $project_id;
-print '">';
-
-print '<br>';
-?>
-
 <table class="tableReport">
 <thead class="theadReport">
 <tr>
@@ -163,8 +146,3 @@ foreach($data as $u){
 ?>
 </tbody>
 </table>
-
-</div>
-
-</section>
-</div>
