@@ -86,6 +86,12 @@
 <?php
 
 $readonlyNotes = ($project_id == 0);
+$projectsNamesById = array();
+if ($is_dashboard_view) {
+    foreach($projectsAccess as $projectAccess) {
+        $projectsNamesById[ $projectAccess['project_id'] ] = $projectAccess['project_name'];
+    }
+}
 
 print '<div align="center">';
 print '<section class="mainholder" id="mainholderP';
@@ -199,8 +205,14 @@ if (!$readonlyNotes) {
 }
 
 $num = "1";
+$last_project_id = 0;
 foreach($data as $u){
     if (!empty($project_id) && $u['project_id'] != $project_id) continue;
+
+    if ($readonlyNotes && $last_project_id != $u['project_id']){
+        $last_project_id = $u['project_id'];
+        print '<h3>'.$projectsNamesById[ $last_project_id ].'</h3>';
+    }
 
     print '<li id="item';
     print '-';

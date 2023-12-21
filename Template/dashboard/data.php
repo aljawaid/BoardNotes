@@ -108,6 +108,7 @@
     ?>
 
     <?= $this->render('BoardNotes:project/data', array(
+        'projectsAccess' => $projectsAccess,
         'project' => $project,
         'project_id' => $project['id'],
         'user' => $user,
