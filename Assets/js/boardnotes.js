@@ -377,33 +377,42 @@
       var is_active = $('#noteDoneCheckmarkP' + project_id + "-" + id).attr('data-id');
       var title = encodeURIComponent($('#noteTitleLabelP' + project_id + "-" + id).text());
       var description = encodeURIComponent($('#textareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >'));
-      modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description);
+      var category_val = $('#catP' + project_id + "-" + id + ' option:selected').val();
+      modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description, category_val);
     });
   });
 
-  function modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description) {
+  function modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description, category_val) {
     $.ajaxSetup ({
       cache: false
     });
+    $('#listCatToTask' + project_id).val(category_val).change();
     $("#dialogToTaskP" + project_id).removeClass( 'hideMe' );
     $("#dialogToTaskP" + project_id).dialog({
       buttons: {
         Ok: function() {
-          var category = $('#listCatToTask' + project_id + ' option:selected').val();
-          var column = $('#listCol' + project_id +' option:selected').val();
-          var swimlane = $('#listSwim' + project_id +' option:selected').val();
+          var categoryToTask = $('#listCatToTask' + project_id + ' option:selected').val();
+          var columnToTask = $('#listColToTask' + project_id + ' option:selected').val();
+          var swimlaneToTask = $('#listSwimToTask' + project_id + ' option:selected').val();
           
           //alert('modalNoteToTask PRE TEST');
 
           var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&task_title=' + title + '&task_description=' + description + '&swimlane=' + swimlane + '&column=' + columns + '&category=' + category;
+          var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes'
+                        + '&project_cus_id=' + project_id
+                        + '&user_id=' + user_id
+                        + '&task_title=' + title
+                        + '&task_description=' + description
+                        + '&category=' + categoryToTask
+                        + '&column=' + columnToTask
+                        + '&swimlane=' + swimlaneToTask;
           $('#deadloading').html(ajax_load).load(loadUrl);
 
           //alert('modalNoteToTask POST TEST');
 
-          //$('#listCatToTask' + project_id).remove();
-          //$('#listCol' + project_id).remove();
-          //$('#listSwim' + project_id).remove();
+          $('#listCatToTask' + project_id).remove();
+          $('#listColToTask' + project_id).remove();
+          $('#listSwimToTask' + project_id).remove();
           //sqlDeleteNote(project_id, user_id, note_id);
           $( this ).dialog( "destroy" ).remove();
         }

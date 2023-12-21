@@ -214,10 +214,9 @@ class BoardNotesController extends BaseController
 
     public function boardNotesToTask()
     {
-    	$project_id = $this->request->getStringParam('project_id');
-//     	$user_id = $this->resolveUserId();
-//      $project = $this->resolveProject($user_id);
-//      $project_id = $project['id'];
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
         $task_title = $this->request->getStringParam('task_title');
         $task_description = $this->request->getStringParam('task_description');
@@ -225,14 +224,20 @@ class BoardNotesController extends BaseController
         $swimlane = $this->request->getStringParam('swimlane');
         $category = $this->request->getStringParam('category');
 
+//         $jsonrpc_api_endpoint = $this->configModel->get('application_url').'jsonrpc.php';
+//         var_dump($jsonrpc_api_endpoint);
+//         $jsonrpc_api_token = $this->configModel->get('api_token');
+//         var_dump($jsonrpc_api_token);
+
     	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
             'title' => t('Post'),
-            'task_title' => $task_title,
+    		'project_id' => $project_id,
+    		'user_id' => $user_id,
+    		'task_title' => $task_title,
     		'task_description' => $task_description,
+    		'category_id' => $category,
     		'column_id' => $column,
     		'swimlane_id' => $swimlane,
-    		'category_id' => $category,
-    		'project_id' => $project_id
         )));
     }
 

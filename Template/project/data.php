@@ -85,6 +85,8 @@
 
 <?php
 
+//----------------------------------------
+
 $readonlyNotes = ($project_id == 0);
 $projectsNamesById = array();
 if ($is_dashboard_view) {
@@ -92,6 +94,43 @@ if ($is_dashboard_view) {
         $projectsNamesById[ $projectAccess['project_id'] ] = $projectAccess['project_name'];
     }
 }
+
+//----------------------------------------
+
+$listCategoriesById = '';
+if(!empty($categories)) {
+  foreach($categories as $cat) {
+    $listCategoriesById .= '<option value="';
+    $listCategoriesById .= $cat['id'];
+    $listCategoriesById .= '">';
+    $listCategoriesById .= $cat['name'];
+    $listCategoriesById .= '</option>';
+  }
+}
+
+$listColumnsById = '';
+if(!empty($columns)) {
+  foreach($columns as $col) {
+    $listColumnsById .= '<option value="';
+    $listColumnsById .= $col['id'];
+    $listColumnsById .= '">';
+    $listColumnsById .= $col['title'];
+    $listColumnsById .= '</option>';
+  }
+}
+
+$listSwimlanesById = '';
+if(!empty($swimlanes)) {
+  foreach($swimlanes as $swim) {
+    $listSwimlanesById .= '<option value="';
+    $listSwimlanesById .= $swim['id'];
+    $listSwimlanesById .= '">';
+    $listSwimlanesById .= $swim['name'];
+    $listSwimlanesById .= '</option>';
+  }
+}
+
+//----------------------------------------
 
 print '<div align="center">';
 print '<section class="mainholder" id="mainholderP';
@@ -106,17 +145,7 @@ print '<ul id="sortable" class="sortableRef';
 print $project_id;
 print '">';
 
-$listCat = '';
-// Create category select menu as var
-if(!empty($categories)) {
-  foreach($categories as $cat) {
-    $listCat .= '<option value="';
-    $listCat .= $cat['name'];
-    $listCat .= '">';
-    $listCat .= $cat['name'];
-    $listCat .= '</option>';
-  }
-}
+//----------------------------------------
 
 if (!$readonlyNotes) {
     print '<li id="item-0" class="ui-state-default liNewNote" data-id="0" data-project="';
@@ -195,7 +224,7 @@ if (!$readonlyNotes) {
     print $user_id;
     print '" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
     print '<option selected="selected"></option>'; // Insert emptyline for keeping non category by default
-    print $listCat;
+    print $listCategoriesById;
     print '</select>';
     print '</p>';
 
@@ -203,6 +232,8 @@ if (!$readonlyNotes) {
 
     print '</li>';
 }
+
+//----------------------------------------
 
 $num = "1";
 $last_project_id = 0;
@@ -436,7 +467,7 @@ foreach($data as $u){
         print '<option selected="selected">'.$u['category'].'</option>';
     }
     else{
-        $emptyCatList = empty($listCat);
+        $emptyCatList = empty($listCategoriesById);
         $emptyCat = empty($u['category']);
 
         if ($emptyCatList || $emptyCat){ // If no categories available or none selected
@@ -446,16 +477,16 @@ foreach($data as $u){
             print '<option></option>'; // add an empty category option
             foreach($categories as $cat) { // detect the selected category
                 if ($cat['name'] == $u['category']){
-                    print '<option selected="selected">';
+                    print '<option value="'.$cat['id'].'" selected="selected">';
                 }else{
-                    print '<option>';
+                    print '<option value="'.$cat['id'].'">';
                 }
                 print $cat['name'];
                 print '</option>';
             }
         }
         if ($emptyCat && !$emptyCatList){
-            print $listCat;
+            print $listCategoriesById;
         }
     }
 
@@ -490,6 +521,8 @@ foreach($data as $u){
 
 print '</ul>';
 
+//----------------------------------------
+
 print '<div id="nrNotes" class="hideMe" data-id="';
 $num = --$num;
 print $num;
@@ -501,37 +534,11 @@ print '" data-user="';
 print $user_id;
 print '"></div>';
 
-$listSwim = '';
-foreach($swimlanes as $swim) {
-  $listSwim .= '<option value="';
-  $listSwim .= $swim['id'];
-  $listSwim .= '">';
-  $listSwim .= $swim['name'];
-  $listSwim .= '</option>';
-}
-
-$listCol = '';
-foreach($columns as $col) {
-  $listCol .= '<option value="';
-  $listCol .= $col['id'];
-  $listCol .= '">';
-  $listCol .= $col['title'];
-  $listCol .= '</option>';
-}
-
-// Create category select menu as var
-$listCatToTask = '';
-if(!empty($categories)) {
-  foreach($categories as $a) {
-    $listCatToTask .= '<option value="';
-    $listCatToTask .= $a['id'];
-    $listCatToTask .= '">';
-    $listCatToTask .= $a['name'];
-    $listCatToTask .= '</option>';
-  }
-}
 
 print '</div>';
+
+//----------------------------------------
+// id=result ending. This is the refresh zone
 ?>
 
 <?php
@@ -539,60 +546,58 @@ print '</div>';
 ?>
 
 <div class="hideMe" id="dialogDeleteAllDone" title="Delete all done notes?">
-  <p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>These items will be permanently deleted and cannot be recovered. Are you sure?</p>
+  <p>
+    <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+    These items will be permanently deleted and cannot be recovered. Are you sure?
+  </p>
 </div>
 
 <div class="hideMe" id="dialogAnalytics" title="Notes Analytics">
   <div id="dialogAnalyticsInside"></div>
 </div>
 
-<div class="hideMe" id="dialogToTaskP<?php print $project_id; ?>" title="Data for creating task">
-  <div id="">
-  <label for="listCatToTask">Category</label>
-  <?php
+<?php
+  //---------------------------------------------
+
+  print '<div class="hideMe" id="dialogToTaskP'.$project_id.'" title="Data for creating task">';
+  print '<div id="">';
+
+  print '<label for="listCatToTask">Category : &nbsp;</label>';
   print '<select name="listCatToTask" id="listCatToTask';
   print $project_id;
   print '">';
   // Only allow blank select if there's other selectable options
-  if (!empty($listCatToTask)){
+  if (!empty($listCategoriesById)){
     print '<option></option>';
   }
-  print $listCatToTask;
-  ?>
-  </select>
-  <br>
+  print $listCategoriesById;
+  print '</select>';
+  print '<br>';
 
-  <label for="listSwim">Swimlane</label>
-  <?php
-  print '<select name="listSwim" id="listSwim';
+  print '<label for="listColToTask">Column : &nbsp;</label>';
+  print '<select name="listColToTask" id="listColToTask';
   print $project_id;
   print '">';
-  // Only allow blank select if there's other selectable options
-  if (!empty($listSwim)){
-    print '<option></option>';
-  }
-  print $listSwim;
-  ?>
-  </select>
-  <br>
+  print $listColumnsById;
+  print '</select>';
+  print '<br>';
 
-  <label for="listCol">Column</label>
-  <?php
-  print '<select name="listCol" id="listCol';
+  print '<label for="listSwimToTask">Swimlane : &nbsp;</label>';
+  print '<select name="listSwimToTask" id="listSwimToTask';
   print $project_id;
   print '">';
-  print $listCol;
-  ?>
-  </select>
-  </div>
-  <div id="deadloading"></div>
-</div>
+  print $listSwimlanesById;
+  print '</select>';
 
+  print '</div>';
+  print '<div id="deadloading"></div>';
+  print '</div>';
 
-<div class="hideMe" id="dialogReportP<?php print $project_id; ?>" title="Sorting and filter for reports">
-  <div id="">
-  <label for="reportCat">Category</label><br>
-  <?php
+  //---------------------------------------------
+
+  print '<div class="hideMe" id="dialogReportP'.$project_id.'" title="Sorting and filter for reports">';
+  print '<div id="">';
+  print '<label for="reportCat">Category</label><br>';
   print '<select name="reportCat" id="reportCatP';
   print $project_id;
   print '" data-project="';
@@ -605,10 +610,14 @@ print '</div>';
   if (!empty($listCat)){
       print $listCat;
   }
-  ?>
-  </select>
-  </div>
-</div>
 
-</section>
-</div>
+  print '</select>';
+  print '</div>';
+  print '</div>';
+
+  //---------------------------------------------
+
+  print '</section>';
+  print '</div>';
+
+?>
