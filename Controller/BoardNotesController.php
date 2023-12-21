@@ -72,7 +72,7 @@ class BoardNotesController extends BaseController
         $user = $this->getUser();
         $user_id = $this->resolveUserId();
 
-        $project = $this->getProject();
+        $project = $is_refresh ? $this->resolveProject($user_id) : $this->getProject();
         $project_id = $project['id'];
 
         $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
@@ -102,6 +102,7 @@ class BoardNotesController extends BaseController
 
     public function boardNotesRefreshProject()
     {
+        error_log('REFRESH');
         $this->boardNotesShowProject_Internal(True);
     }
 

@@ -236,7 +236,6 @@
     var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
     var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesRefreshProject&plugin=BoardNotes&project_cus_id=" + project_id + "&user_id=" + user_id;
     $("#result" + project_id).html(ajax_load).load(loadUrl);
-
   }
 
 
