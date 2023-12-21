@@ -88,10 +88,12 @@
 //----------------------------------------
 
 $readonlyNotes = ($project_id == 0);
-$projectsNamesById = array();
+$projectsTabsById = array();
 if ($is_dashboard_view) {
+    $tab_id = 1;
     foreach($projectsAccess as $projectAccess) {
-        $projectsNamesById[ $projectAccess['project_id'] ] = $projectAccess['project_name'];
+        $projectsTabsById[ $projectAccess['project_id'] ] = array('tab_id' => $tab_id, 'name' => $projectAccess['project_name']);
+        $tab_id++;
     }
 }
 
@@ -242,7 +244,9 @@ foreach($data as $u){
 
     if ($readonlyNotes && $last_project_id != $u['project_id']){
         $last_project_id = $u['project_id'];
-        print '<h3>'.$projectsNamesById[ $last_project_id ].'</h3>';
+        print '<h2><a href="';
+        print '/?controller=BoardNotesController&action=boardNotesShowAll&plugin=BoardNotes&user_id='.$user_id.'&tab_id='.$projectsTabsById[ $last_project_id ]['tab_id'];
+        print '">'.$projectsTabsById[ $last_project_id ]['name'].'</a></h2>';
     }
 
     print '<li id="item';
