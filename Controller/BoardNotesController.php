@@ -220,9 +220,9 @@ class BoardNotesController extends BaseController
 
         $task_title = $this->request->getStringParam('task_title');
         $task_description = $this->request->getStringParam('task_description');
-        $column = $this->request->getStringParam('column');
-        $swimlane = $this->request->getStringParam('swimlane');
-        $category = $this->request->getStringParam('category');
+        $column_id = $this->request->getStringParam('column_id');
+        $swimlane_id = $this->request->getStringParam('swimlane_id');
+        $category_id = $this->request->getStringParam('category_id');
 
 //         $jsonrpc_api_endpoint = $this->configModel->get('application_url').'jsonrpc.php';
 //         var_dump($jsonrpc_api_endpoint);
@@ -230,14 +230,15 @@ class BoardNotesController extends BaseController
 //         var_dump($jsonrpc_api_token);
 
     	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
-            'title' => t('Post'),
+    		'title' => t('Post'),
     		'project_id' => $project_id,
     		'user_id' => $user_id,
     		'task_title' => $task_title,
     		'task_description' => $task_description,
-    		'category_id' => $category,
-    		'column_id' => $column,
-    		'swimlane_id' => $swimlane,
+    		'category_id' => $category_id,
+    		'column_id' => $column_id,
+    		'swimlane_id' => $swimlane_id,
+    		'result' => $result,
         )));
     }
 

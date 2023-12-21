@@ -541,9 +541,6 @@ print '</div>';
 // id=result ending. This is the refresh zone
 ?>
 
-<?php
-/* id=resultX ending. This is the refresh zone */
-?>
 
 <div class="hideMe" id="dialogDeleteAllDone" title="Delete all done notes?">
   <p>
@@ -560,7 +557,8 @@ print '</div>';
   //---------------------------------------------
 
   print '<div class="hideMe" id="dialogToTaskP'.$project_id.'" title="Data for creating task">';
-  print '<div id="">';
+
+  print '<div id="dialogToTaskParams">';
 
   print '<label for="listCatToTask">Category : &nbsp;</label>';
   print '<select name="listCatToTask" id="listCatToTask';
@@ -590,7 +588,8 @@ print '</div>';
   print '</select>';
 
   print '</div>';
-  print '<div id="deadloading"></div>';
+
+  print '<div id="deadloading" class="hideMe"></div>';
   print '</div>';
 
   //---------------------------------------------

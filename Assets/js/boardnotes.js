@@ -386,36 +386,40 @@
     $.ajaxSetup ({
       cache: false
     });
+    $('#dialogToTaskParams').removeClass( 'hideMe' );
+    $('#deadloading').addClass( 'hideMe' );
     $('#listCatToTask' + project_id).val(category_val).change();
     $("#dialogToTaskP" + project_id).removeClass( 'hideMe' );
     $("#dialogToTaskP" + project_id).dialog({
+      title: 'Data for creating task',
       buttons: {
-        Ok: function() {
+        Post: function() {
           var categoryToTask = $('#listCatToTask' + project_id + ' option:selected').val();
           var columnToTask = $('#listColToTask' + project_id + ' option:selected').val();
           var swimlaneToTask = $('#listSwimToTask' + project_id + ' option:selected').val();
           
-          //alert('modalNoteToTask PRE TEST');
-
           var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
           var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes'
                         + '&project_cus_id=' + project_id
                         + '&user_id=' + user_id
                         + '&task_title=' + title
                         + '&task_description=' + description
-                        + '&category=' + categoryToTask
-                        + '&column=' + columnToTask
-                        + '&swimlane=' + swimlaneToTask;
+                        + '&category_id=' + categoryToTask
+                        + '&column_id=' + columnToTask
+                        + '&swimlane_id=' + swimlaneToTask;
+
+          $("#dialogToTaskP" + project_id).dialog({
+            title: 'Result ...',
+            buttons: {
+              Close: function() { $( this ).dialog( "close" ); }
+            }
+          });
+          $('#dialogToTaskParams').addClass( 'hideMe' );
+          $('#deadloading').removeClass( 'hideMe' );
           $('#deadloading').html(ajax_load).load(loadUrl);
-
-          //alert('modalNoteToTask POST TEST');
-
-          $('#listCatToTask' + project_id).remove();
-          $('#listColToTask' + project_id).remove();
-          $('#listSwimToTask' + project_id).remove();
           //sqlDeleteNote(project_id, user_id, note_id);
-          $( this ).dialog( "destroy" ).remove();
-        }
+        },
+        Close: function() { $( this ).dialog( "close" ); }
       }
     });
     return false;
