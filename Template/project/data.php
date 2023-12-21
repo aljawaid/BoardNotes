@@ -350,7 +350,7 @@ foreach($data as $u){
 
     // Here goes the detailed view
     print '<div id="notePlaceholderDescriptionP';
-    print $project_id;
+    print $u['project_id'];
     print '-';
     print $num;
     print '" class="containerFloatClear hideMe">';
@@ -392,13 +392,13 @@ foreach($data as $u){
     print '<label for="cat">Category</label><br>';
     print '<select name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
     print ' id="catP';
-    print $project_id;
+    print $u['project_id'];
     print '-';
     print $num;
     print '" data-id="';
     print $num;
     print '" data-project="';
-    print $project_id;
+    print $u['project_id'];
     print '" data-user="';
     print $user_id;
     print '">';
