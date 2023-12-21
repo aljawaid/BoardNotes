@@ -27,38 +27,40 @@
     var user_id = <?php print $user_id; ?>;
     var isMobile = IsMobile();
 
-    // handle notes reordering
-    function updateNotesOrder(event, ui) {
-        var order = $(this).sortable('toArray');
-        order = order.join(",");
-        var regex = new RegExp('item-', 'g');
-        order = order.replace(regex, '');
-        var order = order.split(',');
-        sqlNotesUpdatePosition(project_id, user_id, order, nrNotes);
-    }
+    if (project_id != 0) {
+        // handle notes reordering
+        function updateNotesOrder(event, ui) {
+            var order = $(this).sortable('toArray');
+            order = order.join(",");
+            var regex = new RegExp('item-', 'g');
+            order = order.replace(regex, '');
+            var order = order.split(',');
+            sqlNotesUpdatePosition(project_id, user_id, order, nrNotes);
+        }
 
-    if (isMobile){
-      // show explicit reorder handles for mobile
-      $( '.sortableHandle').removeClass( "hideMe" );
-      $(function() {
-        $( '#sortable').sortable({
-          handle: '.sortableHandle',
-          placeholder: "ui-state-highlight",
-          update: updateNotesOrder
-        });
-        $( "#sortable" ).disableSelection();
-      });
-    }
-    else{
-      // drag entire notes for non-mobile
-      $( '.sortableRef' + project_id ).sortable({ items: 'li[id!=item-0]' });
-      $(function() {
-        $( '.sortableRef' + project_id ).sortable({
-          placeholder: "ui-state-highlight",
-          update: updateNotesOrder
-        });
-        $( "#sortable" ).disableSelection();
-      });
+        if (isMobile){
+          // show explicit reorder handles for mobile
+          $( '.sortableHandle').removeClass( "hideMe" );
+          $(function() {
+            $( '#sortable').sortable({
+              handle: '.sortableHandle',
+              placeholder: "ui-state-highlight",
+              update: updateNotesOrder
+            });
+            $( "#sortable" ).disableSelection();
+          });
+        }
+        else{
+          // drag entire notes for non-mobile
+          $( '.sortableRef' + project_id ).sortable({ items: 'li[id!=item-0]' });
+          $(function() {
+            $( '.sortableRef' + project_id ).sortable({
+              placeholder: "ui-state-highlight",
+              update: updateNotesOrder
+            });
+            $( "#sortable" ).disableSelection();
+          });
+        }
     }
 
     if(isMobile) {
@@ -82,6 +84,9 @@
 <?= ($is_refresh || $is_custom) ? '' : $this->projectHeader->render($project, 'BoardNotesController', 'boardNotesShowProject', false, 'BoardNotes') ?>
 
 <?php
+
+$readonlyNotes = ($project_id == 0);
+
 print '<div align="center">';
 print '<section class="mainholder" id="mainholderP';
 print $project_id;
@@ -95,71 +100,6 @@ print '<ul id="sortable" class="sortableRef';
 print $project_id;
 print '">';
 
-print '<li id="item-0" class="ui-state-default liNewNote" data-id="0" data-project="';
-print $project_id;
-print '">';
-print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Create New Note</label>';
-
-// Settings delete all done
-print '<button id="settingsDeleteAllDone" class="settingsDeleteAllDone" data-id="0" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
-
-// Settings analytics
-print '<button id="settingsAnalytics" class="settingsAnalytics" data-id="0" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>';
-
-// Open report
-print '<button id="settingsReport" class="settingsReport" data-id="0" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '"><i class="fa fa-file-text-o" aria-hidden="true"></i>';
-print '</button>';
-
-// Newline after heading and top settings
-print '<br>';
-
-print '<div class="containerNoWrap containerFloatRight">';
-
-// Show details button
-print '<button id="showDetailsNew" class="showDetailsNew" data-id="0" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
-
-// Save button
-print '<button class="hideMe saveNewNote" id="saveNewNote" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
-
-print '</div>';
-
-// Input line
-print '<input id="newNote';
-print $project_id;
-print '" name="newNote" type="text" placeholder="What needs to be done" class="inputNewNote" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '">';
-
-// Detailed view
-print '<div id="noteDescriptionP';
-print $project_id;
-print '" data-id="0" class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
-print '<textarea id="textareaNewNote';
-print $project_id;
-print '" class="textareaNewNote"></textarea>';
-
 $listCat = '';
 // Create category select menu as var
 if(!empty($categories)) {
@@ -172,25 +112,91 @@ if(!empty($categories)) {
   }
 }
 
-// Print category select menu
-print '<p class="categories">';
-print '<label for="cat">Category</label><br>';
-print '<select name="cat" id="catP';
-print $project_id;
-print '" data-id="0" data-project="';
-print $project_id;
-print '" data-user="';
-print $user_id;
-print '" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
-print '<option selected="selected"></option>'; // Insert emptyline for keeping non category by default
-print $listCat;
-print '</select>';
-print '</p>';
+if (!$readonlyNotes) {
+    print '<li id="item-0" class="ui-state-default liNewNote" data-id="0" data-project="';
+    print $project_id;
+    print '">';
+    print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Create New Note</label>';
 
-print '</div>';
+    // Settings delete all done
+    print '<button id="settingsDeleteAllDone" class="settingsDeleteAllDone" data-id="0" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
-print '</li>';
+    // Settings analytics
+    print '<button id="settingsAnalytics" class="settingsAnalytics" data-id="0" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>';
 
+    // Open report
+    print '<button id="settingsReport" class="settingsReport" data-id="0" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '"><i class="fa fa-file-text-o" aria-hidden="true"></i>';
+    print '</button>';
+
+    // Newline after heading and top settings
+    print '<br>';
+
+    print '<div class="containerNoWrap containerFloatRight">';
+
+    // Show details button
+    print '<button id="showDetailsNew" class="showDetailsNew" data-id="0" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
+
+    // Save button
+    print '<button class="hideMe saveNewNote" id="saveNewNote" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
+
+    print '</div>';
+
+    // Input line
+    print '<input id="newNote';
+    print $project_id;
+    print '" name="newNote" type="text" placeholder="What needs to be done" class="inputNewNote" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '">';
+
+    // Detailed view
+    print '<div id="noteDescriptionP';
+    print $project_id;
+    print '" data-id="0" class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
+    print '<textarea id="textareaNewNote';
+    print $project_id;
+    print '" class="textareaNewNote"></textarea>';
+
+    // Print category select menu
+    print '<p class="categories">';
+    print '<label for="cat">Category</label><br>';
+    print '<select name="cat" id="catP';
+    print $project_id;
+    print '" data-id="0" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
+    print '<option selected="selected"></option>'; // Insert emptyline for keeping non category by default
+    print $listCat;
+    print '</select>';
+    print '</p>';
+
+    print '</div>';
+
+    print '</li>';
+}
 
 $num = "1";
 foreach($data as $u){
@@ -224,46 +230,48 @@ foreach($data as $u){
     print $user_id;
     print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
 
-    // Delete button viewed (in detailed view)
-    print '<button id="singleNoteDeleteP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" class="hideMe singleNoteDelete" data-id="';
-    print $u['id'];
-    print '" data-project="';
-    print $u['project_id'];
-    print '" data-user="';
-    print $user_id;
-    print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
+    if (!$readonlyNotes){
+        // Delete button viewed (in detailed view)
+        print '<button id="singleNoteDeleteP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" class="hideMe singleNoteDelete" data-id="';
+        print $u['id'];
+        print '" data-project="';
+        print $u['project_id'];
+        print '" data-user="';
+        print $user_id;
+        print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
-    // Add note to tasks table (in detailed view)
-    print '<button id="singleNoteToTaskP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" class="hideMe singleNoteToTask" data-id="';
-    print $num;
-    print '" data-note="';
-    print $u['id'];
-    print '" data-project="';
-    print $u['project_id'];
-    print '" data-user="';
-    print $user_id;
-    print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
+        // Add note to tasks table (in detailed view)
+        print '<button id="singleNoteToTaskP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" class="hideMe singleNoteToTask" data-id="';
+        print $num;
+        print '" data-note="';
+        print $u['id'];
+        print '" data-project="';
+        print $u['project_id'];
+        print '" data-user="';
+        print $user_id;
+        print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
 
-    // Save button (in detailed view)
-    print '<button id="singleNoteSaveP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" class="hideMe singleNoteSave" data-id="';
-    print $num;
-    print '" data-project="';
-    print $u['project_id'];
-    print '" data-user="';
-    print $user_id;
-    print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
+        // Save button (in detailed view)
+        print '<button id="singleNoteSaveP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" class="hideMe singleNoteSave" data-id="';
+        print $num;
+        print '" data-project="';
+        print $u['project_id'];
+        print '" data-user="';
+        print $user_id;
+        print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
+    }
 
     // Category label (in simple view)
     print '<label class="catLabel" id="noteCatLabelP';
@@ -305,7 +313,9 @@ foreach($data as $u){
     }
 
     // Note title input - typing. Changes after submit to label below.
-    print '<input id="noteTitleInputP';
+    print '<input ';
+    if ($readonlyNotes) print 'disabled ';
+    print 'id="noteTitleInputP';
     print $u['project_id'];
     print '-';
     print $num;
@@ -326,7 +336,9 @@ foreach($data as $u){
     print '">';
 
     // Note title label - visual. Changes on click to input
-    print '<label id="noteTitleLabelP';
+    print '<label ';
+    if ($readonlyNotes) print 'disabled ';
+    print 'id="noteTitleLabelP';
     print $u['project_id'];
     print '-';
     print $num;
@@ -373,7 +385,9 @@ foreach($data as $u){
     } else {
         print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all noteDoneDesignText">';
     }
-    print '<textarea title="Press tab to save changes" class="textareaDescription" id="textareaDescriptionP';
+    print '<textarea ';
+    if ($readonlyNotes) print 'disabled ';
+    print 'title="Press tab to save changes" class="textareaDescription" id="textareaDescriptionP';
     print $u['project_id'];
     print '-';
     print $num;
@@ -390,7 +404,9 @@ foreach($data as $u){
 
     print '<p class="categories">';
     print '<label for="cat">Category</label><br>';
-    print '<select name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
+    print '<select ';
+    if ($readonlyNotes) print 'disabled ';
+    print 'name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
     print ' id="catP';
     print $u['project_id'];
     print '-';
@@ -402,27 +418,33 @@ foreach($data as $u){
     print '" data-user="';
     print $user_id;
     print '">';
-    
-    $emptyCatList = empty($listCat);
-    $emptyCat = empty($u['category']);
-    
-    if ($emptyCatList || $emptyCat){ // If no categories available or none selected
-        print '<option selected="selected"></option>'; // None category selected
+
+    if ($readonlyNotes){
+        // just preserve the existing category data from the note
+        print '<option selected="selected">'.$u['category'].'</option>';
     }
-    if (!$emptyCat && !$emptyCatList){
-        print '<option></option>'; // add an empty category option
-        foreach($categories as $cat) { // detect the selected category
-        	if ($cat['name'] == $u['category']){
-        		print '<option selected="selected">';
-        	}else{
-        		print '<option>';
-        	}
-	        print $cat['name'];
-	        print '</option>';
+    else{
+        $emptyCatList = empty($listCat);
+        $emptyCat = empty($u['category']);
+
+        if ($emptyCatList || $emptyCat){ // If no categories available or none selected
+            print '<option selected="selected"></option>'; // None category selected
         }
-    }
-    if ($emptyCat && !$emptyCatList){
-        print $listCat;
+        if (!$emptyCat && !$emptyCatList){
+            print '<option></option>'; // add an empty category option
+            foreach($categories as $cat) { // detect the selected category
+                if ($cat['name'] == $u['category']){
+                    print '<option selected="selected">';
+                }else{
+                    print '<option>';
+                }
+                print $cat['name'];
+                print '</option>';
+            }
+        }
+        if ($emptyCat && !$emptyCatList){
+            print $listCat;
+        }
     }
 
     print '</select>';
