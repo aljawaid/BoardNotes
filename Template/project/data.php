@@ -610,8 +610,8 @@ print '</div>';
   print '">';
   
   print '<option></option>'; // add an empty category option
-  if (!empty($listCat)){
-      print $listCat;
+  if (!empty($listCategoriesById)){
+      print $listCategoriesById;
   }
 
   print '</select>';
