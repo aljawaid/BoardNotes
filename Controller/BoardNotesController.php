@@ -102,7 +102,6 @@ class BoardNotesController extends BaseController
 
     public function boardNotesRefreshProject()
     {
-        error_log('REFRESH');
         $this->boardNotesShowProject_Internal(True);
     }
 
@@ -220,25 +219,31 @@ class BoardNotesController extends BaseController
 
         $task_title = $this->request->getStringParam('task_title');
         $task_description = $this->request->getStringParam('task_description');
+        $category_id = $this->request->getStringParam('category_id');
         $column_id = $this->request->getStringParam('column_id');
         $swimlane_id = $this->request->getStringParam('swimlane_id');
-        $category_id = $this->request->getStringParam('category_id');
 
-//         $jsonrpc_api_endpoint = $this->configModel->get('application_url').'jsonrpc.php';
-//         var_dump($jsonrpc_api_endpoint);
-//         $jsonrpc_api_token = $this->configModel->get('api_token');
-//         var_dump($jsonrpc_api_token);
+        $task_id = $this->taskCreationModel->create(array(
+            'project_id'  => $project_id,
+            'creator_id'  => $user_id,
+            'owner_id'    => $user_id,
+            'title'       => $task_title,
+            'description' => $task_description,
+            'category_id' => $category_id,
+            'column_id' => $column_id,
+            'swimlane_id' => $swimlane_id,
+        ));
 
     	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
-    		'title' => t('Post'),
-    		'project_id' => $project_id,
-    		'user_id' => $user_id,
-    		'task_title' => $task_title,
-    		'task_description' => $task_description,
-    		'category_id' => $category_id,
-    		'column_id' => $column_id,
-    		'swimlane_id' => $swimlane_id,
-    		'result' => $result,
+            //'title' => t('Post'),
+            'task_id' => $task_id,
+            'project_name' => $project_id,
+            'user_name' => $user_id,
+            'task_title' => $task_title,
+            'task_description' => $task_description,
+            'category' => $category_id,
+            'column' => $column_id,
+            'swimlane' => $swimlane_id,
         )));
     }
 
