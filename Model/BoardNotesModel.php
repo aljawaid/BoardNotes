@@ -64,7 +64,7 @@ class BoardNotesModel extends Base
     {
         return $this->db->table(self::TABLEprojects)
             ->eq('id', $project_id)
-            ->findAll();
+            ->findOne();
     }
 
     // Get all project_id where user has assigned access

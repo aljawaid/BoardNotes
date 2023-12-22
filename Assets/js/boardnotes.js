@@ -397,6 +397,7 @@
           var categoryToTask = $('#listCatToTask' + project_id + ' option:selected').val();
           var columnToTask = $('#listColToTask' + project_id + ' option:selected').val();
           var swimlaneToTask = $('#listSwimToTask' + project_id + ' option:selected').val();
+          var removeNote = $('#removeNote' + project_id).is(":checked");
           
           var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
           var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes'
@@ -417,7 +418,10 @@
           $('#dialogToTaskParams').addClass( 'hideMe' );
           $('#deadloading').removeClass( 'hideMe' );
           $('#deadloading').html(ajax_load).load(loadUrl);
-          //sqlDeleteNote(project_id, user_id, note_id);
+          if (removeNote) {
+            sqlDeleteNote(project_id, user_id, note_id);
+            sqlRefreshNotes(project_id, user_id);
+          }
         },
         Close: function() { $( this ).dialog( "close" ); }
       }

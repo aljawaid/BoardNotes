@@ -1,3 +1,9 @@
+<style>
+table {
+    width: initial !important;
+}
+</style>
+
 <?php
 
 if ($task_id > 0) {
@@ -13,27 +19,20 @@ if ($task_id > 0) {
 
     print '<br>';
     print '<br>';
+    print '<table>';
 
-    print '<strong>[project] : </strong>' . $project_name;
-    print '<br>';
+    print '<tr><td align="right"><strong>[project] : </strong></td><td>' . $project_name . '</td></tr>';
 if ($task_id > 0) {
-    print '<strong>[creator] : </strong>' . $user_name;
-    print '<br>';
-    print '<strong>[owner] : </strong>' . $user_name;
-    print '<br>';
+    print '<tr><td align="right"><strong>[creator] : </strong></td><td>' . $user_name . '</td></tr>';
+    print '<tr><td align="right"><strong>[owner] : </strong></td><td>' . $user_name . '</td></tr>';
 } else {
-    print '<strong>[user] : </strong>' . $user_name;
-    print '<br>';
+    print '<tr><td align="right"><strong>[user] : </strong></td><td>' . $user_name . '</td></tr>';
 }
-    print '<strong>[title] : </strong>' . $task_title;
-    print '<br>';
-    print '<strong>[description] : </strong>' . $task_description;
-    print '<br>';
-    print '<strong>[category] : </strong>' . $category;
-    print '<br>';
-    print '<strong>[column] : </strong>' . $column;
-    print '<br>';
-    print '<strong>[swimlane] : </strong>' . $swimlane;
-    print '<br>';
+    print '<tr><td align="right"><strong>[title] : </strong></td><td>' . $task_title . '</td></tr>';
+    print '<tr><td align="right"><strong>[description] : </strong></td><td>' . $task_description . '</td></tr>';
+    print '<tr><td align="right"><strong>[category] : </strong></td><td>' . $category . '</td></tr>';
+    print '<tr><td align="right"><strong>[column] : </strong></td><td>' . $column . '</td></tr>';
+    print '<tr><td align="right"><strong>[swimlane] : </strong></td><td>' . $swimlane . '</td></tr>';
 
+    print '</table>';
 ?>

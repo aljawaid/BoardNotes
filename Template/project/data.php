@@ -590,6 +590,12 @@ print '</div>';
   print '">';
   print $listSwimlanesById;
   print '</select>';
+  print '<br>';
+
+  print '<input type="checkbox" checked name="removeNote" id="removeNote';
+  print $project_id;
+  print '">';
+  print '<label for="removeNote"> Remove the note</label>';
 
   print '</div>';
 

@@ -61,7 +61,7 @@ class BoardNotesController extends BaseController
         else
         {
             // get all the data of existing project and mark it as NOT custom
-            $project = $this->boardNotesModel->boardNotesGetProjectById($project_id)[0];
+            $project = $this->boardNotesModel->boardNotesGetProjectById($project_id);
             $project['is_custom'] = False;
             return $project;
         }
@@ -237,13 +237,13 @@ class BoardNotesController extends BaseController
     	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
             //'title' => t('Post'),
             'task_id' => $task_id,
-            'project_name' => $project_id,
-            'user_name' => $user_id,
+            'project_name' => $this->projectModel->getById($project_id)["name"],
+            'user_name' => $this->userModel->getById($user_id)["username"],
             'task_title' => $task_title,
             'task_description' => $task_description,
-            'category' => $category_id,
-            'column' => $column_id,
-            'swimlane' => $swimlane_id,
+            'category' => $this->categoryModel->getNameById($category_id),
+            'column' => $this->columnModel->getColumnTitleById($column_id),
+            'swimlane' => $this->swimlaneModel->getNameById($swimlane_id),
         )));
     }
 
