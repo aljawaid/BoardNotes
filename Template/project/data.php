@@ -225,7 +225,7 @@ if (!$readonlyNotes) {
     print '" data-user="';
     print $user_id;
     print '" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget">';
-    print '<option selected="selected"></option>'; // Insert emptyline for keeping non category by default
+    print '<option selected="selected"></option>'; // Insert empty line for keeping non category by default
     print $listCategoriesById;
     print '</select>';
     print '</p>';
@@ -393,7 +393,7 @@ foreach($data as $u){
 
     // Note title label - visual. Changes on click to input
     print '<label ';
-    if ($readonlyNotes) print 'disabled ';
+    if ($readonlyNotes) print 'data-disabled="true" ';
     print 'id="noteTitleLabelP';
     print $u['project_id'];
     print '-';
@@ -461,7 +461,7 @@ foreach($data as $u){
     print '<p class="categories">';
     print '<label for="cat">Category</label><br>';
     print '<select ';
-    if ($readonlyNotes) print 'disabled ';
+    if ($readonlyNotes) print 'data-disabled="true" ';
     print 'name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
     print ' id="catP';
     print $u['project_id'];

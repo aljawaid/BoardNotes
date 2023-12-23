@@ -306,7 +306,7 @@
   // Change from label to input on click
   $(function() {
     $( "label" + ".noteTitle" ).click(function() {
-      if ($(this).hasAttr('disabled')) return;
+      if ($(this).attr('data-disabled')) return;
       var project_id = $(this).attr('data-project');
       var id = $(this).attr('data-id');
       showTitleInput(project_id, id, true);
