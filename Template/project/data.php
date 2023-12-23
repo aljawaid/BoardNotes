@@ -461,7 +461,7 @@ foreach($data as $u){
     print '<p class="categories">';
     print '<label for="cat">Category</label><br>';
     print '<select ';
-    if ($readonlyNotes) print 'data-disabled="true" ';
+    if ($readonlyNotes) print 'disabled ';
     print 'name="cat" class="catSelector ui-selectmenu-button ui-selectmenu-button-closed ui-corner-all ui-button ui-widget"';
     print ' id="catP';
     print $u['project_id'];
