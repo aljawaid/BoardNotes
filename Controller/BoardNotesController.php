@@ -132,6 +132,10 @@ class BoardNotesController extends BaseController
             $columns  = $this->boardNotesModel->boardNotesGetColumns($project_id);
             $swimlanes  = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
     	}
+    	else
+    	{
+            $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+    	}
 
         return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
             'title' => t('Notes overview for %s', $this->helper->user->getFullname($user)),

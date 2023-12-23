@@ -69,7 +69,10 @@
     }
 
     adjustAllNotesPlaceholders();
+    toggleCategoryColors();
+    toggleCategoryColors();
 
+    // prepare method for dashboard view if embedded
     if ( $.isFunction(prepareDocumentQ) ) {
         prepareDocumentQ();
     }
@@ -100,14 +103,24 @@ if ($is_dashboard_view) {
 //----------------------------------------
 
 $listCategoriesById = '';
+$mapCategoryColorByName = array();
 if(!empty($categories)) {
   foreach($categories as $cat) {
+    // list by id
     $listCategoriesById .= '<option value="';
     $listCategoriesById .= $cat['id'];
     $listCategoriesById .= '">';
     $listCategoriesById .= $cat['name'];
     $listCategoriesById .= '</option>';
-  }
+    // map color by name
+    $mapCategoryColorByName[ $cat['name'] ] = $cat['color_id'];
+    // category color hidden reference
+    print '<div id="category-';
+    print $cat['name'];
+    print '" data-color="';
+    print $cat['color_id'];
+    print '" class="hideMe">';
+    print '</div>';  }
 }
 
 $listColumnsById = '';
@@ -156,25 +169,33 @@ if (!$readonlyNotes) {
     print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Create New Note</label>';
 
     // Settings delete all done
-    print '<button id="settingsDeleteAllDone" class="settingsDeleteAllDone" data-id="0" data-project="';
+    print '<button id="settingsDeleteAllDone" class="settingsDeleteAllDone" title="Delete all done notes" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
     print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
     // Settings analytics
-    print '<button id="settingsAnalytics" class="settingsAnalytics" data-id="0" data-project="';
+    print '<button id="settingsAnalytics" class="settingsAnalytics" title="Show analytics" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
     print '"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>';
 
     // Open report
-    print '<button id="settingsReport" class="settingsReport" data-id="0" data-project="';
+    print '<button id="settingsReport" class="settingsReport" title="Create report" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
     print '"><i class="fa fa-file-text-o" aria-hidden="true"></i>';
+    print '</button>';
+
+    // Toggle category colors
+    print '<button id="settingsCategoryColors" class="settingsCategoryColors" title="Colorize by category" data-id="0" data-project="';
+    print $project_id;
+    print '" data-user="';
+    print $user_id;
+    print '"><i class="fa fa-paint-brush" aria-hidden="true"></i>';
     print '</button>';
 
     // Newline after heading and top settings
@@ -252,7 +273,14 @@ foreach($data as $u){
     print '<li id="item';
     print '-';
     print $u['id']; 
-    print '" class="ui-state-default liNote" data-id="';
+    print '" class="ui-state-default liNote';
+    if (!empty($u['category'])) {
+        $category_color = $mapCategoryColorByName[ $u['category'] ];
+        if (!empty($category_color)) {
+            print ' color-' . $category_color;
+        }
+    }
+    print '" data-id="';
     print $num;
     print '" data-project="';
     print $u['project_id'];
@@ -326,7 +354,14 @@ foreach($data as $u){
     }
 
     // Category label (in simple view)
-    print '<label class="catLabel" id="noteCatLabelP';
+    print '<label class="catLabel';
+    if (!empty($u['category'])) {
+        $category_color = $mapCategoryColorByName[ $u['category'] ];
+        if (!empty($category_color)) {
+            print ' color-' . $category_color;
+        }
+    }
+    print '" id="noteCatLabelP';
     print $u['project_id'];
     print '-';
     print $num;

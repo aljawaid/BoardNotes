@@ -3,8 +3,8 @@
 <link rel="stylesheet" href="/kanboard/plugins/BoardNotes/Assets/css/style.css" media="print">
 
 <script>
- // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
-  $( document ).ready(function() {
+  // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
+  function prepareDocumentReport() {
     $('.noteTitleInput').hide();
 
     var isMobile = false; //initiate as false
@@ -14,8 +14,21 @@
     if(isMobile) {
       $('.sidebar').hide();
     }
-  });
 
+    // category colors
+    $('.catLabel').each(function() {
+        var id = $(this).attr('data-id');
+        var project_id = $(this).attr('data-project');
+        var category = $(this).html();
+        updateCategoryColors(project_id, id, category, category)
+    });
+
+    toggleCategoryColors();
+    toggleCategoryColors();
+  }
+
+  window.onload = prepareDocumentReport;
+  $( document ).ready( prepareDocumentReport );
 
 </script>
 
@@ -33,7 +46,7 @@
 $num = "1";
 
 foreach($data as $u){
-    print '<tr id="trReportNr';
+    print '<tr class="trReport" id="trReportNr';
     print $num;
     print '">';
 
@@ -55,11 +68,19 @@ foreach($data as $u){
     print '<td class="tdReport tdReportInfo">';
 
     // Category label
-    print '<label class="catLabel">';
+    print '<label class="catLabel" id="noteCatLabelP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '" data-id="';
+    print $num;
+    print '" data-project="';
+    print $u['project_id'];
+    print '">';
     print $u['category'];
     print '</label>';
 
-    // Note title label - visual. Changes on click to input
+    // Note title label
     print '<label id="reportTitleLabelP';
     print $u['project_id'];
     print '-';

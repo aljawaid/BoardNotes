@@ -99,21 +99,21 @@ class BoardNotesModel extends Base
         return $projectsAccess;
     }
 
-    // Get the Id of a category in project
-    public function boardNotesGetCategoryId($project_id, $category)
-    {
-        return $this->db->table(self::TABLEcategories)
-            ->eq('project_id', $project_id)
-            ->eq('name', $category)
-            ->findOneColumn('id');
-    }
-
     // Get a list of all categories in project
     public function boardNotesGetCategories($project_id)
     {
         return $this->db->table(self::TABLEcategories)
-            ->columns(self::TABLEcategories.'.id', self::TABLEcategories.'.name', self::TABLEcategories.'.project_id')
+            ->columns(self::TABLEcategories.'.id', self::TABLEcategories.'.name', self::TABLEcategories.'.project_id', self::TABLEcategories.'.color_id')
             ->eq('project_id', $project_id)
+            ->asc('name')
+            ->findAll();
+    }
+
+    // Get a list of ALL categories
+    public function boardNotesGetAllCategories()
+    {
+        return $this->db->table(self::TABLEcategories)
+            ->columns(self::TABLEcategories.'.id', self::TABLEcategories.'.name', self::TABLEcategories.'.project_id', self::TABLEcategories.'.color_id')
             ->asc('name')
             ->findAll();
     }

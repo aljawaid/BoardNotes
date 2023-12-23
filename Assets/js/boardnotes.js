@@ -45,10 +45,10 @@
   // Blink note
   function blinkNote(project_id, id){
     var note_id = $('#note_idP' + project_id + "-" + id).attr('data-id');
-    setTimeout(function() { $( "#item" + "-" + note_id ).addClass( "blurMe" ); }, 0);
+    setTimeout(function() { $( "#item-" + note_id ).addClass( "blurMe" ); }, 0);
     setTimeout(function() { toggleDetails(project_id, id); }, 100);
     setTimeout(function() { toggleDetails(project_id, id); }, 200);
-    setTimeout(function() { $( "#item" + "-" + note_id ).removeClass( "blurMe" ); }, 300);
+    setTimeout(function() { $( "#item-" + note_id ).removeClass( "blurMe" ); }, 300);
   };
 
 
@@ -125,8 +125,9 @@
 
   // Switch note done state
   function switchNoteDoneState(project_id, id){
-      // cycle through states
       $checkDone = $("#noteDoneCheckmarkP" + project_id + "-" + id);
+
+      // cycle through states
       if ($checkDone.hasClass( "fa-circle-thin" )) {
         $checkDone.removeClass( "fa-circle-thin" );
         $checkDone.addClass( "fa-spinner fa-spin" );
@@ -146,20 +147,24 @@
 
   // Update note done checkmark
   function updateNoteDoneCheckmark(project_id, id){
-    if( $( "#noteDoneCheckmarkP" + project_id + "-" + id).hasClass( "fa-check" ) ){
-      $("#noteTitleLabelP" + project_id + "-" + id).addClass( "noteDoneDesignText" );
-      $("#noteDescriptionP" + project_id + "-" + id).addClass( "noteDoneDesignText" );
-      $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '0');
+    $noteDoneCheckmark = $("#noteDoneCheckmarkP" + project_id + "-" + id);
+    $noteTitleLabel = $("#noteTitleLabelP" + project_id + "-" + id);
+    $noteDescription = $("#noteDescriptionP" + project_id + "-" + id);
+
+    if( $noteDoneCheckmark.hasClass( "fa-check" ) ){
+      $noteTitleLabel.addClass( "noteDoneDesignText" );
+      $noteDescription.addClass( "noteDoneDesignText" );
+      $noteDoneCheckmark.attr('data-id', '0');
     }
-    if( $( "#noteDoneCheckmarkP" + project_id + "-" + id).hasClass( "fa-circle-thin" ) ){
-      $("#noteTitleLabelP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
-      $("#noteDescriptionP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
-      $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '1');
+    if( $noteDoneCheckmark.hasClass( "fa-circle-thin" ) ){
+      $noteTitleLabel.removeClass( "noteDoneDesignText" );
+      $noteDescription.removeClass( "noteDoneDesignText" );
+      $noteDoneCheckmark.attr('data-id', '1');
     }
-    if( $( "#noteDoneCheckmarkP" + project_id + "-" + id).hasClass( "fa-spinner fa-spin" ) ){
-      $("#noteTitleLabelP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
-      $("#noteDescriptionP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
-      $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '2');
+    if( $noteDoneCheckmark.hasClass( "fa-spinner fa-spin" ) ){
+      $noteTitleLabel.removeClass( "noteDoneDesignText" );
+      $noteDescription.removeClass( "noteDoneDesignText" );
+      $noteDoneCheckmark.attr('data-id', '2');
     }
   };
 
@@ -268,38 +273,44 @@
 
   // Show input or label visuals for titles of existing notes
   function showTitleInput(project_id, id, show_input) {
+    $noteTitleLabel = $("#noteTitleLabelP" + project_id + "-" + id);
+    $noteTitleInput = $("#noteTitleInputP" + project_id + "-" + id);
+    $noteDescription = $('#noteDescriptionP' + project_id + "-" + id);
+    $textareaDescription = $('#textareaDescriptionP' + project_id + "-" + id);
+
     if (show_input) {
-      $("#noteTitleLabelP" + project_id + "-" + id).addClass( 'hideMe' );
-      $("#noteTitleInputP" + project_id + "-" + id).removeClass( 'hideMe' );
-      $("#noteTitleInputP" + project_id + "-" + id).focus();
+      $noteTitleLabel.addClass( 'hideMe' );
+      $noteTitleInput.removeClass( 'hideMe' );
+      $noteTitleInput.focus();
 
       // get current width of the description textarea
-      var inputWidth = $('#textareaDescriptionP' + project_id + "-" + id).width();
-      if ( $('#noteDescriptionP' + project_id + "-" + id).hasClass( 'hideMe' ) ) {
-        $('#noteDescriptionP' + project_id + "-" + id).toggleClass( 'hideMe' );
-        inputWidth = $('#textareaDescriptionP' + project_id + "-" + id).width();
-        $('#noteDescriptionP' + project_id + "-" + id).toggleClass( 'hideMe' );
+      var inputWidth = $textareaDescription.width();
+      if ( $noteDescription.hasClass( 'hideMe' ) ) {
+        $noteDescription.toggleClass( 'hideMe' );
+        inputWidth = $textareaDescription.width();
+        $noteDescription.toggleClass( 'hideMe' );
       }
 
-      $("#noteTitleInputP" + project_id + "-" + id).width( inputWidth );
+      $noteTitleInput.width( inputWidth );
     }
     else {
-      $("#noteTitleInputP" + project_id + "-" + id).blur();
-      $("#noteTitleInputP" + project_id + "-" + id).addClass( 'hideMe' );
-      $("#noteTitleLabelP" + project_id + "-" + id).removeClass( 'hideMe' );
+      $noteTitleInput.blur();
+      $noteTitleInput.addClass( 'hideMe' );
+      $noteTitleLabel.removeClass( 'hideMe' );
     }
     adjustNotePlaceholders(project_id, id);
   };
 
   // Show input or textarea visuals for descriptions of existing notes
   function showDescriptionInput(project_id, id, show_input) {
+    $textareaDescription = $('#textareaDescriptionP' + project_id + "-" + id);
     if (show_input) {
-      $('#textareaDescriptionP' + project_id + "-" + id).addClass( "textareaDescriptionSelected" );
-      $('#textareaDescriptionP' + project_id + "-" + id).removeClass( "textareaDescription" );
+      $textareaDescription.addClass( "textareaDescriptionSelected" );
+      $textareaDescription.removeClass( "textareaDescription" );
     }
     else {
-      $('#textareaDescriptionP' + project_id + "-" + id).addClass( "textareaDescription" );
-      $('#textareaDescriptionP' + project_id + "-" + id).removeClass( "textareaDescriptionSelected" );
+      $textareaDescription.addClass( "textareaDescription" );
+      $textareaDescription.removeClass( "textareaDescriptionSelected" );
     }
   };
 
@@ -340,9 +351,6 @@
 	      var user_id = $(this).attr('data-user');
 	      $('.inputNewNote').blur();
 	      sqlAddNote(project_id, user_id);
-	      if (!$('#noteDescription0').hasClass('hideMe') ) {
-	        $('#noteDescription0').toggleClass('hideMe' );
-	      }
 	      sqlRefreshNotes(project_id, user_id);
       }
     });
@@ -356,9 +364,6 @@
       var user_id = $(this).attr('data-user');
       $('.inputNewNote').blur();
       sqlAddNote(project_id, user_id);
-      if (!$('#noteDescription0').hasClass('hideMe') ) {
-        $('#noteDescription0').toggleClass('hideMe' );
-      }
       sqlRefreshNotes(project_id, user_id);
     });
   });
@@ -522,6 +527,88 @@
   });
 
 
+  $(function() {
+    $( "button" + ".settingsCategoryColors" ).click(function() {
+        toggleCategoryColors();
+    });
+  });
+
+  // Toggle category colors
+  function toggleCategoryColors() {
+    var showCategoryColors = sessionStorage.getItem('boardnotesShowCategoryColors');
+    if (!showCategoryColors || showCategoryColors == "hide") {
+        $( ".trReport" ).addClass( 'task-board' );
+        $( ".liNote" ).addClass( 'task-board' );
+        // avoid the ugly empty category label boxes
+        $('.catLabel').each(function() {
+            if ($(this).html())
+                $(this).addClass( 'task-board-category' );
+        });
+        sessionStorage.setItem('boardnotesShowCategoryColors', "show");
+    } else {
+        $( ".trReport" ).removeClass( 'task-board' );
+        $( ".liNote" ).removeClass( 'task-board' );
+        $( ".catLabel" ).removeClass( 'task-board-category' );
+        sessionStorage.setItem('boardnotesShowCategoryColors', "hide");
+    }
+  }
+
+  // Update category colors
+  function updateCategoryColors(project_id, id, old_category, new_category) {
+    var note_id = $('#note_idP' + project_id + "-" + id).attr('data-id');
+    $old_color = $( "#category-" + old_category ).attr('data-color');
+    $new_color = $( "#category-" + new_category ).attr('data-color');
+
+    $( "#trReportNr" + id ).removeClass( 'color-' + $old_color );
+    $( "#item-" + note_id ).removeClass( 'color-' + $old_color );
+    $("#noteCatLabelP" + project_id + "-" + id).removeClass( 'color-' + $old_color );
+
+    $( "#trReportNr" + id ).addClass( 'color-' + $new_color );
+    $( "#item-" + note_id ).addClass( 'color-' + $new_color );
+    $("#noteCatLabelP" + project_id + "-" + id).addClass( 'color-' + $new_color);
+  }
+
+  // Selector category
+  $(function() {
+    $( ".catSelector" ).selectmenu({
+      change: function( event, data ) {
+        var id = $(this).attr('data-id');
+        if (id > 0) { // exclude handling the category drop down for new note
+            var project_id = $(this).attr('data-project');
+            var user_id = $(this).attr('data-user');
+            var old_category = $("#noteCatLabelP" + project_id + "-" + id).html();
+            var new_category = $('#catP' + project_id + "-" + id + ' option:selected').text();
+            $("#noteCatLabelP" + project_id + "-" + id).html(new_category);
+
+            updateCategoryColors(project_id, id, old_category, new_category);
+            // avoid the ugly empty category label boxes
+            var showCategoryColors = sessionStorage.getItem('boardnotesShowCategoryColors');
+            if (new_category && showCategoryColors == "show") {
+                $("#noteCatLabelP" + project_id + "-" + id).addClass( 'task-board-category' );
+            }
+            if (!new_category || !showCategoryColors || showCategoryColors == "hide") {
+                $("#noteCatLabelP" + project_id + "-" + id).removeClass( 'task-board-category' );
+            }
+
+            showTitleInput(project_id, id, false);
+            showDescriptionInput(project_id, id, false);
+            sqlUpdateNote(project_id, user_id, id);
+            blinkNote(project_id, id);
+
+        }
+      }
+    });
+  });
+
+
+  // Hide note in reporting
+  $(function() {
+    $( "button" + "#singleReportHide" ).click(function() {
+      var id = $(this).attr('data-id');
+      $( "#trReportId" + id ).addClass( "hideMe" );
+    });
+  });
+
   function modalReport(project_id, user_id) {
     $( "#dialogReportP" + project_id ).removeClass( 'hideMe' );
     $( "#dialogReportP" + project_id ).dialog({
@@ -552,32 +639,3 @@
     });
     return false;
   }
-
-
-  // Selector category
-  $(function() {
-    $( ".catSelector" ).selectmenu({
-      change: function( event, data ) {
-        var id = $(this).attr('data-id');
-        if (id > 0) { // exclude handling the category drop down for new note
-            var project_id = $(this).attr('data-project');
-            var user_id = $(this).attr('data-user');
-            var category = $('#catP' + project_id + "-" + id + ' option:selected').text();
-            $("#noteCatLabelP" + project_id + "-" + id).html(category);
-            showTitleInput(project_id, id, false);
-            showDescriptionInput(project_id, id, false);
-            sqlUpdateNote(project_id, user_id, id);
-            blinkNote(project_id, id);
-        }
-      }
-    });
-  });
-
-
-  // Hide note in reporting
-  $(function() {
-    $( "button" + "#singleReportHide" ).click(function() {
-      var id = $(this).attr('data-id');
-      $( "#trReportId" + id ).addClass( "hideMe" );
-    });
-  }); 
