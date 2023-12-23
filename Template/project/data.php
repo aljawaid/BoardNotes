@@ -162,11 +162,18 @@ print '">';
 
 //----------------------------------------
 
-if (!$readonlyNotes) {
     print '<li id="item-0" class="ui-state-default liNewNote" data-id="0" data-project="';
     print $project_id;
     print '">';
-    print '<label class="labelNewNote" for="textinput" style="font-weight: 700;">Create New Note</label>';
+
+if ($readonlyNotes) {
+    print '<label class="labelNewNote">Overview Mode</label> (can ONLY change note status)';
+} else {
+    print '<label class="labelNewNote" for="textinput">Create New Note</label>';
+}
+
+// exclude when readonlyNotes
+if (!$readonlyNotes) {
 
     // Settings delete all done
     print '<button id="settingsDeleteAllDone" class="settingsButton" title="Delete all done notes" data-id="0" data-project="';
@@ -195,6 +202,7 @@ if (!$readonlyNotes) {
 
     // add some space between button groups
     print '<div class="settingsButton">&nbsp;</div>';
+} // end exclude
 
     // Collapse all
     print '<button id="settingsCollapseAll" class="settingsButton" title="Collapse all notes" data-id="0" data-project="';
@@ -223,6 +231,8 @@ if (!$readonlyNotes) {
     print '"><i class="fa fa-paint-brush" aria-hidden="true"></i>';
     print '</button>';
 
+// exclude when readonlyNotes
+if (!$readonlyNotes) {
     // Newline after heading and top settings
     print '<br>';
 
@@ -277,9 +287,9 @@ if (!$readonlyNotes) {
     print '</p>';
 
     print '</div>';
+} // end exclude
 
     print '</li>';
-}
 
 //----------------------------------------
 
