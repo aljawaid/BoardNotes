@@ -277,6 +277,8 @@ foreach($data as $u){
     print $user_id;
     print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
 
+    // hide all the utility buttons when viewing notes as readonly
+    // just allow for check/uncheck note
     if (!$readonlyNotes){
         // Delete button viewed (in detailed view)
         print '<button id="singleNoteDeleteP';
@@ -291,20 +293,23 @@ foreach($data as $u){
         print $user_id;
         print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
-        // Add note to tasks table (in detailed view)
-        print '<button id="singleNoteToTaskP';
-        print $u['project_id'];
-        print '-';
-        print $num;
-        print '" class="hideMe singleNoteToTask" data-id="';
-        print $num;
-        print '" data-note="';
-        print $u['id'];
-        print '" data-project="';
-        print $u['project_id'];
-        print '" data-user="';
-        print $user_id;
-        print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
+        // custom notes projects obviously CANNOT create tasks from notes
+        if (!$project['is_custom']) {
+            // Add note to tasks table (in detailed view)
+            print '<button id="singleNoteToTaskP';
+            print $u['project_id'];
+            print '-';
+            print $num;
+            print '" class="hideMe singleNoteToTask" data-id="';
+            print $num;
+            print '" data-note="';
+            print $u['id'];
+            print '" data-project="';
+            print $u['project_id'];
+            print '" data-user="';
+            print $user_id;
+            print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
+        }
 
         // Save button (in detailed view)
         print '<button id="singleNoteSaveP';

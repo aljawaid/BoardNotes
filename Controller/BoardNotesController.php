@@ -75,6 +75,8 @@ class BoardNotesController extends BaseController
         $project = $is_refresh ? $this->resolveProject($user_id) : $this->getProject();
         $project_id = $project['id'];
 
+        $project['is_custom'] = False;
+
         $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
         $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
     	$columns = $this->boardNotesModel->boardNotesGetColumns($project_id);

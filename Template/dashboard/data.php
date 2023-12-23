@@ -103,7 +103,9 @@
         $project = array('id' => 0, 'name' => 'All');
         if ($tab_id > 0) {
             $projectAccess = $projectsAccess[$tab_id - 1];
-            $project = array('id' => $projectAccess['project_id'], 'name' => $projectAccess['project_name']);
+            $project = array('id' => $projectAccess['project_id'],
+                             'name' => $projectAccess['project_name'],
+                             'is_custom' => $projectAccess['is_custom']);
         }
     ?>
 
