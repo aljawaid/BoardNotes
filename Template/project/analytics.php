@@ -10,6 +10,9 @@ $( document ).ready(function() {
         data: {
             columns: e,
             type: "donut"
+        },
+        color: {
+            pattern: ['#ff7f0e', '#2ca02c', '#1f77b4']
         }
     })
 });
@@ -23,12 +26,17 @@ $( document ).ready(function() {
 // Data - open and closed notes
 $ana_active0 = "0";
 $ana_active1 = "0";
+$ana_active2 = "0";
 $ana_total = "0";
 foreach ($analyticsData as $qq) {
   if ($qq['is_active'] == "0") {
     $ana_active0++;
-  } else {
+  }
+  if ($qq['is_active'] == "1") {
     $ana_active1++;
+  }
+  if ($qq['is_active'] == "2") {
+    $ana_active2++;
   }
   $ana_total++;
 }
@@ -37,12 +45,20 @@ $ana_active0_per = (($ana_active0/$ana_total)*100);
 $ana_active0_per = number_format((float)$ana_active0_per, 2, '.', '');
 $ana_active1_per = (($ana_active1/$ana_total)*100);
 $ana_active1_per = number_format((float)$ana_active1_per, 2, '.', '');
+$ana_active2_per = (($ana_active2/$ana_total)*100);
+$ana_active2_per = number_format((float)$ana_active2_per, 2, '.', '');
 
+$chart_metrics = '[';
+$chart_metrics .= '{"column_title":"Open","nb_tasks":' . $ana_active1 . ',"percentage":' . $ana_active1_per . '},';
+$chart_metrics .= '{"column_title":"Done","nb_tasks":' . $ana_active0 . ',"percentage":' . $ana_active0_per . '},';
+$chart_metrics .= '{"column_title":"Progress","nb_tasks":' . $ana_active2 . ',"percentage":' . $ana_active2_per . '}';
+$chart_metrics .= ']';
 ?>
+
 <p><strong>Open: <?php print $ana_active1; ?></strong></p>
 <p><strong>Done: <?php print $ana_active0; ?></strong></p>
+<p><strong>Progress: <?php print $ana_active2; ?></strong></p>
 <section class="analytic-task-repartition">
-<div id="chart" class="c3" data-metrics='[{"column_title":"Open","nb_tasks":<?php print $ana_active1; ?>,"percentage":<?php print $ana_active1_per; ?>},{"column_title":"Done","nb_tasks":<?php print $ana_active0; ?>,"percentage":<?php print $ana_active0_per; ?>}]'></div>
-
+<div id="chart" class="c3" data-metrics='<?php print $chart_metrics; ?>'></div>
 
 </section>

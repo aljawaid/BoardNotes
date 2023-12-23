@@ -123,16 +123,43 @@
   });
 
 
-  // Note is done
-  function isNoteDone(project_id, id){
+  // Switch note done state
+  function switchNoteDoneState(project_id, id){
+      // cycle through states
+      $checkDone = $("#noteDoneCheckmarkP" + project_id + "-" + id);
+      if ($checkDone.hasClass( "fa-circle-thin" )) {
+        $checkDone.removeClass( "fa-circle-thin" );
+        $checkDone.addClass( "fa-spinner fa-spin" );
+        return;
+      }
+      if ($checkDone.hasClass( "fa-spinner fa-spin" )) {
+        $checkDone.removeClass( "fa-spinner fa-spin" );
+        $checkDone.addClass( "fa-check" );
+        return;
+      }
+      if ($checkDone.hasClass( "fa-check" )) {
+        $checkDone.removeClass( "fa-check" );
+        $checkDone.addClass( "fa-circle-thin" );
+        return;
+      }
+  }
+
+  // Update note done checkmark
+  function updateNoteDoneCheckmark(project_id, id){
+    if( $( "#noteDoneCheckmarkP" + project_id + "-" + id).hasClass( "fa-check" ) ){
+      $("#noteTitleLabelP" + project_id + "-" + id).addClass( "noteDoneDesignText" );
+      $("#noteDescriptionP" + project_id + "-" + id).addClass( "noteDoneDesignText" );
+      $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '0');
+    }
     if( $( "#noteDoneCheckmarkP" + project_id + "-" + id).hasClass( "fa-circle-thin" ) ){
       $("#noteTitleLabelP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
       $("#noteDescriptionP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
       $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '1');
-    } else {
-      $("#noteTitleLabelP" + project_id + "-" + id).addClass( "noteDoneDesignText" );
-      $("#noteDescriptionP" + project_id + "-" + id).addClass( "noteDoneDesignText" );
-      $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '0');
+    }
+    if( $( "#noteDoneCheckmarkP" + project_id + "-" + id).hasClass( "fa-spinner fa-spin" ) ){
+      $("#noteTitleLabelP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
+      $("#noteDescriptionP" + project_id + "-" + id).removeClass( "noteDoneDesignText" );
+      $("#noteDoneCheckmarkP" + project_id + "-" + id).attr('data-id', '2');
     }
   };
 
@@ -142,9 +169,9 @@
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
       var id = $(this).attr('data-id');
-      $("#noteDoneCheckmarkP" + project_id + "-" + id).toggleClass( "fa-circle-thin" );
-      $("#noteDoneCheckmarkP" + project_id + "-" + id).toggleClass( "fa-check" );
-      isNoteDone(project_id, id);
+
+      switchNoteDoneState(project_id, id);
+      updateNoteDoneCheckmark(project_id, id);
       showTitleInput(project_id, id, false);
       showDescriptionInput(project_id, id, false);
       sqlUpdateNote(project_id, user_id, id);
@@ -367,10 +394,6 @@
   $(function() {
     $( "button" + ".singleNoteToTask" ).click(function() {
       var csrf_token = $('[name=csrf_token]').val();
-      var id = $(this).attr('data-id');
-      if (!id) {
-        alert ("You need to refresh the page before exporting");
-      }
       var note_id = $(this).attr('data-note');
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');

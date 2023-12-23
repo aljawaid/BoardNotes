@@ -354,15 +354,19 @@ foreach($data as $u){
     print $u['project_id'];
     print '-';
     print $num;
-    if($u['is_active'] == "1"){
-        print '" data-id="';
-        print $u['is_active'];
-        print '" class="fa fa-circle-thin" aria-hidden="true"></i></button>';
-    } else {
-        print '" data-id="';
-        print $u['is_active'];
-        print '" class="fa fa-check" aria-hidden="true"></i></button>';
-    }
+    print '" data-id="';
+    print $u['is_active'];
+    print '" ';
+        if($u['is_active'] == "2"){
+            print 'class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+        }
+        if($u['is_active'] == "1"){
+            print 'class="fa fa-circle-thin" aria-hidden="true"></i>';
+        }
+        if($u['is_active'] == "0"){
+            print 'class="fa fa-check" aria-hidden="true"></i>';
+        }
+    print '</button>';
 
     // Note title input - typing. Changes after submit to label below.
     print '<input ';
@@ -379,10 +383,10 @@ foreach($data as $u){
     print $user_id;
     print '" name="noteTitle';
     print $num;
-    if($u['is_active'] == "1"){
-        print '" class="hideMe noteTitle" value="';
-    } else {
+    if($u['is_active'] == "0"){
         print '" class="hideMe noteTitle noteDoneDesignText" value="';
+    } else {
+        print '" class="hideMe noteTitle" value="';
     }
     print $u['title'];
     print '">';
@@ -402,10 +406,10 @@ foreach($data as $u){
     print $user_id;
     print '" name="noteTitleLabel';
     print $num;
-    if($u['is_active'] == "1"){
-        print '" class="noteTitleLabel noteTitle" value="">';
-    } else {
+    if($u['is_active'] == "0"){
         print '" class="noteTitleLabel noteTitle noteDoneDesignText" value="">';
+    } else {
+        print '" class="noteTitleLabel noteTitle" value="">';
     }
     print $u['title'];
     print '</label>';
@@ -432,10 +436,10 @@ foreach($data as $u){
     print '" data-user="';
     print $user_id;
     print '" ';
-    if($u['is_active'] == "1"){
-        print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
-    } else {
+    if($u['is_active'] == "0"){
         print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all noteDoneDesignText">';
+    } else {
+        print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
     }
     print '<textarea ';
     if ($readonlyNotes) print 'disabled ';
