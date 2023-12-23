@@ -233,7 +233,7 @@ div .saveNoteHolder {
     margin-right: 10px;
 }
 
-.settingsDeleteAllDone  {
+.settingsButton  {
     float: right;
     appearance: none;
     -webkit-appearance: none;
@@ -243,43 +243,6 @@ div .saveNoteHolder {
     padding-right: 5px;
     padding-left: 5px;
 }
-
-.settingsAnalytics  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-.settingsReport  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-.settingsCategoryColors  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
 
 div .singleNoteDeleteHolder {
     padding: 5px 0 10px 20px;

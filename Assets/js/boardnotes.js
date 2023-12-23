@@ -10,7 +10,7 @@
     }
   }
 
-  // Show details menu for existing notes (toggle class)
+  // Show details for existing notes (toggle class)
   function toggleDetails(project_id, id) {
     $("#noteDescriptionP" + project_id + "-" + id).toggleClass( "hideMe" );
     $("#singleNoteDeleteP" + project_id + "-" + id).toggleClass( "hideMe" );
@@ -460,7 +460,7 @@
 
   // POST delete all done
   $(function() {
-    $( "button" + ".settingsDeleteAllDone" ).click(function() {
+    $( "#settingsDeleteAllDone" ).click(function() {
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
       modalDeleteAllDoneNotes(project_id, user_id);
@@ -490,7 +490,7 @@
 
   // POST analytics
   $(function() {
-    $( "button" + ".settingsAnalytics" ).click(function() {
+    $( "#settingsAnalytics" ).click(function() {
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
       modalAnalytics(project_id, user_id);
@@ -519,7 +519,7 @@
 
   // Sort and filter for report
   $(function() {
-    $( "button" + ".settingsReport" ).click(function() {
+    $( "#settingsReport" ).click(function() {
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
       modalReport(project_id, user_id);
@@ -528,7 +528,33 @@
 
 
   $(function() {
-    $( "button" + ".settingsCategoryColors" ).click(function() {
+    $( "#settingsCollapseAll" ).click(function() {
+        $('.showDetails').each(function() {
+            if ($(this).find('i').hasClass( "fa-angle-double-up" ))
+            {
+                var project_id = $(this).attr('data-project');
+                var id = $(this).attr('data-id');
+                toggleDetails(project_id, id);
+            }
+        });
+    });
+  });
+
+  $(function() {
+    $( "#settingsExpandAll" ).click(function() {
+        $('.showDetails').each(function() {
+            if ($(this).find('i').hasClass( "fa-angle-double-down" ))
+            {
+                var project_id = $(this).attr('data-project');
+                var id = $(this).attr('data-id');
+                toggleDetails(project_id, id);
+            }
+        });
+    });
+  });
+
+  $(function() {
+    $( "#settingsCategoryColors" ).click(function() {
         toggleCategoryColors();
     });
   });
