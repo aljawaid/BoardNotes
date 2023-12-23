@@ -399,6 +399,7 @@
   $(function() {
     $( "button" + ".singleNoteToTask" ).click(function() {
       var csrf_token = $('[name=csrf_token]').val();
+      var id = $(this).attr('data-id');
       var note_id = $(this).attr('data-note');
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
