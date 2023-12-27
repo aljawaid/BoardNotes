@@ -72,15 +72,29 @@ class BoardNotesController extends BaseController
         $user = $this->getUser();
         $user_id = $this->resolveUserId();
 
-        $project = $is_refresh ? $this->resolveProject($user_id) : $this->getProject();
+        if ($is_refresh)
+        {
+            $project = $this->resolveProject($user_id);
+        }
+        else
+        {
+            $project = $this->getProject();
+            $project['is_custom'] = False;
+        }
         $project_id = $project['id'];
 
-        $project['is_custom'] = False;
 
-        $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
-        $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
-    	$columns = $this->boardNotesModel->boardNotesGetColumns($project_id);
+    	if ($project['is_custom'])
+    	{
+            $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+    	}
+    	else
+    	{
+            $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
+    	}
+        $columns = $this->boardNotesModel->boardNotesGetColumns($project_id);
     	$swimlanes = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
+        $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
 
         return $this->response->html($this->helper->layout->app('BoardNotes:project/data', array(
             'title' => $project['name'], // rather keep the project name as title
@@ -120,11 +134,6 @@ class BoardNotesController extends BaseController
 
         $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
-        $data = $this->boardNotesModel->boardNotesShowAll($projectsAccess, $user_id);
-        $categories = array();
-    	$columns  = array();
-    	$swimlanes  = array();
-
     	if ($tab_id > 0 && !$projectsAccess[$tab_id - 1]['is_custom'])
     	{
     	    $project_id = $projectsAccess[$tab_id - 1]['project_id'];
@@ -135,7 +144,10 @@ class BoardNotesController extends BaseController
     	else
     	{
             $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+        	$columns  = array();
+        	$swimlanes  = array();
     	}
+        $data = $this->boardNotesModel->boardNotesShowAll($projectsAccess, $user_id);
 
         return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
             'title' => t('Notes overview for %s', $this->helper->user->getFullname($user)),
