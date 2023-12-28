@@ -409,11 +409,7 @@ foreach($data as $u){
     print $user_id;
     print '" name="noteTitle';
     print $num;
-    if($u['is_active'] == "0"){
-        print '" class="hideMe noteTitle noteDoneDesignText" value="';
-    } else {
-        print '" class="hideMe noteTitle" value="';
-    }
+    print '" class="hideMe noteTitle" value="';
     print $u['title'];
     print '">';
 
@@ -462,14 +458,15 @@ foreach($data as $u){
     print '" data-user="';
     print $user_id;
     print '" ';
-    if($u['is_active'] == "0"){
-        print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all noteDoneDesignText">';
-    } else {
-        print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
-    }
-    print '<textarea ';
+    print 'class="hideMe details containerFloatClear noteDescriptionClass ui-corner-all">';
+    print '<textarea title="Press tab to save changes" ';
     if ($readonlyNotes) print 'disabled ';
-    print 'title="Press tab to save changes" class="textareaDescription" id="textareaDescriptionP';
+    if($u['is_active'] == "0"){
+        print '" class="textareaDescription noteDoneDesignTextarea"';
+    } else {
+        print '" class="textareaDescription"';
+    }
+    print ' id="noteTextareaDescriptionP';
     print $u['project_id'];
     print '-';
     print $num;

@@ -52,6 +52,11 @@ input[type="text"] {
     margin-top: 0;
     height: auto;
     padding-left: 10px;
+    text-decoration: none;
+}
+
+input[type=text]::selection {
+  background: rgba(82,168,236,.8);
 }
 
 input[type=text]:focus {
@@ -60,6 +65,7 @@ input[type=text]:focus {
     outline: 0;
     border-bottom: 1px solid gray;
     box-shadow: none;
+    text-decoration: none;
 }
 
 input::placeholder {
@@ -139,6 +145,7 @@ label {
     margin-top: 0;
     padding-left: 10px;
     height: 20px;
+    border: 0px !important;
 }
 
 .noteDescriptionClass {
@@ -216,12 +223,25 @@ label {
 }
 
 .noteDoneDesignText {
-    color: #777;
+    color: #555;
+    text-decoration: line-through;
+}
+
+.noteDoneDesignTextarea {
+    color: #555;
+    border: 1px solid #555 !important;
     text-decoration: line-through;
 }
 
 #item-0 .noteDescriptionClass {
     padding: 5px 10px 0 40px;
+}
+
+.categories {
+    display: inline-block;
+    vertical-align: top;
+    margin-left: 20px;
+    color: #1f1f1f;
 }
 
 textarea {
@@ -231,22 +251,18 @@ textarea {
     height: 50px;
     width: 320px;
     padding: 5px;
-    color: #777;
+    color: #1f1f1f;
     margin-top: 5px;
 }
 
-
-.categories {
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 20px;
-    color: #1f1f1f;
+textarea::selection {
+    background: rgba(82,168,236,.8);
 }
 
 .textareaDescription {
     display: inline-block;
     background: none;
-    border: 1px solid #777;
+    border: 1px solid #1f1f1f;
     white-space:pre-wrap;
 }
 
@@ -254,6 +270,7 @@ textarea {
     display: inline-block;
     color: #000 !important;
     background-color: #777;
+    text-decoration: none;
 }
 
 .textareaDescriptionSelected:focus {

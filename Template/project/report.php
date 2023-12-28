@@ -111,7 +111,7 @@ foreach($data as $u){
         print $u['project_id'];
         print '" class="details reportDescriptionClass ui-corner-all">';
 
-        print '<span id="textareaDescriptionP';
+        print '<span id="noteTextareaDescriptionP';
         print $u['project_id'];
         print '-';
         print $num;
@@ -120,7 +120,7 @@ foreach($data as $u){
         print '" data-project="';
         print $u['project_id'];
         if($u['is_active'] == "0"){
-            print '" class="textareaReportDescription reportTitle noteDoneDesignText">';
+            print '" class="textareaReportDescription reportTitle noteDoneDesignTextarea">';
         } else {
             print '" class="textareaReportDescription reportTitle">';
         }

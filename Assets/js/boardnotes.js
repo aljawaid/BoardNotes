@@ -150,21 +150,21 @@
   function updateNoteDoneCheckmark(project_id, id){
     $noteDoneCheckmark = $("#noteDoneCheckmarkP" + project_id + "-" + id);
     $noteTitleLabel = $("#noteTitleLabelP" + project_id + "-" + id);
-    $noteDescription = $("#noteDescriptionP" + project_id + "-" + id);
+    $noteDescription = $("#noteTextareaDescriptionP" + project_id + "-" + id);
 
     if( $noteDoneCheckmark.hasClass( "fa-check" ) ){
       $noteTitleLabel.addClass( "noteDoneDesignText" );
-      $noteDescription.addClass( "noteDoneDesignText" );
+      $noteDescription.addClass( "noteDoneDesignTextarea" );
       $noteDoneCheckmark.attr('data-id', '0');
     }
     if( $noteDoneCheckmark.hasClass( "fa-circle-thin" ) ){
       $noteTitleLabel.removeClass( "noteDoneDesignText" );
-      $noteDescription.removeClass( "noteDoneDesignText" );
+      $noteDescription.removeClass( "noteDoneDesignTextarea" );
       $noteDoneCheckmark.attr('data-id', '1');
     }
     if( $noteDoneCheckmark.hasClass( "fa-spinner fa-spin" ) ){
       $noteTitleLabel.removeClass( "noteDoneDesignText" );
-      $noteDescription.removeClass( "noteDoneDesignText" );
+      $noteDescription.removeClass( "noteDoneDesignTextarea" );
       $noteDoneCheckmark.attr('data-id', '2');
     }
   };
@@ -213,7 +213,7 @@
     var is_active = $('#noteDoneCheckmarkP' + project_id + "-" + id).attr('data-id');
     var title = $('#noteTitleInputP' + project_id + "-" + id).val();
     var category = $('#catP' + project_id + "-" + id + ' option:selected').text();
-    var description = $('#textareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >');
+    var description = $('#noteTextareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >');
 
     $.ajaxSetup ({
         cache: false
@@ -332,12 +332,15 @@
     $noteTitleLabel = $("#noteTitleLabelP" + project_id + "-" + id);
     $noteTitleInput = $("#noteTitleInputP" + project_id + "-" + id);
     $noteDescription = $('#noteDescriptionP' + project_id + "-" + id);
-    $textareaDescription = $('#textareaDescriptionP' + project_id + "-" + id);
+    $textareaDescription = $('#noteTextareaDescriptionP' + project_id + "-" + id);
 
     if (show_input) {
       $noteTitleLabel.addClass( 'hideMe' );
       $noteTitleInput.removeClass( 'hideMe' );
       $noteTitleInput.focus();
+      $noteTitleInput[0].selectionStart = 0;
+      $noteTitleInput[0].selectionEnd = 0;
+
 
       // get current width of the description textarea
       var inputWidth = $textareaDescription.width();
@@ -359,10 +362,13 @@
 
   // Show input or textarea visuals for descriptions of existing notes
   function showDescriptionInput(project_id, id, show_input) {
-    $textareaDescription = $('#textareaDescriptionP' + project_id + "-" + id);
+    $textareaDescription = $('#noteTextareaDescriptionP' + project_id + "-" + id);
     if (show_input) {
       $textareaDescription.addClass( "textareaDescriptionSelected" );
       $textareaDescription.removeClass( "textareaDescription" );
+      $textareaDescription[0].selectionStart = 0;
+      $textareaDescription[0].selectionEnd = 0;
+
     }
     else {
       $textareaDescription.addClass( "textareaDescription" );
@@ -488,7 +494,7 @@
       var note_id = $(this).attr('data-note');
       var is_active = $('#noteDoneCheckmarkP' + project_id + "-" + id).attr('data-id');
       var title = encodeURIComponent($('#noteTitleLabelP' + project_id + "-" + id).text());
-      var description = encodeURIComponent($('#textareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >'));
+      var description = encodeURIComponent($('#noteTextareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >'));
       var category_val = $('#catP' + project_id + "-" + id + ' option:selected').val();
       modalNoteToTask(project_id, user_id, note_id, is_active, title, description, category_val);
     });
