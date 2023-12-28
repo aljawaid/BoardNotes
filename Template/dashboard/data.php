@@ -22,35 +22,7 @@
 }
 </style>
 
-<script>
-
-  function updateNotesTabs() {
-      var tab_id = $( "#tab_id" ).attr('data');
-
-      $( ".singleTab" ).removeClass( 'active' );
-      $( "#singleTab" + tab_id ).addClass( 'active' );
-      $( "#myNotesHeader h2" ).text( 'My notes > ' + $( "#singleTab" + tab_id ).text());
-
-      var numTabs = $( "#tabs li" ).length;
-      var tabHeight = $( "#tabs li:eq(0)" ).outerHeight();
-      $( "#tabs" ).height(numTabs * tabHeight);
-  }
-
-  function prepareDocumentQ() {
-    var isMobile = IsMobile();
-    if(isMobile) {
-      // choose mobile view
-      $('#mainholderQ').removeClass('mainholderQ').addClass('mainholderMobileQ');
-    }
-
-    updateNotesTabs();
-  }
-
-</script>
-
-<div id="myNotesHeader" class="page-header"><h2>My notes > All</h2></div>
-
-<section id="mainholderQ" class="mainholderQ sidebar-container">
+<?= $this->asset->js('plugins/BoardNotes/Assets/js/load_dashboard.js') ?>
 
 <?php
 
@@ -60,6 +32,10 @@
         $tab_id = intval($_GET['tab_id']);
     }
 ?>
+
+<div id="myNotesHeader" class="page-header"><h2>My notes &gt; All</h2></div>
+
+<section id="mainholderQ" class="mainholderQ sidebar-container">
 
 <div id="tabs" class="sidebar">
   <ul>
