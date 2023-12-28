@@ -14,15 +14,13 @@ if (!$is_refresh && !$is_dashboard_view) {
 //----------------------------------------
 
 $readonlyNotes = ($project_id == 0);
-$projectsTabsById = array();
-if ($is_dashboard_view) {
-    $tab_id = 1;
-    foreach($projectsAccess as $projectAccess) {
-        $projectsTabsById[ $projectAccess['project_id'] ] = array('tab_id' => $tab_id, 'name' => $projectAccess['project_name']);
-        $tab_id++;
-    }
-}
 
+$tab_id = 1;
+$projectsTabsById = array();
+foreach($projectsAccess as $projectAccess) {
+    $projectsTabsById[ $projectAccess['project_id'] ] = array('tab_id' => $tab_id, 'name' => $projectAccess['project_name']);
+    $tab_id++;
+}
 //----------------------------------------
 
 $listCategoriesById = '';
@@ -116,24 +114,24 @@ if ($readonlyNotes) {
 if (!$readonlyNotes) {
 
     // Settings delete all done
-    print '<button id="settingsDeleteAllDone" class="settingsButton" title="Delete all done notes" data-id="0" data-project="';
+    print '<button id="settingsDeleteAllDone" class="toolbarButton" title="Delete all done notes" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
     print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
     // add some space between button groups
-    print '<div class="settingsButton">&nbsp;</div>';
+    print '<div class="toolbarButton">&nbsp;</div>';
 
     // Settings analytics
-    print '<button id="settingsAnalytics" class="settingsButton" title="Show analytics" data-id="0" data-project="';
+    print '<button id="settingsAnalytics" class="toolbarButton" title="Show analytics" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
     print '"><i class="fa fa-bar-chart" aria-hidden="true"></i></button>';
 
     // Open report
-    print '<button id="settingsReport" class="settingsButton" title="Create report" data-id="0" data-project="';
+    print '<button id="settingsReport" class="toolbarButton" title="Create report" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
@@ -141,11 +139,11 @@ if (!$readonlyNotes) {
     print '</button>';
 
     // add some space between button groups
-    print '<div class="settingsButton">&nbsp;</div>';
+    print '<div class="toolbarButton">&nbsp;</div>';
 } // end exclude
 
     // Collapse all
-    print '<button id="settingsCollapseAll" class="settingsButton" title="Collapse all notes" data-id="0" data-project="';
+    print '<button id="settingsCollapseAll" class="toolbarButton" title="Collapse all notes" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
@@ -153,7 +151,7 @@ if (!$readonlyNotes) {
     print '</button>';
 
     // Expand all
-    print '<button id="settingsExpandAll" class="settingsButton" title="Expand all notes" data-id="0" data-project="';
+    print '<button id="settingsExpandAll" class="toolbarButton" title="Expand all notes" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
@@ -161,10 +159,10 @@ if (!$readonlyNotes) {
     print '</button>';
 
     // add some space between button groups
-    print '<div class="settingsButton">&nbsp;</div>';
+    print '<div class="toolbarButton">&nbsp;</div>';
 
     // Toggle category colors
-    print '<button id="settingsCategoryColors" class="settingsButton" title="Colorize by category" data-id="0" data-project="';
+    print '<button id="settingsCategoryColors" class="toolbarButton" title="Colorize by category" data-id="0" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
@@ -186,7 +184,7 @@ if (!$readonlyNotes) {
     print '"><i class="fa fa-angle-double-down" aria-hidden="true"></i></button>';
 
     // Save button
-    print '<button class="hideMe saveNewNote" id="saveNewNote" data-project="';
+    print '<button class="hideMe saveNewNote" id="saveNewNote" title="Save note" data-project="';
     print $project_id;
     print '" data-user="';
     print $user_id;
@@ -249,7 +247,7 @@ foreach($data as $u){
     print '-';
     print $u['id']; 
     print '" class="ui-state-default liNote';
-    if (!empty($u['category'])) {
+    if (!empty($u['category']) && array_key_exists($u['category'], $mapCategoryColorByName)) {
         $category_color = $mapCategoryColorByName[ $u['category'] ];
         if (!empty($category_color)) {
             print ' color-' . $category_color;
@@ -284,11 +282,11 @@ foreach($data as $u){
     // just allow for check/uncheck note
     if (!$readonlyNotes){
         // Delete button viewed (in detailed view)
-        print '<button id="singleNoteDeleteP';
+        print '<button title="Delete note" id="singleNoteDeleteP';
         print $u['project_id'];
         print '-';
         print $num;
-        print '" class="hideMe singleNoteDelete" data-id="';
+        print '" class="hideMe toolbarButton singleNoteDelete" data-id="';
         print $u['id'];
         print '" data-project="';
         print $u['project_id'];
@@ -296,14 +294,45 @@ foreach($data as $u){
         print $user_id;
         print '"><i class="fa fa-trash-o" aria-hidden="true"></i></button>';
 
+        // Save button (in detailed view)
+        print '<button title="Save note" id="singleNoteSaveP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" class="hideMe toolbarButton singleNoteSave" data-id="';
+        print $num;
+        print '" data-project="';
+        print $u['project_id'];
+        print '" data-user="';
+        print $user_id;
+        print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
+
+        // add some space between button groups
+        print '<div class="toolbarButton">&nbsp;</div>';
+
+        // Transfer button (in detailed view)
+        print '<button title="Move note to project" id="singleNoteTransferP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" class="hideMe toolbarButton singleNoteTransfer" data-id="';
+        print $num;
+        print '" data-note="';
+        print $u['id'];
+        print '" data-project="';
+        print $u['project_id'];
+        print '" data-user="';
+        print $user_id;
+        print '"><i class="fa fa-exchange" aria-hidden="true"></i></button>';
+
         // custom notes projects obviously CANNOT create tasks from notes
         if (!$project['is_custom']) {
             // Add note to tasks table (in detailed view)
-            print '<button id="singleNoteToTaskP';
+            print '<button title="Create task from note" id="singleNoteToTaskP';
             print $u['project_id'];
             print '-';
             print $num;
-            print '" class="hideMe singleNoteToTask" data-id="';
+            print '" class="hideMe toolbarButton singleNoteToTask" data-id="';
             print $num;
             print '" data-note="';
             print $u['id'];
@@ -313,24 +342,11 @@ foreach($data as $u){
             print $user_id;
             print '"><i class="fa fa-share-square-o" aria-hidden="true"></i></button>';
         }
-
-        // Save button (in detailed view)
-        print '<button id="singleNoteSaveP';
-        print $u['project_id'];
-        print '-';
-        print $num;
-        print '" class="hideMe singleNoteSave" data-id="';
-        print $num;
-        print '" data-project="';
-        print $u['project_id'];
-        print '" data-user="';
-        print $user_id;
-        print '"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>';
     }
 
     // Category label (in simple view)
     print '<label class="catLabel';
-    if (!empty($u['category'])) {
+    if (!empty($u['category']) && array_key_exists($u['category'], $mapCategoryColorByName)) {
         $category_color = $mapCategoryColorByName[ $u['category'] ];
         if (!empty($category_color)) {
             print ' color-' . $category_color;
@@ -576,8 +592,10 @@ if (!$is_refresh) { // print only once per project !!!
 
   print '<div class="hideMe" id="dialogDeleteAllDone" title="Delete all done notes?">';
   print '<p>';
-  print '<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>';
-  print 'These items will be permanently deleted and cannot be recovered. Are you sure?';
+  print '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+  print ' These items will be permanently deleted and cannot be recovered!';
+  print '<br>';
+  print ' Are you sure?';
   print '</p>';
   print '</div>';
 
@@ -587,12 +605,12 @@ if (!$is_refresh) { // print only once per project !!!
 
   //---------------------------------------------
 
-  print '<div class="hideMe" id="dialogToTaskP'.$project_id.'" title="Data for creating task">';
+  print '<div class="hideMe" id="dialogToTaskP'.$project_id.'" title="Create task from note?">';
 
   print '<div id="dialogToTaskParams">';
 
   print '<label for="listCatToTask">Category : &nbsp;</label>';
-  print '<select name="listCatToTask" id="listCatToTask';
+  print '<select name="listCatToTask" id="listCatToTaskP';
   print $project_id;
   print '">';
   // Only allow blank select if there's other selectable options
@@ -604,7 +622,7 @@ if (!$is_refresh) { // print only once per project !!!
   print '<br>';
 
   print '<label for="listColToTask">Column : &nbsp;</label>';
-  print '<select name="listColToTask" id="listColToTask';
+  print '<select name="listColToTask" id="listColToTaskP';
   print $project_id;
   print '">';
   print $listColumnsById;
@@ -612,14 +630,14 @@ if (!$is_refresh) { // print only once per project !!!
   print '<br>';
 
   print '<label for="listSwimToTask">Swimlane : &nbsp;</label>';
-  print '<select name="listSwimToTask" id="listSwimToTask';
+  print '<select name="listSwimToTask" id="listSwimToTaskP';
   print $project_id;
   print '">';
   print $listSwimlanesById;
   print '</select>';
   print '<br>';
 
-  print '<input type="checkbox" checked name="removeNote" id="removeNote';
+  print '<input type="checkbox" checked name="removeNote" id="removeNoteP';
   print $project_id;
   print '">';
   print '<label for="removeNote"> Remove the note</label>';
@@ -631,9 +649,39 @@ if (!$is_refresh) { // print only once per project !!!
 
   //---------------------------------------------
 
-  print '<div class="hideMe" id="dialogReportP'.$project_id.'" title="Sorting and filter for reports">';
+  print '<div class="hideMe" id="dialogTransferP'.$project_id.'" title="Move note to project">';
+
+  print '<label for="listNoteProject">Target project : &nbsp;</label>';
+  print '<select name="listNoteProject" id="listNoteProjectP';
+  print $project_id;
+  print '">';
+  foreach($projectsTabsById as $key => $projectTab) {
+    if ($key != $project_id){
+      print '<option value="';
+      print $key;
+      print '">';
+      print $projectTab['name'];
+      print '</option>';
+    }
+  }
+  print '</select>';
+  print '<p>';
+  print '<br>';
+  print '<i class="fa fa-exclamation-triangle" aria-hidden="true"></i>';
+  print ' Bear in mind that the target project may NOT have the category that is assigned to the note!';
+  print '<br>';
+  print ' It will be ignored until a valid value from the target project is set.';
+  print '<br>';
+  print ' Continue?';
+  print '</p>';
+
+  print '</div>';
+
+  //---------------------------------------------
+
+  print '<div class="hideMe" id="dialogReportP'.$project_id.'" title="Create report">';
   print '<div id="">';
-  print '<label for="reportCat">Category</label><br>';
+  print '<label for="reportCat">Filter by category :</label><br>';
   print '<select name="reportCat" id="reportCatP';
   print $project_id;
   print '" data-project="';

@@ -33,7 +33,7 @@
     }
 ?>
 
-<div id="myNotesHeader" class="page-header"><h2>My notes &gt; All</h2></div>
+<div id="myNotesHeader" class="page-header"><h2>My notes > All</h2></div>
 
 <section id="mainholderQ" class="mainholderQ sidebar-container">
 

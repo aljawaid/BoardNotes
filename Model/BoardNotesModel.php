@@ -158,7 +158,7 @@ class BoardNotesModel extends Base
     }
 
     // Delete note
-    public function boardNotesDeleteNote($note_id, $project_id, $user_id)
+    public function boardNotesDeleteNote($project_id, $user_id, $note_id)
     {
         return $this->db->table(self::TABLEnotes)
             ->eq('id', $note_id)
@@ -175,20 +175,6 @@ class BoardNotesModel extends Base
             ->eq('user_id', $user_id)
             ->eq('is_active', "0")
             ->remove();
-    }
-
-    // Update note
-    public function boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category)
-    {
-        // Get current unixtime
-        $t = time();
-        $values = array('is_active' => $is_active, 'title' => $title, 'description' => $description, 'category' => $category, 'date_modified' => $t,);
-        
-        return $this->db->table(self::TABLEnotes)
-            ->eq('id', $note_id)
-            ->eq('project_id', $project_id)
-            ->eq('user_id', $user_id)
-            ->update($values);
     }
 
     // Add note
@@ -226,6 +212,34 @@ class BoardNotesModel extends Base
         return $this->db->table(self::TABLEnotes)->insert($values);
     }
 
+    // Transfer note
+    public function boardNotesTransferNote($project_id, $user_id, $note_id, $target_project_id)
+    {
+        // Get current unixtime
+        $t = time();
+        $values = array('project_id' => $target_project_id, 'date_modified' => $t,);
+
+        return $this->db->table(self::TABLEnotes)
+            ->eq('id', $note_id)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->update($values);
+    }
+
+    // Update note
+    public function boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category)
+    {
+        // Get current unixtime
+        $t = time();
+        $values = array('is_active' => $is_active, 'title' => $title, 'description' => $description, 'category' => $category, 'date_modified' => $t,);
+
+        return $this->db->table(self::TABLEnotes)
+            ->eq('id', $note_id)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->update($values);
+    }
+
     // Update note positions
     public function boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes)
     {
@@ -237,7 +251,6 @@ class BoardNotesModel extends Base
 
         //  Explode all positions
         $note_ids = explode(',', $notePositions);
-
 
         // Loop through all positions
         foreach ($note_ids as $row) {

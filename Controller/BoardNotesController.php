@@ -83,6 +83,7 @@ class BoardNotesController extends BaseController
         }
         $project_id = $project['id'];
 
+        $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
     	if ($project['is_custom'])
     	{
@@ -102,12 +103,15 @@ class BoardNotesController extends BaseController
             'project_id' => $project_id,
             'user' => $user,
             'user_id' => $user_id,
-            'is_refresh' => $is_refresh,
-            'is_dashboard_view' => 0,
-            'data' => $data,
+            'projectsAccess' => $projectsAccess,
+
             'categories' => $categories,
             'columns' => $columns,
             'swimlanes' => $swimlanes,
+            'data' => $data,
+
+            'is_refresh' => $is_refresh,
+            'is_dashboard_view' => 0,
         )));
     }
 
@@ -154,10 +158,11 @@ class BoardNotesController extends BaseController
             'user' => $user,
             'user_id' => $user_id,
             'projectsAccess' => $projectsAccess,
-            'data' => $data,
+
             'categories' => $categories,
             'columns' => $columns,
             'swimlanes' => $swimlanes,
+            'data' => $data,
         )));
     }
 
@@ -169,7 +174,7 @@ class BoardNotesController extends BaseController
 
         $note_id = $this->request->getStringParam('note_id');
 
-        $validation = $this->boardNotesModel->boardNotesDeleteNote($note_id, $project_id, $user_id);
+        $validation = $this->boardNotesModel->boardNotesDeleteNote($project_id, $user_id, $note_id);
         return $validation;
     }
 
@@ -180,6 +185,34 @@ class BoardNotesController extends BaseController
         $project_id = $project['id'];
 
         $validation = $this->boardNotesModel->boardNotesDeleteAllDoneNotes($project_id, $user_id);
+        return $validation;
+    }
+
+    public function boardNotesAddNote()
+    {
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
+
+    	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
+    	$title = $this->request->getStringParam('title');
+    	$description = $this->request->getStringParam('description');
+    	$category = $this->request->getStringParam('category');
+
+    	$validation = $this->boardNotesModel->boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category);
+        return $validation;
+    }
+
+    public function boardNotesTransferNote()
+    {
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
+
+    	$note_id = $this->request->getStringParam('note_id');
+    	$target_project_id = $this->request->getStringParam('target_project_id');
+
+        $validation = $this->boardNotesModel->boardNotesTransferNote($project_id, $user_id, $note_id, $target_project_id);
         return $validation;
     }
 
@@ -197,21 +230,6 @@ class BoardNotesController extends BaseController
     	$category = $this->request->getStringParam('category');
 
         $validation = $this->boardNotesModel->boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category);
-        return $validation;
-    }
-
-    public function boardNotesAddNote()
-    {
-    	$user_id = $this->resolveUserId();
-        $project = $this->resolveProject($user_id);
-        $project_id = $project['id'];
-
-    	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
-    	$title = $this->request->getStringParam('title');
-    	$description = $this->request->getStringParam('description');
-    	$category = $this->request->getStringParam('category');
-
-    	$validation = $this->boardNotesModel->boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category);
         return $validation;
     }
 

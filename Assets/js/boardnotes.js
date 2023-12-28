@@ -14,8 +14,9 @@
   function toggleDetails(project_id, id) {
     $("#noteDescriptionP" + project_id + "-" + id).toggleClass( "hideMe" );
     $("#singleNoteDeleteP" + project_id + "-" + id).toggleClass( "hideMe" );
-    $("#singleNoteToTaskP" + project_id + "-" + id).toggleClass( "hideMe" );
     $("#singleNoteSaveP" + project_id + "-" + id).toggleClass( "hideMe" );
+    $("#singleNoteTransferP" + project_id + "-" + id).toggleClass( "hideMe" );
+    $("#singleNoteToTaskP" + project_id + "-" + id).toggleClass( "hideMe" );
     $("#noteCatLabelP" + project_id + "-" + id).toggleClass( "hideMe" );
 
     $("#showDetails" + project_id + "-" + id).find('i').toggleClass( "fa-angle-double-down" );
@@ -185,6 +186,27 @@
   });
 
 
+  // SQL note transfer (to another project)
+  function sqlTransferNote(project_id, user_id, note_id, target_project_id){
+    $.ajaxSetup ({
+        cache: false
+    });
+    $.ajax({
+      type: "POST",
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesTransferNote&plugin=BoardNotes'
+            + '&project_cus_id=' + project_id
+            + '&user_id=' + user_id
+            + '&note_id=' + note_id
+            + '&target_project_id=' + target_project_id,
+      success: function(response) {
+      },
+      error: function(xhr,textStatus,e) {
+        alert(e);
+      }
+    });
+    return false;
+  }
+
   // SQL note update (title etc. and done)
   function sqlUpdateNote(project_id, user_id, id){
     var note_id = $('#note_idP' + project_id + "-" + id).attr('data-id');
@@ -193,9 +215,19 @@
     var category = $('#catP' + project_id + "-" + id + ' option:selected').text();
     var description = $('#textareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >');
 
+    $.ajaxSetup ({
+        cache: false
+    });
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdateNote&plugin=BoardNotes'
+            + '&project_cus_id=' + project_id
+            + '&user_id=' + user_id
+            + '&note_id=' + note_id
+            + '&is_active=' + is_active
+            + '&title=' + title
+            + '&description=' + description
+            + '&category=' + category,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -219,9 +251,18 @@
     $('.inputNewNote').val("");
     var category = $('#catP' + project_id + ' option:selected').text();
 
+    $.ajaxSetup ({
+        cache: false
+    });
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&is_active=' + is_active + '&title=' + title + '&description=' + description + '&category=' + category,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesAddNote&plugin=BoardNotes'
+            + '&project_cus_id=' + project_id
+            + '&user_id=' + user_id
+            + '&is_active=' + is_active
+            + '&title=' + title
+            + '&description=' + description
+            + '&category=' + category,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -233,9 +274,15 @@
 
 
   function sqlDeleteNote(project_id, user_id, note_id){
+    $.ajaxSetup ({
+        cache: false
+    });
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&note_id=' + note_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteNote&plugin=BoardNotes'
+            + '&project_cus_id=' + project_id
+            + '&user_id=' + user_id
+            + '&note_id=' + note_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -247,9 +294,14 @@
 
 
   function sqlDeleteAllDoneNotes(project_id, user_id){
+    $.ajaxSetup ({
+        cache: false
+    });
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesDeleteAllDoneNotes&plugin=BoardNotes'
+            + '&project_cus_id=' + project_id
+            + '&user_id=' + user_id,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {
@@ -265,8 +317,10 @@
     $.ajaxSetup ({
       cache: false
     });
-    var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesRefreshProject&plugin=BoardNotes&project_cus_id=" + project_id + "&user_id=" + user_id;
+    var ajax_load = '<img src="http://automobiles.honda.com/images/current-offers/small-loading.gif" alt="loading..." />';
+    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesRefreshProject&plugin=BoardNotes'
+                + '&project_cus_id=' + project_id
+                + '&user_id=' + user_id;
     setTimeout(function() {
         $("#result" + project_id).html(ajax_load).load(loadUrl);
     }, 100);
@@ -388,49 +442,76 @@
   // POST delete on delete button
   $(function() {
     $( "button" + ".singleNoteDelete" ).click(function() {
-      var note_id = $(this).attr('data-id');
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
+      var note_id = $(this).attr('data-id');
       sqlDeleteNote(project_id, user_id, note_id);
       sqlRefreshNotes(project_id, user_id);
     });
   });
 
 
-  // POST export note to tasks
+  // POST transfer note to list
   $(function() {
-    $( "button" + ".singleNoteToTask" ).click(function() {
-      var csrf_token = $('[name=csrf_token]').val();
-      var id = $(this).attr('data-id');
-      var note_id = $(this).attr('data-note');
+    $( "button" + ".singleNoteTransfer" ).click(function() {
       var project_id = $(this).attr('data-project');
       var user_id = $(this).attr('data-user');
+      var note_id = $(this).attr('data-note');
+      modalTransferNote(project_id, user_id, note_id);
+    });
+  });
+
+  function modalTransferNote(project_id, user_id, note_id) {
+    $("#dialogTransferP" + project_id).removeClass( 'hideMe' );
+    $("#dialogTransferP" + project_id).dialog({
+      buttons: {
+        Move: function() {
+          var target_project_id = $('#listNoteProjectP' + project_id + ' option:selected').val();
+          sqlTransferNote(project_id, user_id, note_id, target_project_id);
+          $( this ).dialog( "close" );
+          sqlRefreshNotes(project_id, user_id);
+        },
+        Cancel: function() {
+          $( this ).dialog( "close" );
+        }
+      }
+    });
+    return false;
+  };
+
+  // POST export note as task
+  $(function() {
+    $( "button" + ".singleNoteToTask" ).click(function() {
+      var id = $(this).attr('data-id');
+      var project_id = $(this).attr('data-project');
+      var user_id = $(this).attr('data-user');
+      var note_id = $(this).attr('data-note');
       var is_active = $('#noteDoneCheckmarkP' + project_id + "-" + id).attr('data-id');
       var title = encodeURIComponent($('#noteTitleLabelP' + project_id + "-" + id).text());
       var description = encodeURIComponent($('#textareaDescriptionP' + project_id + "-" + id).val().replace(/\n/g, '<br >'));
       var category_val = $('#catP' + project_id + "-" + id + ' option:selected').val();
-      modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description, category_val);
+      modalNoteToTask(project_id, user_id, note_id, is_active, title, description, category_val);
     });
   });
 
-  function modalNoteToTask(csrf_token, project_id, user_id, note_id, is_active, title, description, category_val) {
+  function modalNoteToTask(project_id, user_id, note_id, is_active, title, description, category_val) {
     $.ajaxSetup ({
       cache: false
     });
     $('#dialogToTaskParams').removeClass( 'hideMe' );
     $('#deadloading').addClass( 'hideMe' );
-    $('#listCatToTask' + project_id).val(category_val).change();
+    $('#listCatToTaskP' + project_id).val(category_val).change();
     $("#dialogToTaskP" + project_id).removeClass( 'hideMe' );
     $("#dialogToTaskP" + project_id).dialog({
-      title: 'Data for creating task',
+      title: 'Create task from note?',
       buttons: {
-        Post: function() {
-          var categoryToTask = $('#listCatToTask' + project_id + ' option:selected').val();
-          var columnToTask = $('#listColToTask' + project_id + ' option:selected').val();
-          var swimlaneToTask = $('#listSwimToTask' + project_id + ' option:selected').val();
-          var removeNote = $('#removeNote' + project_id).is(":checked");
-          
-          var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
+        Create: function() {
+          var categoryToTask = $('#listCatToTaskP' + project_id + ' option:selected').val();
+          var columnToTask = $('#listColToTaskP' + project_id + ' option:selected').val();
+          var swimlaneToTask = $('#listSwimToTaskP' + project_id + ' option:selected').val();
+          var removeNote = $('#removeNoteP' + project_id).is(":checked");
+
+          var ajax_load = '<img src="http://automobiles.honda.com/images/current-offers/small-loading.gif" alt="loading..." />';
           var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesToTask&plugin=BoardNotes'
                         + '&project_cus_id=' + project_id
                         + '&user_id=' + user_id
@@ -454,7 +535,7 @@
             sqlRefreshNotes(project_id, user_id);
           }
         },
-        Close: function() { $( this ).dialog( "close" ); }
+        Cancel: function() { $( this ).dialog( "close" ); }
       }
     });
     return false;
@@ -505,8 +586,10 @@
     $.ajaxSetup ({
         cache: false
     });
-    var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id;
+    var ajax_load = '<img src="http://automobiles.honda.com/images/current-offers/small-loading.gif" alt="loading..." />';
+    var loadUrl = '/kanboard/?controller=BoardNotesController&action=boardNotesAnalytics&plugin=BoardNotes'
+                + '&project_cus_id=' + project_id
+                + '&user_id=' + user_id;
     $('#dialogAnalyticsInside').html(ajax_load).load(loadUrl);
 
     $( "#dialogAnalytics" ).removeClass( 'hideMe' );
@@ -639,13 +722,19 @@
   });
 
   function modalReport(project_id, user_id) {
+    $.ajaxSetup ({
+        cache: false
+    });
     $( "#dialogReportP" + project_id ).removeClass( 'hideMe' );
     $( "#dialogReportP" + project_id ).dialog({
       buttons: {
         Ok: function() {
           var category = $('#reportCatP' + project_id + ' option:selected').text();
-          var ajax_load = "<img src='http://automobiles.honda.com/images/current-offers/small-loading.gif' alt='loading...' />";
-          var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes" + "&project_cus_id=" + project_id + "&user_id=" + user_id + "&category=" + category;
+          var ajax_load = '<img src="http://automobiles.honda.com/images/current-offers/small-loading.gif" alt="loading..." />';
+          var loadUrl = "/kanboard/?controller=BoardNotesController&action=boardNotesReport&plugin=BoardNotes"
+                        + "&project_cus_id=" + project_id
+                        + "&user_id=" + user_id
+                        + "&category=" + category;
           $("#result" + project_id).html(ajax_load).load(loadUrl);
           $( this ).dialog( "close" );
         }
@@ -657,9 +746,16 @@
 
   // SQL update positions
   function sqlNotesUpdatePosition(project_id, user_id, order, nrNotes){
+    $.ajaxSetup ({
+        cache: false
+    });
     $.ajax({
       type: "POST",
-      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdatePosition&plugin=BoardNotes' + '&project_cus_id=' + project_id + '&user_id=' + user_id + '&order=' + order + '&nrNotes=' + nrNotes,
+      url: '/kanboard/?controller=BoardNotesController&action=boardNotesUpdatePosition&plugin=BoardNotes'
+        + '&project_cus_id=' + project_id
+        + '&user_id=' + user_id
+        + '&order=' + order
+        + '&nrNotes=' + nrNotes,
       success: function(response) {
       },
       error: function(xhr,textStatus,e) {

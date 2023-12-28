@@ -193,11 +193,7 @@ label {
     padding-right: 5px;
 }
 
-div .saveNoteHolder {
-    padding: 5px 0 10px 20px;
-}
-
-.singleNoteToTask {
+.toolbarButton  {
     float: right;
     appearance: none;
     -webkit-appearance: none;
@@ -206,46 +202,6 @@ div .saveNoteHolder {
     background: transparent;
     padding-right: 5px;
     padding-left: 5px;
-    margin-right: 10px;
-}
-
-.singleNoteDelete {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-.singleNoteSave {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-.settingsButton  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-}
-
-div .singleNoteDeleteHolder {
-    padding: 5px 0 10px 20px;
 }
 
 .checkDone {

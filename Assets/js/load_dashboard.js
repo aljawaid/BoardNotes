@@ -3,7 +3,7 @@ function updateNotesTabs() {
 
     $( ".singleTab" ).removeClass( 'active' );
     $( "#singleTab" + tab_id ).addClass( 'active' );
-    $( "#myNotesHeader h2" ).text( 'My notes &gt; ' + $( "#singleTab" + tab_id ).text());
+    $( "#myNotesHeader h2" ).text( 'My notes > ' + $( "#singleTab" + tab_id ).text());
 
     var numTabs = $( "#tabs li" ).length;
     var tabHeight = $( "#tabs li:eq(0)" ).outerHeight();
