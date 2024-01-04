@@ -6,211 +6,314 @@ use Kanboard\Controller\BaseController;
 
 class BoardNotesController extends BaseController
 {
-    public function boardNotesShowProject()
+
+    private function resolveUserId()
     {
-        $project = $this->getProject();
+        $user_id = ''; // init empty string
+        $use_cached = $this->request->getStringParam('use_cached');
+
+        if (!empty($use_cached) && isset($_SESSION['cached_user_id'])) // use cached
+        {
+            $user_id = $_SESSION['cached_user_id'];
+        }
+
+        if (empty($user_id)) // try get param from URL
+        {
+            $user_id = $this->request->getStringParam('user_id');
+        }
+
+        if (empty($user_id)) // as last resort get the current user
+        {
+            $user_id = $this->getUser()['id'];
+        }
+
+        $_SESSION['cached_user_id'] = $user_id;
+
+        return $user_id;
+    }
+
+    private function resolveProject($user_id)
+    {
+        $project_id = $this->request->getIntegerParam('project_cus_id');
+        if (empty($project_id))
+        {
+            $project_id = $this->request->getIntegerParam('project_id');
+        }
+        $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
+
+        // search requested project VS access
+        foreach($projectsAccess as $projectAccess)
+        {
+            if ($projectAccess['project_id'] == $project_id) break;
+        }
+
+        // if we didn't find the requested project, switch by default to the first one (i.e. General custom)
+        if ($projectAccess['project_id'] != $project_id)
+        {
+            $projectAccess = $projectsAccess[0];
+        }
+
+        if ($projectAccess['is_custom'])
+        {
+            // assemble a fake custom project
+            return array("id" => $project_id, "name" => $projectAccess['project_name'], "is_custom" => True);
+        }
+        else
+        {
+            // get all the data of existing project and mark it as NOT custom
+            $project = $this->boardNotesModel->boardNotesGetProjectById($project_id);
+            $project['is_custom'] = False;
+            return $project;
+        }
+    }
+
+    private function boardNotesShowProject_Internal($is_refresh)
+    {
         $user = $this->getUser();
+        $user_id = $this->resolveUserId();
 
-        $data = $this->boardNotesModel->boardNotesShowProject($project['id'], $user['id']);
-    	$projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
+        if ($is_refresh)
+        {
+            $project = $this->resolveProject($user_id);
+        }
+        else
+        {
+            $project = $this->getProject();
+            $project['is_custom'] = False;
+        }
+        $project_id = $project['id'];
 
-        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
-        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
-    	
-        $categories = $this->boardNotesModel->boardNotesGetCategories($project['id']);
-    	$columns = $this->boardNotesModel->boardNotesToTaskSupplyDataCol($project['id']);
-    	$swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project['id']);
+        $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
+    	if ($project['is_custom'])
+    	{
+            $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+    	}
+    	else
+    	{
+            $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
+    	}
+        $columns = $this->boardNotesModel->boardNotesGetColumns($project_id);
+    	$swimlanes = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
+        $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
 
-        return $this->response->html($this->helper->layout->project('boardNotes:project/show', array(
-            'title' => t('BoardNotes'),
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/data', array(
+            'title' => $project['name'], // rather keep the project name as title
             'project' => $project,
+            'project_id' => $project_id,
+            'user' => $user,
+            'user_id' => $user_id,
+            'projectsAccess' => $projectsAccess,
+
+            'categories' => $categories,
+            'columns' => $columns,
+            'swimlanes' => $swimlanes,
             'data' => $data,
-    	    'categories' => $categories,
-    	    'columns' => $columns,
-    	    'swimlanes' => $swimlanes,
+
+            'is_refresh' => $is_refresh,
+            'is_dashboard_view' => 0,
         )));
     }
 
-    public function boardNotesShowProjectRefresh()
+    public function boardNotesShowProject()
     {
-        $project = $this->request->getStringParam('project_id');
-        $project = array("id" => $project);
+        $this->boardNotesShowProject_Internal(False);
+    }
 
-        $user = $this->getUser();
-        $data = $this->boardNotesModel->boardNotesShowProject($project['id'], $user['id']);
-        $categories = $this->boardNotesModel->boardNotesGetCategories($project['id']);
-        $columns = $this->boardNotesModel->boardNotesToTaskSupplyDataCol($project['id']);
-        $swimlanes = $this->boardNotesModel->boardNotesToTaskSupplyDataSwi($project['id']);
-
-        return $this->response->html($this->helper->layout->app('boardNotes:project/dataSingle', array(
-            'title' => t('BoardNotes'),
-            'project' => $project,
-            'data' => $data,
-    	    'categories' => $categories,
-    	    'columns' => $columns,
-    	    'swimlanes' => $swimlanes,
-        )));
+    public function boardNotesRefreshProject()
+    {
+        $this->boardNotesShowProject_Internal(True);
     }
 
     public function boardNotesShowAll()
     {
-        //$project = $this->getProject();
         $user = $this->getUser();
+        $user_id = $this->resolveUserId();
 
-	    $projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
+        $tab_id = $this->request->getIntegerParam('tab_id');
+        if (empty($tab_id))
+        {
+            $tab_id = 0;
+        }
 
-        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
-        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
+        $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
-        $data = $this->boardNotesModel->boardNotesShowAll($projectAccess, $user['id']);
+    	if ($tab_id > 0 && !$projectsAccess[$tab_id - 1]['is_custom'])
+    	{
+    	    $project_id = $projectsAccess[$tab_id - 1]['project_id'];
+            $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
+            $columns  = $this->boardNotesModel->boardNotesGetColumns($project_id);
+            $swimlanes  = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
+    	}
+    	else
+    	{
+            $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+        	$columns  = array();
+        	$swimlanes  = array();
+    	}
+        $data = $this->boardNotesModel->boardNotesShowAll($projectsAccess, $user_id);
 
-        return $this->response->html($this->helper->layout->dashboard('boardNotes:boardnotes/showAll', array(
-            'title' => t('BoardNotes'),
-            'project' => 'Notes',
-	        'projectAccess' => $projectAccess,
+        return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
+            'title' => t('Notes overview for %s', $this->helper->user->getFullname($user)),
+            'user' => $user,
+            'user_id' => $user_id,
+            'projectsAccess' => $projectsAccess,
+
+            'categories' => $categories,
+            'columns' => $columns,
+            'swimlanes' => $swimlanes,
             'data' => $data,
-	        'allProjects' => '1'
         )));
     }
 
-    public function boardNotesShowAllRefresh()
+    public function boardNotesDeleteNote()
     {
-        $project = $this->getProject();
-        $user = $this->getUser();
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-	    $projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
-        $projectAccess[] = array("project_id" => "9998", "project_name" => "General");
-        $projectAccess[] = array("project_id" => "9997", "project_name" => "Todo");
-        $data = $this->boardNotesModel->boardNotesShowAll($projectAccess, $user['id']);
-
-        return $this->response->html($this->helper->layout->app('boardNotes:project_overview/data', array(
-            'title' => t('BoardNotes'),
-            'project' => $project,
-            'data' => $data,
-        )));
-    }
-
-    public function boardNotesDelete()
-    {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
-
-        $user = $this->getUser();
         $note_id = $this->request->getStringParam('note_id');
 
-
-        $validation = $this->boardNotesModel->boardNotesDeleteNote($note_id, $user['id']);
+        $validation = $this->boardNotesModel->boardNotesDeleteNote($project_id, $user_id, $note_id);
+        return $validation;
     }
 
-    public function boardNotesDeleteAllDone()
+    public function boardNotesDeleteAllDoneNotes()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-        $user = $this->getUser();
-        $note_id = $this->request->getStringParam('project_id');
-
-        $validation = $this->boardNotesModel->boardNotesDeleteAllDone($project['id'], $user['id']);
+        $validation = $this->boardNotesModel->boardNotesDeleteAllDoneNotes($project_id, $user_id);
+        return $validation;
     }
 
-    public function boardNotesUpdate()
+    public function boardNotesAddNote()
     {
-    	$note_id = $this->request->getStringParam('note_id');
-    	$is_active = $this->request->getStringParam('is_active');
-    	$title = $this->request->getStringParam('title');
-    	$description = $this->request->getStringParam('description');
-    	$category = $this->request->getStringParam('category');
-        
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-        $user = $this->getUser();
-
-        $validation = $this->boardNotesModel->boardNotesUpdateNote($user['id'], $note_id, $is_active, $title, $description, $category);
-    }
-
-    public function boardNotesAdd()
-    {
-        //$project = $this->getProject();
-        $project = $this->request->getStringParam('project_id');
-
-        $user = $this->getUser();
     	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
     	$title = $this->request->getStringParam('title');
     	$description = $this->request->getStringParam('description');
     	$category = $this->request->getStringParam('category');
 
-    	$validation = $this->boardNotesModel->boardNotesAddNote($project, $user['id'], $is_active, $title, $description, $category);
+    	$validation = $this->boardNotesModel->boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category);
+        return $validation;
     }
 
-    public function boardNotesAnalytic()
+    public function boardNotesTransferNote()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-        $user = $this->getUser();
+    	$note_id = $this->request->getStringParam('note_id');
+    	$target_project_id = $this->request->getStringParam('target_project_id');
 
-        $analyticData = $this->boardNotesModel->boardNotesAnalytics($project['id'], $user['id']);
+        $validation = $this->boardNotesModel->boardNotesTransferNote($project_id, $user_id, $note_id, $target_project_id);
+        return $validation;
+    }
 
-        return $this->response->html($this->helper->layout->app('boardNotes:boardnotes/analytics', array(
-            'title' => t('Analytics'),
-            'project' => $project,
-        	'analyticData' => $analyticData
+    public function boardNotesUpdateNote()
+    {
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
+
+    	$note_id = $this->request->getStringParam('note_id');
+
+    	$is_active = $this->request->getStringParam('is_active');
+    	$title = $this->request->getStringParam('title');
+    	$description = $this->request->getStringParam('description');
+    	$category = $this->request->getStringParam('category');
+
+        $validation = $this->boardNotesModel->boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category);
+        return $validation;
+    }
+
+    public function boardNotesAnalytics()
+    {
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
+
+        $analyticsData = $this->boardNotesModel->boardNotesAnalytics($project_id, $user_id);
+
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/analytics', array(
+            //'title' => t('Analytics'),
+            'analyticsData' => $analyticsData
         )));
     }
 
     public function boardNotesToTask()
     {
-	    //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
-        
-        $user = $this->getUser();
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-        $title = $this->request->getStringParam('title');
-        $description = $this->request->getStringParam('description');
-        $columns = $this->request->getStringParam('columns');
-        $swimlanes = $this->request->getStringParam('swimlanes');
-        $category = $this->request->getStringParam('category');
+        $task_title = $this->request->getStringParam('task_title');
+        $task_description = $this->request->getStringParam('task_description');
+        $category_id = $this->request->getStringParam('category_id');
+        $column_id = $this->request->getStringParam('column_id');
+        $swimlane_id = $this->request->getStringParam('swimlane_id');
 
-    	return $this->response->html($this->helper->layout->app('boardNotes:boardnotes/post', array(
-            'title' => t('Post'),
-            'title' => $title,
-    		'description' => $description,
-    		'column_id' => $columns,
-    		'swimlane_id' => $swimlanes,
-    		'category_id' => $category,
-    		'project_id' => $project['id']
+        $task_id = $this->taskCreationModel->create(array(
+            'project_id'  => $project_id,
+            'creator_id'  => $user_id,
+            'owner_id'    => $user_id,
+            'title'       => $task_title,
+            'description' => $task_description,
+            'category_id' => $category_id,
+            'column_id' => $column_id,
+            'swimlane_id' => $swimlane_id,
+        ));
+
+    	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
+            //'title' => t('Post'),
+            'task_id' => $task_id,
+            'project_name' => $this->projectModel->getById($project_id)["name"],
+            'user_name' => $this->userModel->getById($user_id)["username"],
+            'task_title' => $task_title,
+            'task_description' => $task_description,
+            'category' => $this->categoryModel->getNameById($category_id),
+            'column' => $this->columnModel->getColumnTitleById($column_id),
+            'swimlane' => $this->swimlaneModel->getNameById($swimlane_id),
         )));
-
-
-     }
+    }
 
     public function boardNotesUpdatePosition()
     {
-        $nrNotes = $this->request->getStringParam('nrNotes');
-        $notePositions = $this->request->getStringParam('order');
+    	$user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-        $validation = $this->boardNotesModel->boardNotesUpdatePosition($notePositions, $nrNotes);
+        $notePositions = $this->request->getStringParam('order');
+        $nrNotes = $this->request->getStringParam('nrNotes');
+
+        $validation = $this->boardNotesModel->boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes);
+        return $validation;
     }
 
-    public function boardNotesShowReport()
+    public function boardNotesReport()
     {
-        //$project = $this->getProject();
-    	$project = $this->request->getStringParam('project_id');
+        $user_id = $this->resolveUserId();
+        $project = $this->resolveProject($user_id);
+        $project_id = $project['id'];
 
-        $user = $this->getUser();
         $category = $this->request->getStringParam('category');
         if (empty($category)) {
             $category = "";
         }
 
-        $data = $this->boardNotesModel->boardNotesShowReport($project['id'], $user['id'], $category);
-        $projectAccess = $this->boardNotesModel->boardNotesGetProjectID($user['id']);
+        $data = $this->boardNotesModel->boardNotesReport($project_id, $user_id, $category);
 
-        return $this->response->html($this->helper->layout->project('boardNotes:boardnotes/report', array(
-            'title' => t('BoardNotes Report'),
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/report', array(
+            'title' => $project['name'], // rather keep the project name as title
             'project' => $project,
+            'project_id' => $project_id,
+            'user_id' => $user_id,
             'data' => $data,
         )));
     }

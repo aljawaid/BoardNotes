@@ -2,8 +2,6 @@
 
 namespace Kanboard\Plugin\BoardNotes\Schema;
 
-//use Kanboard\Core\Security\Token;
-//use Kanboard\Core\Security\Role;
 use PDO;
 
 const VERSION = 1;
@@ -17,7 +15,6 @@ function version_1(PDO $pdo)
         `project_name` TEXT,
         PRIMARY KEY(id)
     ) ENGINE=InnoDB CHARSET=utf8mb4 COLLATE utf8mb4_unicode_ci');
-
 
     $pdo->exec('CREATE TABLE IF NOT EXISTS boardnotes (
         `id` INT NOT NULL AUTO_INCREMENT,

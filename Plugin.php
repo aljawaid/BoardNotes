@@ -8,11 +8,10 @@ class Plugin extends Base
 {
     public function initialize()
     {
-    $this->setContentSecurityPolicy(array('default-src' => '* \'unsafe-inline\' \'unsafe-eval\''));
-	$this->template->hook->attach('template:dashboard:sidebar', 'boardNotes:boardnotes/dashboardsidebar');
-	$this->template->hook->attach('template:project:dropdown', 'boardNotes:boardnotes/dropdown');
-	$this->template->hook->attach('template:project:sidebar', 'boardNotes:boardnotes/sidebar');
-
+        $this->setContentSecurityPolicy(array('default-src' => '* \'unsafe-inline\' \'unsafe-eval\''));
+        $this->template->hook->attach('template:dashboard:sidebar', 'BoardNotes:dashboard/sidebar');
+        $this->template->hook->attach('template:project:dropdown', 'BoardNotes:project/dropdown');
+        $this->template->hook->attach('template:project-header:view-switcher', 'BoardNotes:project/header');
     }
 
     public function getClasses()
@@ -34,7 +33,7 @@ class Plugin extends Base
     }
     public function getPluginVersion()
     {
-        return '0.0.5';
+        return '0.0.6';
     }
     public function getPluginDescription()
     {

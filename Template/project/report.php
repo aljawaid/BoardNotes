@@ -1,10 +1,10 @@
-<?= $this->asset->css('plugins/Boardnotes/assets/css/style.css') ?>
-<?= $this->asset->js('plugins/Boardnotes/assets/js/boardnotes.js') ?>
-<link rel="stylesheet" href="/kanboard/plugins/Boardnotes/assets/css/style.css" media="print">
+<?= $this->asset->css('plugins/BoardNotes/Assets/css/style.css') ?>
+<?= $this->asset->js('plugins/BoardNotes/Assets/js/boardnotes.js') ?>
+<link rel="stylesheet" href="/kanboard/plugins/BoardNotes/Assets/css/style.css" media="print">
 
 <script>
- // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
-  $( document ).ready(function() {
+  // On mobile: Hide InputTitle (show label), hide sidebar and define class for view (normal or mobile)
+  function prepareDocumentReport() {
     $('.noteTitleInput').hide();
 
     var isMobile = false; //initiate as false
@@ -14,35 +14,30 @@
     if(isMobile) {
       $('.sidebar').hide();
     }
-  });
 
+    // category colors
+    $('.catLabel').each(function() {
+        var id = $(this).attr('data-id');
+        var project_id = $(this).attr('data-project');
+        var category = $(this).html();
+        updateCategoryColors(project_id, id, category, category)
+    });
+
+    toggleCategoryColors();
+    toggleCategoryColors();
+  }
+
+  window.onload = prepareDocumentReport;
+  $( document ).ready( prepareDocumentReport );
 
 </script>
-
-<p class="page-headerName"><?= t('Reporting') ?></p>
-  <br>
-
-<?php
-
-print '<section class="mainholder" id="mainholderP';
-print $project['id'];
-print '">';
-
-print '<div id="result';
-print $project['id'];
-print '">';
-
-print '<br>';
-
-?>
-
 
 <table class="tableReport">
 <thead class="theadReport">
 <tr>
-<th class="thReport thReportNr">Nr</th>
+<th class="thReport thReportNr">#</th>
 <th class="thReport">Info</th>
-<th class="thReport thReportResponsible">Resp</th>
+<th class="thReport thReportResponsible">Responsible</th>
 <th class="thReport thReportStatus">Status</th>
 </tr>
 </thead>
@@ -51,29 +46,41 @@ print '<br>';
 $num = "1";
 
 foreach($data as $u){
-    print '<tr id="trReportId';
+    print '<tr class="trReport" id="trReportNr';
     print $num;
     print '">';
 
-    print '<td class="tdReportId">';
-//    print '<span class="fa-stack fa-lg">';
-//    print '<i class="fa fa-circle-thin fa-stack-2x"></i>';
-//    print '<i class="fa fa-inverse fa-stack-1x">';
+    print '<td class="tdReport tdReportNr">';
+     // Hide button
+    print '<button id="singleReportHide" class="singleReportHide" data-id="';
     print $num;
-//    print '</i>';
-//    print '</span>';
-
+    print '"><i class="fa fa-minus-square-o" style="color:#CCC" aria-hidden="true" title="Hide"></i></button>';
+    // Report #
+    print '<span class="fa-stack fa-lg">';
+    print '<i class="fa fa-circle-thin fa-stack-2x"></i>';
+    print '<i class="fa fa-inverse fa-stack-1x">';
+    print $num;
+    print '</i>';
+    print '</span>';
     print '</td>';
 
-    // Category label
-    print '<td class="tdReportInfo">';
-    if(!empty($u['category'])){
-        print '<label class="catLabel">';
-        print $u['category'];
-        print '</label>';
-    }
+    // Report Info
+    print '<td class="tdReport tdReportInfo">';
 
-    // Note title label - visual. Changes on click to input
+    // Category label
+    print '<label class="catLabel" id="noteCatLabelP';
+    print $u['project_id'];
+    print '-';
+    print $num;
+    print '" data-id="';
+    print $num;
+    print '" data-project="';
+    print $u['project_id'];
+    print '">';
+    print $u['category'];
+    print '</label>';
+
+    // Note title label
     print '<label id="reportTitleLabelP';
     print $u['project_id'];
     print '-';
@@ -84,8 +91,8 @@ foreach($data as $u){
     print $u['project_id'];
     print '" name="reportTitleLabel';
     print $num;
-    if($u['is_active'] == "1"){
-        print '" class="reportTitleLabel reportTitle" value="">';
+    if($u['is_active'] == "0"){
+        print '" class="reportTitleLabel reportTitle noteDoneDesignText" value="">';
     } else {
         print '" class="reportTitleLabel reportTitle" value="">';
     }
@@ -94,34 +101,32 @@ foreach($data as $u){
 
     // Detailed view
     if(!empty($u['description'])) {
+        print '<div id="noteDescriptionP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" data-id="';
+        print $num;
+        print '" data-project="';
+        print $u['project_id'];
+        print '" class="details reportDescriptionClass ui-corner-all">';
 
-    print '<div id="noteDescriptionP';
-    print $u['project_id'];
-    print '-';
-    print $num;
-    print '" data-id="';
-    print $num;
-    print '" data-project="';
-    print $u['project_id'];
-    print '" ';
-    if($u['is_active'] == "1"){
-        print 'class="details reportDescriptionClass ui-corner-all">';
-    } else {
-        print 'class="details reportDescriptionClass ui-corner-all noteDoneDesignText">';
-    }
-
-      print '<span title="Press tab to save changes" class="textareaDescription" id="textareaDescriptionP';
-      print $u['project_id'];
-      print '-';
-      print $num;
-      print '" data-id="';
-      print $num;
-      print '" data-project="';
-      print $u['project_id'];
-      print '">';
-      $description = str_ireplace("<br >", "\r\n", $u['description']); 
-      print $description;
-      print '</span>';
+        print '<span id="noteTextareaDescriptionP';
+        print $u['project_id'];
+        print '-';
+        print $num;
+        print '" data-id="';
+        print $num;
+        print '" data-project="';
+        print $u['project_id'];
+        if($u['is_active'] == "0"){
+            print '" class="textareaReportDescription reportTitle noteDoneDesignTextarea">';
+        } else {
+            print '" class="textareaReportDescription reportTitle">';
+        }
+        $description = str_ireplace("<br >", "\r\n", $u['description']);
+        print $description;
+        print '</span>';
     }
 
     // Project_id (hidden, for reference)
@@ -142,28 +147,27 @@ foreach($data as $u){
     print '" class="hideMe">';
     print '</div>';
 
-
-    print '</td><td class="tdReportResponsible">';
-    print '</td><td class="tdReportStatus">';
-
     print '</td>';
 
-    // Delete button viewed in detailed view
-    print '<td class="noprint tdReportButton">';
-    print '<button id="singleReportHide" class="singleReportHide" data-id="';
-    print $num;
-    print '"><i class="fa fa-minus-square-o" aria-hidden="true"></i></button>';
+    print '<td class="tdReport tdReportResponsible reportTitle">';
+    print '</td>';
+    print '<td class="tdReport tdReportStatus reportTitle">';
+        if($u['is_active'] == "2"){
+            print '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+        }
+        //if($u['is_active'] == "1"){
+        //    print '<i class="fa fa-circle-thin" aria-hidden="true"></i>';
+        //}
+        if($u['is_active'] == "0"){
+            print '<i class="fa fa-check" aria-hidden="true"></i>';
+        }
     print '</td>';
 
     print '</tr>';
 
-    // Id
+    // #
     $num++;
 }
 ?>
 </tbody>
 </table>
-
-</div>
-
-</section>

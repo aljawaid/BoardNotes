@@ -1,10 +1,11 @@
 /* General */
+
 .button a {
-    border-bottom: 1px solid #777777;
-    border-left: 1px solid #000000;
-    border-right: 1px solid #333333;
-    border-top: 1px solid #000000;
-    color: #000000;
+    border-bottom: 1px solid #777;
+    border-left: 1px solid #000;
+    border-right: 1px solid #333;
+    border-top: 1px solid #000;
+    color: #000;
     display: block;
     height: 2.5em;
     padding: 0 1em;
@@ -15,7 +16,7 @@
 .mainholder {
     width: 700px;
     font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #4d4d4d;
+    color: #999;
     -webkit-font-smoothing: antialiased;
     position: relative;
     font-weight: 300;
@@ -30,45 +31,6 @@
     font-weight: 300;
 }
 
-.hideMe {
-    display: none;
-} 
-
-.newNoteLi {
-     padding: 5px 10px 12px 15px!important;
-}
-
-.newNoteLabel {
-    font-weight: 700;
-    padding-bottom: 5px;
-}
-
-.newNoteTextarea {
-    display: inline-block;
-}
-
-#sortable { 
-  list-style-type: none; 
-  margin: 0; 
-  padding: 0; 
-/*  width: 60%; */
-}
-
-#sortable li { 
-  margin: 0 3px 3px 3px; 
-  padding: 0.4em; 
-  border-radius: 3px;
-  min-height: 16px;
-/*  padding-left: 10px; */
-/*  font-size: 1.4em; */
-/*  height: 18px; */
-}
-
-/*#sortable li span { 
-   position: absolute; 
-   margin-left: -1.3em; 
-}*/
-
 .view {
     height: 35px;
     line-height: 35px;
@@ -79,34 +41,111 @@
     padding-right: 10px;
 }
 
-.noteTitle {
-    color: #5b4f4f;
-}
-
-
-input[type=text] {
+input[type="text"] {
     display: inline-block;
     width: 80%;
     font-size: 16px;
     border: none;
-    background-color: rgba(255, 255, 255, 0);
+    color: #000 !important;
+    background-color: #777 !important;
     padding: 0 0;
     margin-top: 0;
     height: auto;
     padding-left: 10px;
+    text-decoration: none;
+}
+
+input[type=text]::selection {
+  background: rgba(82,168,236,.8);
 }
 
 input[type=text]:focus {
-    color: #000;
+    color: #fff !important;
     border-color: rgba(82,168,236,.8);
     outline: 0;
     border-bottom: 1px solid gray;
     box-shadow: none;
+    text-decoration: none;
+}
+
+input::placeholder {
+  color: #bbb !important;
+}
+
+label {
+    display: inline-block;
+}
+
+#sortable {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+#sortable li {
+  margin: 0 3px 3px 3px;
+  padding: 0.4em;
+  border-radius: 3px;
+  min-height: 16px;
+}
+
+.hideMe {
+    display:none !important;
+} 
+
+.blurMe {
+    filter: blur(15px);
+}
+
+.containerNoWrap {
+    white-space: nowrap;
+}
+
+.containerFloatLeft {
+    float: left;
+}
+
+.containerFloatRight {
+    float: right;
+}
+
+.containerFloatClear {
+    clear: left;
+    clear: right;
+}
+
+
+/* Notes elements */
+
+.liNote {
+    padding: 5px 10px 12px 15px!important;
+    background-color: rgba(246, 246, 246, 0.7);
+}
+
+.liNewNote {
+    padding: 5px 10px 12px 15px!important;
+    background-color: rgba(246, 246, 246, 0.9);
+}
+
+.labelNewNote {
+    font-weight: 700;
+    padding-bottom: 5px;
+}
+
+.textareaNewNote {
+    display: inline-block;
+    color: #999;
+}
+
+.noteTitle {
+    color: #1f1f1f;
 }
 
 .noteTitleLabel {
     margin-top: 0;
     padding-left: 10px;
+    height: 20px;
+    border: 0px !important;
 }
 
 .noteDescriptionClass {
@@ -114,9 +153,19 @@ input[type=text]:focus {
     color: #7a7a7a;
     font-size: 15px;
     min-height: 16px;
-/*    display: inline;*/
-/*    display: none;*/
-} 
+}
+
+.sortableHandle {
+    float: right;
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    border: 0;
+    background: transparent;
+    padding-left: 15px;
+    padding-right: 10px;
+    font-size: 16px;
+}
 
 .showDetails {
     float: right;
@@ -140,7 +189,7 @@ input[type=text]:focus {
     padding-right: 5px;
 }
 
-.newNoteSave {
+.saveNewNote {
     float: right;
     appearance: none;
     -webkit-appearance: none;
@@ -151,11 +200,7 @@ input[type=text]:focus {
     padding-right: 5px;
 }
 
-div .newNoteSaveHolder {
-    padding: 5px 0 10px 20px;
-}
-
-.singleNoteToTask {
+.toolbarButton  {
     float: right;
     appearance: none;
     -webkit-appearance: none;
@@ -164,64 +209,9 @@ div .newNoteSaveHolder {
     background: transparent;
     padding-right: 5px;
     padding-left: 5px;
-    margin-right: 10px;
-}
-
-.singleNoteDelete {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-.settingsDeleteAllDone  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-/*    margin-right: 10px; */
-}
-
-.settingsAnalytics  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-.settingsReport  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
-}
-
-
-div .singleNoteDeleteHolder {
-    padding: 5px 0 10px 20px;
 }
 
 .checkDone {
-    float: left;
     appearance: none;
     -webkit-appearance: none;
     outline: none;
@@ -229,40 +219,62 @@ div .singleNoteDeleteHolder {
     background: transparent;
     padding-left: 10px;
     padding-right: 10px;
-    color: #4f4545;
+    color: #1f1f1f;
 }
 
 .noteDoneDesignText {
-    color: #b1b0b0;
+    color: #555;
+    text-decoration: line-through;
+}
+
+.noteDoneDesignTextarea {
+    color: #555;
+    border: 1px solid #555 !important;
     text-decoration: line-through;
 }
 
 #item-0 .noteDescriptionClass {
-    padding: 5px 10px 0 0;
+    padding: 5px 10px 0 40px;
 }
-
-textarea {
-    height: 70px;
-    width: 280px;
-    padding: 5px;
-    color: #6d6c6c;
-    margin-top: 5px;
-}
-
 
 .categories {
     display: inline-block;
     vertical-align: top;
     margin-left: 20px;
+    color: #1f1f1f;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 50px;
+    max-height: 350px;
+    height: 50px;
+    width: 320px;
+    padding: 5px;
+    color: #1f1f1f;
+    margin-top: 5px;
+}
+
+textarea::selection {
+    background: rgba(82,168,236,.8);
 }
 
 .textareaDescription {
     display: inline-block;
-    min-width: 265px;
-    width: auto;
     background: none;
-    border: 1px solid #aaaaaa;
+    border: 1px solid #1f1f1f;
     white-space:pre-wrap;
+}
+
+.textareaDescriptionSelected {
+    display: inline-block;
+    color: #000 !important;
+    background-color: #777;
+    text-decoration: none;
+}
+
+.textareaDescriptionSelected:focus {
+    color: #fff !important;
 }
 
 .catSelector {
@@ -270,20 +282,17 @@ textarea {
 }
 
 .catLabel {
+    float: right;
     cursor: default;
     margin-top: 0;
     padding: 0 5px 0 5px;
     border-radius: 5px;
-    background: rgba(95, 92, 92, 0.2);
-}
-
-label {
-    display: inline-block;
+    color: #1f1f1f;
+    background: #999;
 }
 
 
 /* Style for report.php */
-
 
 .page-headerName {
  font-family: 'Helvetica', Arial, sans-serif;
@@ -298,19 +307,18 @@ label {
 }
 
 .reportTitle {
-    color: #5b4f4f;
+    color: #ddd;
 }
 
 .singleReportHide {
-    float: right;
+    float: left;
     appearance: none;
     -webkit-appearance: none;
     outline: none;
     border: 0;
     background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-    margin-right: 10px;
+    padding: 5px 5px 5px 5px;
+    margin-right: 15px;
 }
 
 .reportDescriptionClass {
@@ -318,13 +326,11 @@ label {
     color: #7a7a7a;
     font-size: 12px;
     min-height: 16px;
-/*    display: inline;*/
-/*    display: none;*/
-} 
+}
 
 .tableReport {
     border-bottom: none;
-    border-left: 1px solid #CCC;
+    border-left: 1px solid #ccc;
     border-right: none;
     border-top: none;
 }
@@ -336,18 +342,20 @@ label {
 }
 
 .thReport {
-   border-top: 1px solid #CCC;
+   border-top: 1px solid #ccc;
    padding-left: 10px;
    border-left: none;
-   border-bottom: 1px solid #CCC;
+   border-bottom: 1px solid #ccc;
+   background-color: rgba(37, 37, 37, 0.75);
 }
 
 .thReportNr {
-   padding-left: 7px;
+   padding-left: 60px;
+   width: 80px;
 }
 
 .thReportStatus {
-    border-right: 1px solid #CCC;
+    border-right: 1px solid #ccc;
     width: 45px;
 }
 
@@ -355,7 +363,21 @@ label {
     width: 45px;
 }
 
-.tdReportId {
+.textareaReportDescription {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 10px 10px 10px 10px;
+    background-color: #555;
+    border: 0px;
+    white-space:pre-wrap;
+}
+
+
+.tdReport {
+   background-color: rgba(92, 92, 92, 0.50);
+}
+
+.tdReportNr {
     border-left: none;
     padding-left: 10px;
     font-weight: 600;
@@ -372,14 +394,8 @@ label {
 
 .tdReportStatus {
     border-left:none;
-    border-right: 1px solid #CCC;;
+    border-right: 1px solid #ccc;;
 }
-
-.tdReportButton {
-   border-left: none;
-   border-bottom: none;
-}
-
 
 
 /* Tabs jquery */
@@ -399,12 +415,11 @@ label {
 }
 
 
-
 @media (max-width : 751px) {
     .mainholder {
         width: auto;
         font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        color: #4d4d4d;
+        color: #999;
         -webkit-font-smoothing: antialiased;
         position: relative;
         font-weight: 300;
