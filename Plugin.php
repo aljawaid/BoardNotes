@@ -4,6 +4,7 @@ namespace Kanboard\Plugin\BoardNotes;
 
 use Kanboard\Core\Plugin\Base;
 use Kanboard\Core\Security\Role;
+use Kanboard\Core\Translator;
 
 /**
  * Register BoardNotes models, views and access rules.
@@ -14,13 +15,23 @@ class Plugin extends Base
 {
     public function initialize()
     {
-        $this->setContentSecurityPolicy(array('default-src' => '* \'unsafe-inline\' \'unsafe-eval\''));
         $this->template->hook->attach('template:dashboard:sidebar', 'BoardNotes:dashboard/sidebar');
         $this->template->hook->attach('template:project:dropdown', 'BoardNotes:project/dropdown');
         $this->template->hook->attach('template:project-header:view-switcher', 'BoardNotes:project/header');
 
         $this->projectAccessMap->add('BoardNotesController', '*', Role::PROJECT_VIEWER);
         $this->projectAccessMap->add('BoardNotesController', 'boardNotesToTask', Role::PROJECT_MEMBER);
+    }
+
+    public function onStartup()
+    {
+        // Namespaced English strings provide a safe fallback without replacing Kanboard translations.
+        Translator::load('en_US', __DIR__ . '/Locale');
+
+        $language = $this->languageModel->getCurrentLanguage();
+        if ($language !== 'en_US') {
+            Translator::load($language, __DIR__ . '/Locale');
+        }
     }
 
     public function getClasses()
@@ -42,7 +53,7 @@ class Plugin extends Base
     }
     public function getPluginVersion()
     {
-        return '0.0.6';
+        return '0.1.0';
     }
     public function getCompatibleVersion()
     {
@@ -50,10 +61,10 @@ class Plugin extends Base
     }
     public function getPluginDescription()
     {
-        return 'Keep notes on every single projects. Notes which is not suitable for creating board tasks.';
+        return t('boardnotes.description');
     }
     public function getPluginHomepage()
     {
-        return '';
+        return 'https://github.com/aljawaid/BoardNotes';
     }
 }

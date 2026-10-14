@@ -1,428 +1,178 @@
-/* General */
-
-.button a {
-    border-bottom: 1px solid #777777;
-    border-left: 1px solid #000000;
-    border-right: 1px solid #333333;
-    border-top: 1px solid #000000;
-    color: #000000;
-    display: block;
-    height: 2.5em;
-    padding: 0 1em;
-    width: 5em;       
-    text-decoration: none;       
+/* BoardNotes workspace component: theme-aware note editing, ordering and reports. */
+.boardnotes {
+    color: var(--color-primary);
+    max-width: 72rem;
 }
 
-.mainholder {
-    width: 700px;
-    font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #999999;
-    -webkit-font-smoothing: antialiased;
-    position: relative;
-    font-weight: 300;
+.boardnotes__header,
+.boardnotes__item-header,
+.boardnotes__actions,
+.boardnotes__secondary-actions,
+.boardnotes__order {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
-.mainholderMobile {
-    width: auto;
-    font: 11px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #4d4d4d;
-    -webkit-font-smoothing: antialiased;
-    position: relative;
-    font-weight: 300;
+.boardnotes__header {
+    justify-content: space-between;
+    margin-bottom: 1rem;
 }
 
-.view {
-    height: 35px;
-    line-height: 35px;
-    border-bottom: 1px solid #ededed;
-    border-left: 1px solid #ededed;
-    border-right: 1px solid #ededed;
-    padding-left: 10px;
-    padding-right: 10px;
+.boardnotes__actions form,
+.boardnotes__secondary-actions form,
+.boardnotes__item-header > form {
+    margin: 0;
 }
 
-input[type="text"] {
-    display: inline-block;
-    width: 80%;
-    font-size: 16px;
-    border: none;
-    color: #000000 !important;
-    background-color: #777777 !important;
-    padding: 0 0;
-    margin-top: 0;
-    height: auto;
-    padding-left: 10px;
-    text-decoration: none;
+.boardnotes__summary,
+.boardnotes__project {
+    color: var(--color-light);
 }
 
-input[type="text"]::selection {
-  background: rgb(82,168,236,.8);
+.boardnotes__new,
+.boardnotes__details > form,
+.boardnotes__secondary-actions {
+    background: var(--panel-background-color);
+    border: 1px solid var(--panel-border-color);
+    border-radius: 0.25rem;
+    margin-bottom: 1rem;
+    padding: 1rem;
 }
 
-input[type="text"]:focus {
-    color: #ffffff !important;
-    border-color: rgb(82,168,236,.8);
-    outline: 0;
-    border-bottom: 1px solid gray;
-    box-shadow: none;
-    text-decoration: none;
+.boardnotes__new input[type="text"],
+.boardnotes__new textarea,
+.boardnotes__details input[type="text"],
+.boardnotes__details textarea,
+.boardnotes__details select {
+    max-width: 100%;
+    width: 100%;
 }
 
-input::placeholder {
-  color: #bbbbbb !important;
+.boardnotes__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
 }
 
-label {
-    display: inline-block;
+.boardnotes__item {
+    background: var(--table-list-row-background-color);
+    border: 1px solid var(--table-list-border-color);
+    border-left: 0.35rem solid var(--color-lighter);
+    border-radius: 0.25rem;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    padding: 0.75rem;
 }
 
-#sortable {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
+.boardnotes__item[draggable="true"] {
+    cursor: move;
 }
 
-#sortable li {
-  margin: 0 3px 3px 3px;
-  padding: 0.4em;
-  border-radius: 3px;
-  min-height: 16px;
-}
-
-.hideMe {
-    display:none !important;
-} 
-
-.blurMe {
-    filter: blur(15px);
-}
-
-.containerNoWrap {
-    white-space: nowrap;
-}
-
-.containerFloatLeft {
-    float: left;
-}
-
-.containerFloatRight {
-    float: right;
-}
-
-.containerFloatClear {
-    clear: left;
-    clear: right;
-}
-
-
-/* Notes elements */
-
-.liNote {
-    padding: 5px 10px 12px 15px!important;
-    background-color: rgb(246, 246, 246, 0.7);
-}
-
-.liNewNote {
-    padding: 5px 10px 12px 15px!important;
-    background-color: rgb(246, 246, 246, 0.9);
-}
-
-.labelNewNote {
-    font-weight: bold;
-    padding-bottom: 5px;
-}
-
-.textareaNewNote {
-    display: inline-block;
-    color: #999999;
-}
-
-.noteTitle {
-    color: #1f1f1f;
-}
-
-.noteTitleLabel {
-    margin-top: 0;
-    padding-left: 10px;
-    height: 20px;
-    border: 0 !important;
-}
-
-.noteDescriptionClass {
-    padding: 5px 10px 0 40px;
-    color: #7a7a7a;
-    font-size: 15px;
-    min-height: 16px;
-}
-
-.sortableHandle {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-left: 15px;
-    padding-right: 10px;
-    font-size: 16px;
-}
-
-.showDetails {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.showDetailsNew {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.saveNewNote {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.toolbarButton  {
-    float: right;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-right: 5px;
-    padding-left: 5px;
-}
-
-.checkDone {
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
-    background: transparent;
-    padding-left: 10px;
-    padding-right: 10px;
-    color: #1f1f1f;
-}
-
-.noteDoneDesignText {
-    color: #555555;
+.boardnotes__item--completed strong {
+    color: var(--color-light);
     text-decoration: line-through;
 }
 
-.noteDoneDesignTextarea {
-    color: #555555;
-    border: 1px solid #555555 !important;
-    text-decoration: line-through;
+.boardnotes__item-header {
+    flex: 1 1 30rem;
 }
 
-#item-0 .noteDescriptionClass {
-    padding: 5px 10px 0 40px;
-}
-
-.categories {
-    display: inline-block;
-    vertical-align: top;
-    margin-left: 20px;
-    color: #1f1f1f;
-}
-
-textarea {
-    resize: vertical;
-    min-height: 50px;
-    max-height: 350px;
-    height: 50px;
-    width: 320px;
-    padding: 5px;
-    color: #1f1f1f;
-    margin-top: 5px;
-}
-
-textarea::selection {
-    background: rgb(82,168,236,.8);
-}
-
-.textareaDescription {
-    display: inline-block;
-    background: none;
-    border: 1px solid #1f1f1f;
-    white-space:pre-wrap;
-}
-
-.textareaDescriptionSelected {
-    display: inline-block;
-    color: #000000 !important;
-    background-color: #777777;
-    text-decoration: none;
-}
-
-.textareaDescriptionSelected:focus {
-    color: #ffffff !important;
-}
-
-.catSelector {
-    margin-top: 3px;
-}
-
-.catLabel {
-    float: right;
-    cursor: default;
-    margin-top: 0;
-    padding: 0 5px 0 5px;
-    border-radius: 5px;
-    color: #1f1f1f;
-    background: #999999;
-}
-
-
-/* Style for report.php */
-
-.page-headerName {
- font-family: Helvetica, Arial, sans-serif;
- font-size: 50px;
- line-height: 55px;
-}
-
-.reportTitleLabel {
-    margin-top: 0;
-    padding-left: 10px;
-    max-width: 90%;
-}
-
-.reportTitle {
-    color: #dddddd;
-}
-
-.singleReportHide {
-    float: left;
-    appearance: none;
-    -webkit-appearance: none;
-    outline: none;
-    border: 0;
+.boardnotes__status {
     background: transparent;
-    padding: 5px 5px 5px 5px;
-    margin-right: 15px;
-}
-
-.reportDescriptionClass {
-    padding: 5px 10px 0 20px;
-    color: #7a7a7a;
-    font-size: 12px;
-    min-height: 16px;
-}
-
-.tableReport {
-    border-bottom: none;
-    border-left: 1px solid #cccccc;
-    border-right: none;
-    border-top: none;
-}
-
-.theadReport {
-   font-family: Helvetica, Arial, sans-serif;
-   font-size: 14px;
-   line-height: 16px;
-}
-
-.thReport {
-   border-top: 1px solid #cccccc;
-   padding-left: 10px;
-   border-left: none;
-   border-bottom: 1px solid #cccccc;
-   background-color: rgb(37, 37, 37, 0.75);
-}
-
-.thReportNr {
-   padding-left: 60px;
-   width: 80px;
-}
-
-.thReportStatus {
-    border-right: 1px solid #cccccc;
-    width: 45px;
-}
-
-.thReportResponsible {
-    width: 45px;
-}
-
-.textareaReportDescription {
-    display: inline-block;
-    margin-left: 10px;
-    padding: 10px 10px 10px 10px;
-    background-color: #555555;
     border: 0;
-    white-space:pre-wrap;
+    color: var(--color-primary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    padding: 0.25rem;
 }
 
-
-.tdReport {
-   background-color: rgb(92, 92, 92, 0.50);
+.boardnotes__category {
+    background: var(--input-addon-background-color);
+    border-radius: 1rem;
+    color: var(--input-addon-color);
+    padding: 0.15rem 0.6rem;
 }
 
-.tdReportNr {
-    border-left: none;
-    padding-left: 10px;
-    font-weight: 600;
+.boardnotes__details {
+    flex-basis: 100%;
+    margin-top: 0.5rem;
 }
 
-.tdReportInfo {
-    border-left:none;
-    padding-left: 0;
+.boardnotes__details > summary {
+    color: var(--link-color-primary);
+    cursor: pointer;
+    width: max-content;
 }
 
-.tdReportResponsible {
-    border-left:none;
+.boardnotes__description {
+    overflow-wrap: anywhere;
+    white-space: normal;
 }
 
-.tdReportStatus {
-    border-left:none;
-    border-right: 1px solid #cccccc;
+.boardnotes__choice {
+    align-items: center;
+    display: flex;
+    gap: 0.35rem;
 }
 
-
-/* Tabs jquery */
-
-.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
-    padding: 4.5px 4px 1px 5px;
-    font-size: 13px;
+.boardnotes__help {
+    color: var(--link-color-primary);
+    cursor: help;
 }
 
-.ui-tabs-vertical .ui-tabs-nav li.ui-tabs-active {
-    height: 25px;
-    margin: 0 -1px .2em 0;
+.boardnotes__message:focus,
+.boardnotes :focus-visible {
+    outline: 3px solid var(--input-focus-border-color);
+    outline-offset: 2px;
 }
 
-.ui-tabs-vertical .ui-tabs-nav li {
-    height: 25px;
-    overflow:hidden;
+.boardnotes__empty {
+    background: var(--alert-background-color-info);
+    border: 1px solid var(--alert-border-color-info);
+    color: var(--alert-color-info);
+    padding: 1rem;
 }
 
+.boardnotes-report__description {
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
+}
 
-@media (max-width : 751px) {
-    .mainholder {
-        width: auto;
-        font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        color: #999999;
-        -webkit-font-smoothing: antialiased;
-        position: relative;
-        font-weight: 300;
+@media (max-width: 48rem) {
+    .boardnotes__header,
+    .boardnotes__item {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .boardnotes__actions,
+    .boardnotes__secondary-actions {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .boardnotes__actions .btn,
+    .boardnotes__actions form,
+    .boardnotes__actions button {
+        width: 100%;
+    }
+}
+
+@media print {
+    .boardnotes__actions,
+    .boardnotes__new,
+    .boardnotes__order,
+    .sidebar,
+    .page-header {
+        display: none !important;
+    }
+}
+
+@media (forced-colors: active) {
+    .boardnotes__item {
+        border: 1px solid CanvasText;
     }
 }

@@ -278,10 +278,26 @@ class BoardNotesModel extends Base
             ->update($values);
     }
 
+    // Change status without accepting editable note content from overview pages.
+    public function boardNotesToggleNote($project_id, $user_id, $note_id, $is_active)
+    {
+        return $this->db->table(self::TABLEnotes)
+            ->eq('id', $note_id)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->update(array('is_active' => $is_active, 'date_modified' => time()));
+    }
+
     // Update note positions
     public function boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes)
     {
         $note_ids = array_values(array_unique(array_filter(array_map('intval', explode(',', $notePositions)))));
+        if (count($note_ids) !== (int) $nrNotes) {
+            return false;
+        }
+        if ($note_ids === array()) {
+            return $nrNotes === 0;
+        }
         $ordered_ids = $note_ids;
         $owned_ids = $this->db->table(self::TABLEnotes)
             ->eq('project_id', $project_id)
