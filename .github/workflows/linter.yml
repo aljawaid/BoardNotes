@@ -61,7 +61,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: github/super-linter/slim@b807e99ddd37e444d189cfd2c2ca1274d8ae8ef1 # v7
+        uses: super-linter/super-linter@2da136927bd4a73596db63044b504547c62cb854 # v9.0.0
         # https://github.com/marketplace/actions/super-linter#environment-variables
         env:
           # Change to 'true' to scan all files, 'false' for new or edited files
@@ -69,12 +69,12 @@ jobs:
           # Change to 'master' if your main branch differs
           DEFAULT_BRANCH: master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSS_FILE_NAME: .stylelintrc.json
+          CSS_FILE_NAME: stylelint.config.mjs
           LINTER_RULES_PATH: .github/linters
           MARKDOWN_CONFIG_FILE: .markdownlint.json
           PHP_CONFIG_FILE: php.ini
           YAML_CONFIG_FILE: .yaml-lint.yml
-          JAVASCRIPT_ES_CONFIG_FILE: .eslintrc.json
+          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.mjs
           FILTER_REGEX_EXCLUDE: (Releases.*|Screenshots.*)
           # ACTIONS_RUNNER_DEBUG: true
           # CREATE_LOG_FILE: true
@@ -102,3 +102,32 @@ jobs:
           # VALIDATE_SQLFLUFF: true
           VALIDATE_XML: true
           VALIDATE_YAML: true
+
+  contracts:
+    name: PHP ${{ matrix.php }} Contracts
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.2', '8.3', '8.4', '8.5']
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set Up PHP
+        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo_sqlite
+          coverage: none
+      - name: Run BoardNotes Contracts
+        shell: bash
+        run: |
+          set -euo pipefail
+          for test_file in tests/*Test.php; do
+            php "$test_file"
+          done

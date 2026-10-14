@@ -7,7 +7,10 @@
     <arg value="sp"/>
     <config name="ignore_warnings_on_exit" value="1"/>
     <config name="report_width" value="auto"/>
-    <rule ref="PSR12" />
+    <rule ref="PSR12">
+        <!-- Preserve the repository's established CRLF and LF files on supported platforms. -->
+        <exclude name="Generic.Files.LineEndings.InvalidEOLChar" />
+    </rule>
     <rule ref="Generic.Files.LineLength.MaxExceeded">
         <type>warning</type>
         <severity>3</severity>
