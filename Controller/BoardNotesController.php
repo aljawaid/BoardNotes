@@ -3,29 +3,20 @@
 namespace Kanboard\Plugin\BoardNotes\Controller;
 
 use Kanboard\Controller\BaseController;
+use Kanboard\Core\Controller\AccessForbiddenException;
+use Kanboard\Core\Controller\PageNotFoundException;
 
+/**
+ * Serve personal BoardNotes views and mutations within authorised projects.
+ *
+ * Related test: tests/AuthorizationContractTest.php.
+ */
 class BoardNotesController extends BaseController
 {
     private function resolveUserId()
     {
-        $user_id = ''; // init empty string
-        $use_cached = $this->request->getStringParam('use_cached');
-
-        if (!empty($use_cached) && isset($_SESSION['cached_user_id'])) { // use cached
-            $user_id = $_SESSION['cached_user_id'];
-        }
-
-        if (empty($user_id)) { // try get param from URL
-            $user_id = $this->request->getStringParam('user_id');
-        }
-
-        if (empty($user_id)) { // as last resort get the current user
-            $user_id = $this->getUser()['id'];
-        }
-
-        $_SESSION['cached_user_id'] = $user_id;
-
-        return $user_id;
+        // Note ownership is always derived from the authenticated session.
+        return (int) $this->userSession->getId();
     }
 
     private function resolveProject($user_id)
@@ -34,26 +25,21 @@ class BoardNotesController extends BaseController
         if (empty($project_id)) {
             $project_id = $this->request->getIntegerParam('project_id');
         }
-        $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
+        $projectAccess = $this->boardNotesModel->boardNotesGetAccessibleProject($project_id, $user_id);
 
-        // search requested project VS access
-        foreach ($projectsAccess as $projectAccess) {
-            if ($projectAccess['project_id'] == $project_id) {
-                break;
-            }
-        }
-
-        // if we didn't find the requested project, switch by default to the first one (i.e. General custom)
-        if ($projectAccess['project_id'] != $project_id) {
-            $projectAccess = $projectsAccess[0];
+        if (empty($projectAccess)) {
+            throw new AccessForbiddenException();
         }
 
         if ($projectAccess['is_custom']) {
             // assemble a fake custom project
-            return array("id" => $project_id, "name" => $projectAccess['project_name'], "is_custom" => true);
+            return array('id' => $project_id, 'name' => $projectAccess['project_name'], 'is_custom' => true);
         } else {
             // get all the data of existing project and mark it as NOT custom
             $project = $this->boardNotesModel->boardNotesGetProjectById($project_id);
+            if (empty($project)) {
+                throw new PageNotFoundException();
+            }
             $project['is_custom'] = false;
             return $project;
         }
@@ -75,7 +61,7 @@ class BoardNotesController extends BaseController
         $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
         if ($project['is_custom']) {
-            $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+            $categories = array();
         } else {
             $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
         }
@@ -103,12 +89,12 @@ class BoardNotesController extends BaseController
 
     public function boardNotesShowProject()
     {
-        $this->boardNotesShowProjectInternal(false);
+        return $this->boardNotesShowProjectInternal(false);
     }
 
     public function boardNotesRefreshProject()
     {
-        $this->boardNotesShowProjectInternal(true);
+        return $this->boardNotesShowProjectInternal(true);
     }
 
     public function boardNotesShowAll()
@@ -129,7 +115,7 @@ class BoardNotesController extends BaseController
             $columns  = $this->boardNotesModel->boardNotesGetColumns($project_id);
             $swimlanes  = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
         } else {
-            $categories = $this->boardNotesModel->boardNotesGetAllCategories();
+            $categories = array();
             $columns  = array();
             $swimlanes  = array();
         }
@@ -192,7 +178,11 @@ class BoardNotesController extends BaseController
         $project_id = $project['id'];
 
         $note_id = $this->request->getStringParam('note_id');
-        $target_project_id = $this->request->getStringParam('target_project_id');
+        $target_project_id = $this->request->getIntegerParam('target_project_id');
+
+        if (empty($this->boardNotesModel->boardNotesGetAccessibleProject($target_project_id, $user_id))) {
+            throw new AccessForbiddenException();
+        }
 
         $validation = $this->boardNotesModel->boardNotesTransferNote($project_id, $user_id, $note_id, $target_project_id);
         return $validation;
@@ -235,11 +225,39 @@ class BoardNotesController extends BaseController
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
-        $task_title = $this->request->getStringParam('task_title');
-        $task_description = $this->request->getStringParam('task_description');
-        $category_id = $this->request->getStringParam('category_id');
-        $column_id = $this->request->getStringParam('column_id');
-        $swimlane_id = $this->request->getStringParam('swimlane_id');
+        if ($project['is_custom'] || ! $this->helper->user->hasProjectAccess('TaskCreationController', 'show', $project_id)) {
+            throw new AccessForbiddenException();
+        }
+
+        $note_id = $this->request->getIntegerParam('note_id');
+        $note = $this->boardNotesModel->boardNotesGetNote($project_id, $user_id, $note_id);
+        if (empty($note)) {
+            throw new PageNotFoundException();
+        }
+
+        $category_id = $this->request->getIntegerParam('category_id');
+        $column_id = $this->request->getIntegerParam('column_id');
+        $swimlane_id = $this->request->getIntegerParam('swimlane_id');
+
+        $category = $category_id > 0 ? $this->categoryModel->getById($category_id) : array();
+        $column = $this->columnModel->getById($column_id);
+        $swimlane = $swimlane_id > 0 ? $this->swimlaneModel->getById($swimlane_id) : array();
+
+        if (empty($column) || (int) $column['project_id'] !== (int) $project_id) {
+            throw new AccessForbiddenException();
+        }
+        if ($category_id > 0 && (empty($category) || (int) $category['project_id'] !== (int) $project_id)) {
+            throw new AccessForbiddenException();
+        }
+        if ($swimlane_id > 0 && (empty($swimlane) || (int) $swimlane['project_id'] !== (int) $project_id)) {
+            throw new AccessForbiddenException();
+        }
+
+        $task_title = trim($note['title']);
+        $task_description = str_ireplace('<br >', "\n", $note['description']);
+        if ($task_title === '') {
+            throw new PageNotFoundException();
+        }
 
         $task_id = $this->taskCreationModel->create(array(
             'project_id'  => $project_id,
@@ -259,9 +277,9 @@ class BoardNotesController extends BaseController
             'user_name' => $this->userModel->getById($user_id)["username"],
             'task_title' => $task_title,
             'task_description' => $task_description,
-            'category' => $this->categoryModel->getNameById($category_id),
-            'column' => $this->columnModel->getColumnTitleById($column_id),
-            'swimlane' => $this->swimlaneModel->getNameById($swimlane_id),
+            'category' => $category_id > 0 ? $category['name'] : '',
+            'column' => $column['title'],
+            'swimlane' => $swimlane_id > 0 ? $swimlane['name'] : '',
         )));
     }
 

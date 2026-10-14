@@ -3,7 +3,13 @@
 namespace Kanboard\Plugin\BoardNotes;
 
 use Kanboard\Core\Plugin\Base;
+use Kanboard\Core\Security\Role;
 
+/**
+ * Register BoardNotes models, views and access rules.
+ *
+ * Related test: tests/AuthorizationContractTest.php.
+ */
 class Plugin extends Base
 {
     public function initialize()
@@ -12,6 +18,9 @@ class Plugin extends Base
         $this->template->hook->attach('template:dashboard:sidebar', 'BoardNotes:dashboard/sidebar');
         $this->template->hook->attach('template:project:dropdown', 'BoardNotes:project/dropdown');
         $this->template->hook->attach('template:project-header:view-switcher', 'BoardNotes:project/header');
+
+        $this->projectAccessMap->add('BoardNotesController', '*', Role::PROJECT_VIEWER);
+        $this->projectAccessMap->add('BoardNotesController', 'boardNotesToTask', Role::PROJECT_MEMBER);
     }
 
     public function getClasses()

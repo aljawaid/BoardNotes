@@ -10,6 +10,11 @@ use Kanboard\Model\SwimlaneModel;
 use Kanboard\Model\ProjectUserRoleModel;
 use Kanboard\Model\CategoryModel;
 
+/**
+ * Store and query personal notes within the current user's accessible projects.
+ *
+ * Related test: tests/AuthorizationContractTest.php.
+ */
 class BoardNotesModel extends Base
 {
     // phpcs:disable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase -- Preserve the established public constant API.
@@ -23,10 +28,14 @@ class BoardNotesModel extends Base
     public const TABLEcategories = CategoryModel::TABLE;
     // phpcs:enable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
 
-    // Show single note
-    public function boardNotesShowNote($note_id)
+    // Return one note only when its owner and project scope both match.
+    public function boardNotesGetNote($project_id, $user_id, $note_id)
     {
-        return $this->db->table(self::TABLEnotes)->eq('id', $note_id)->findAll();
+        return $this->db->table(self::TABLEnotes)
+            ->eq('id', $note_id)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->findOne();
     }
 
     // Show all notes related to project
@@ -72,15 +81,22 @@ class BoardNotesModel extends Base
     // Get all project_id where user has assigned access
     public function boardNotesGetProjectIds($user_id)
     {
-        $projectIds = $this->db->table(self::TABLEaccess)
-            ->columns(self::TABLEaccess . '.project_id', 'alias_projects_table.name AS project_name')
-            ->eq('user_id', $user_id)
-            ->left(self::TABLEprojects, 'alias_projects_table', 'id', self::TABLEaccess, 'project_id')
-            ->asc('project_name')
-            ->findAll();
-        foreach ($projectIds as &$projectId) {
-            $projectId['is_custom'] = false;
+        if ($this->userSession->isAdmin()) {
+            $projects = $this->projectModel->getListByStatus(ProjectModel::ACTIVE);
+        } else {
+            // Kanboard combines direct and group membership in this model method.
+            $projects = $this->projectUserRoleModel->getActiveProjectsByUser($user_id);
         }
+
+        $projectIds = array();
+        foreach ($projects as $project_id => $project_name) {
+            $projectIds[] = array(
+                'project_id' => (int) $project_id,
+                'project_name' => $project_name,
+                'is_custom' => false,
+            );
+        }
+
         return $projectIds;
     }
 
@@ -103,6 +119,18 @@ class BoardNotesModel extends Base
         $projectAssignedAccess = $this->boardNotesGetProjectIds($user_id);
         $projectsAccess = array_merge($projectCustomAccess, $projectAssignedAccess);
         return $projectsAccess;
+    }
+
+    // Resolve a project only from the current user's complete access list.
+    public function boardNotesGetAccessibleProject($project_id, $user_id)
+    {
+        foreach ($this->boardNotesGetAllProjectIds($user_id) as $project) {
+            if ((int) $project['project_id'] === (int) $project_id) {
+                return $project;
+            }
+        }
+
+        return array();
     }
 
     // Get a list of all categories in project
@@ -149,16 +177,17 @@ class BoardNotesModel extends Base
     // Show all notes
     public function boardNotesShowAll($projectsAccess, $user_id)
     {
+        $uids = array();
         foreach ($projectsAccess as $u) {
-            $uids[] = $u['project_id'];
+            $uids[] = (int) $u['project_id'];
         }
-        $projectsAccess = implode(", ", $uids);
-        substr_replace($projectsAccess, "", -2);
-        $projectsAccess = explode(', ', $projectsAccess);
+        if ($uids === array()) {
+            return array();
+        }
 
         return $this->db->table(self::TABLEnotes)
             ->eq('user_id', $user_id)
-            ->in(self::TABLEnotes . '.project_id', $projectsAccess)
+            ->in(self::TABLEnotes . '.project_id', $uids)
             ->desc('project_id')
             ->desc('is_active')
             ->desc('position')
@@ -191,6 +220,7 @@ class BoardNotesModel extends Base
         // Get last position number
         $lastPosition = $this->db->table(self::TABLEnotes)
             ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
             ->desc('position')
             ->findOneColumn('position');
 
@@ -251,17 +281,23 @@ class BoardNotesModel extends Base
     // Update note positions
     public function boardNotesUpdatePosition($project_id, $user_id, $notePositions, $nrNotes)
     {
-        unset($num);
-        unset($note_id);
+        $note_ids = array_values(array_unique(array_filter(array_map('intval', explode(',', $notePositions)))));
+        $ordered_ids = $note_ids;
+        $owned_ids = $this->db->table(self::TABLEnotes)
+            ->eq('project_id', $project_id)
+            ->eq('user_id', $user_id)
+            ->in('id', $note_ids)
+            ->findAllByColumn('id');
 
-        // Ser $num to nr of notes to max
-        $num = $nrNotes;
+        sort($note_ids);
+        $owned_ids = array_map('intval', $owned_ids);
+        sort($owned_ids);
+        if ($note_ids !== $owned_ids) {
+            return false;
+        }
 
-        //  Explode all positions
-        $note_ids = explode(',', $notePositions);
-
-        // Loop through all positions
-        foreach ($note_ids as $row) {
+        $num = count($note_ids);
+        foreach ($ordered_ids as $row) {
             $values = array('position' => $num);
 
             $this->db->table(self::TABLEnotes)
@@ -271,6 +307,8 @@ class BoardNotesModel extends Base
             ->update($values);
             $num--;
         }
+
+        return true;
     }
 
     // Delete note ???
