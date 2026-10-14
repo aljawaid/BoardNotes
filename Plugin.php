@@ -35,6 +35,10 @@ class Plugin extends Base
     {
         return '0.0.6';
     }
+    public function getCompatibleVersion()
+    {
+        return '>=1.2.54';
+    }
     public function getPluginDescription()
     {
         return 'Keep notes on every single projects. Notes which is not suitable for creating board tasks.';

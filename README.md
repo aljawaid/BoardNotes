@@ -27,6 +27,8 @@ or
 
 - Clone folder with git
 
+- Requires Kanboard 1.2.54 or later.
+
 # AND #
 
 - Add your api (settings -> api) in the post.php.config file
