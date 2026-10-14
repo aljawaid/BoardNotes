@@ -1,3 +1,14 @@
+Version 0.1.0
+-------------
+
+* Enforce authenticated note ownership, project access and CSRF protection.
+* Replace legacy jQuery fragments, inline code and fixed Kanboard paths with generated routes and native browser controls.
+* Preserve notes until optional task conversion has completed successfully.
+* Add empty-safe analytics, escaped reports, responsive theme-aware styling and English translation catalogues.
+* Add schema migration 2 for indexes, portable seed data and user/project lifecycle cleanup.
+* Add PHP 8.1-8.5 contract tests and update Super-Linter to immutable v9.0.0.
+* Complete and close the structure and naming work tracked in issue #2.
+
 Version 0.0.5
 -------------
 

@@ -1,107 +1,115 @@
-# NOT MAINTAINED
+# BoardNotes
 
-Kanboard Plugin for notes
-==========================
+BoardNotes adds private, project-specific notes to <a href="https://kanboard.org/" rel="noopener noreferrer">Kanboard</a>. Notes can remain informal or be converted into tasks when they are ready for action.
 
-This plugin adds a GUI for notes.
+> **Important:** BoardNotes 0.1.0 requires Kanboard 1.2.54 or later and PHP 8.1 or later. Back up the Kanboard database before upgrading. Notes belong to individual users and are not a shared project discussion area.
 
-Plugin for [Kanboard](https://github.com/fguillot/kanboard)
+## Features
 
-Author
-------
+- Create, edit, complete, reopen and delete personal notes for a project.
+- Add project categories and transfer notes between accessible projects.
+- Reorder notes by dragging them or by using accessible move buttons.
+- Convert a note into a task with a selected column, swimlane and category.
+- Keep the source note by default; optional removal happens only after task creation succeeds.
+- View a personal all-project overview, empty-safe analytics and printable reports.
+- Use responsive, keyboard-accessible controls that follow Kanboard's active theme.
+- Run without third-party browser requests, fixed installation paths or separate API credentials.
 
-- [TTJ](https://gitlab.com/u/ThomasTJ)
-- License MIT
+## Screenshots
 
-Installation
-------------
+![BoardNotes project notes](Screenshots/NotesPerProject.png)
 
-- Decompress the archive in the `plugins` folder
+The screenshot documents an earlier visual release. The current interface follows the same workflow with updated Kanboard-native controls.
 
-or
+## Usage
 
-- Create a folder **plugins/BoardNotes**
-- Copy all files under this directory
+1. Open a project and select **Notes** from the project navigation.
+2. Enter a title and, when useful, a description and category.
+3. Open **Details** to edit, move, delete or convert a note into a task.
+4. Select **My notes** on the dashboard to review notes across accessible projects.
+5. Use **Analytics** or **Print report** from an individual project's notes page.
 
-or
+The task-conversion form includes a **Remove the note after the task is created** option. It is deliberately disabled by default to prevent accidental information loss.
 
-- Clone folder with git
+## Installation & Compatibility
 
-- Requires Kanboard 1.2.54 or later.
+| Requirement | Supported value |
+| --- | --- |
+| Kanboard | 1.2.54 or later |
+| PHP | 8.1–8.5 |
+| Database | SQLite, MySQL/MariaDB or PostgreSQL |
+| Plug-in folder | `plugins/BoardNotes` |
 
-# AND #
+Install from an archive:
 
-- Add your api (settings -> api) in the post.php.config file
-- Add your kanboard url in the post.php.config file
-- Rename the post.php.config to post.php (mv post.php.config post.php)
+1. Download a trusted BoardNotes release archive.
+2. Verify the archive using the checksum or signature supplied with that release.
+3. Extract it so that `Plugin.php` is located at `plugins/BoardNotes/Plugin.php`.
+4. Sign in to Kanboard as an administrator and confirm BoardNotes appears on the plug-ins page.
+5. Open one project and complete the acceptance checks below.
 
-Requirements
-------------
+Install from Git:
 
-All of the links are pointing to kanboard/ which means, that your Kanboard installations need to be here: 127.0.0.1/kanboard.
+```console
+cd /path/to/kanboard/plugins
+git clone https://github.com/aljawaid/BoardNotes.git BoardNotes
+```
 
-Use
----
+Do not add API credentials or edit a Kanboard base URL. BoardNotes uses Kanboard's generated routes and authenticated session.
 
-Take notes on the fly. Developed to easily take project specific notes. The purpose of the notes is not to be tasks, but for keeping information - a flexible alternative to metadata.
-I'm using Kanboard as projectmanagement tool for managing construction projects, where I often need to take notes regarding specific installations, during site-visits or phonemeetings.
+### Upgrade acceptance
 
-The notes is accessible from the project dropdown, where only the project specific notes will be shown. On the dashboard there's a link in the sidebar to view all notes, the notes will be separated in tabs.
+- Confirm existing notes remain visible to their owners.
+- Create, edit, complete and reorder a temporary note.
+- Transfer a temporary note to another accessible project.
+- Convert a note into a task once while retaining the note and once with removal selected.
+- Confirm the all-project overview, analytics and print report work with both populated and empty projects.
+- Repeat a representative check in each enabled Kanboard theme and on a narrow screen.
 
-Features
---------
+### Rollback
 
-- Take notes quickly. Write the note title and press ENTER to save.
-- Press TAB in the new note title to show the detailed menu
-- Add detailed description to new notes
-- Add a category to notes. The category is the same as the projects categories. (Please see the section for bugs)
-- Get pie analytic on open and done notes
-- Delete all done notes
-- One-click for editing notes status (open/done)
-- Edit note title. Click on title, edit and press ENTER
-- Press the show more button on a note to see the note details
-- Edit an existing notes description. Click on the description, type, press TAB to save
-- Change category on existing notes. If you want to remove the category, just choose option 2 (the blank)
-- Free sorting. Move the notes around. The sorting is saved.
-- Export note to task. (Please see the secton for bugs)
-- Generate report for printing notes.
-- Filter report on category
+1. Stop user changes or place Kanboard in the maintenance state used by your environment.
+2. Restore the pre-upgrade database backup.
+3. Replace `plugins/BoardNotes` with the previously verified plug-in directory.
+4. Clear any application or PHP opcode cache used by the installation.
+5. Repeat the note visibility and edit checks before returning the service to users.
 
-Todo
-----
+Rolling back plug-in files without restoring the matching database backup is not recommended after schema migration 2 has run.
 
-- Implement fault procedures (verify it is number, etc.)
-- Adding possibility to attach image from mobile
-- Finish exporting notes to task in specific swimlane and with category
-- Update styling for a more simplicity view
-- Better overview of multiple projects with tabs
+## Security & Privacy
 
-Issues
-------------------------
+- Note ownership is derived from the authenticated Kanboard session; browser-supplied user IDs are ignored.
+- Every mutation requires Kanboard's reusable CSRF token and an accessible project.
+- Note content is sent in request bodies rather than URLs and is escaped when rendered.
+- Task conversion revalidates project relationships for the selected column, category and swimlane.
+- BoardNotes makes no external browser requests and does not weaken Kanboard's Content Security Policy.
+- Deleting a Kanboard user or a real project removes its associated private notes. The built-in custom **General** and **Todo** note areas are not Kanboard projects.
 
-- Focus on description textarea when pressing TAB on new notes title is not working
-- Category is saved as text in database and does not have foreing key to the projects real category table
-- Category not updating in title after manually changing the category
-- Analytic chart on categories not developed
-- Margin bottom not added
-- The only folder in the `Template` folder is `boardnotes`, and not specified out on `dashboard` etc.
-- There is no description of shortcuts (ENTER and TAB key)
-- Delete directly on trash button on single note - to fast?
-- If note has empty title, it's not possible to change it afterwards
-- Analytic is breaking when viewing all projects (js not reloading correctly)
-- Exporting note to task: Swimlanes not working. Category not working.
-- Div modal for "Delete all done" and "Analytic" is repeated on every reload
-- Should disabled projects show on all boardnotes page?
-- Functions in controller (BoardNotesController) missing variables in () - needed?
-- Markups as Kanboard
+## Troubleshooting
 
-Tested on
----------
+| Symptom | Check |
+| --- | --- |
+| **Notes** is missing | Confirm the directory name is exactly `BoardNotes` and `Plugin.php` is directly inside it. |
+| A project is unavailable | Confirm the signed-in user is a project viewer or member. |
+| Task conversion is unavailable | Confirm the project is a real Kanboard project and the user can create tasks in it. |
+| A change is rejected | Refresh the page to renew the session and CSRF token, then retry once. |
+| Styling looks stale | Clear the browser and application caches; do not edit the compiled plug-in asset paths. |
+| Upgrade fails | Restore the database and plug-in backup, then retain the error log for diagnosis. |
 
-- Application version: 1.0.30 / 1.0.32
-- PHP version: 5.5.9-1ubuntu4.17
-- PHP SAPI: apache2handler
-- OS version: Linux 3.13.0-74-generic
-- Database driver: sqlite
-- Database version: 3.8.2
-- Browser: Chromium 51.0.2704.106 (64-bit)
+For reproducible reports, include the Kanboard version, PHP version, database driver, BoardNotes version, browser and the exact action that failed. Do not include note contents, credentials or session tokens.
+
+## Authors & Contributors
+
+- **Original author:** <a href="https://gitlab.com/u/ThomasTJ" rel="noopener noreferrer">TTJ (ThomasTJ)</a>
+- **Current repository maintenance:** <a href="https://github.com/aljawaid" rel="noopener noreferrer">aljawaid</a>
+- Thanks to everyone who has reported issues, reviewed changes or contributed code and documentation.
+
+Attribution is intentionally retained from the original project documentation. Contributions should preserve prior author and contributor credits.
+
+## License
+
+BoardNotes is released under the MIT License. See [LICENSE](LICENSE).
+
+## Change history
+
+See [CHANGELOG](CHANGELOG) for release notes and historical changes.
