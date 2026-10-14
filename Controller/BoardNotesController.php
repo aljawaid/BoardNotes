@@ -6,24 +6,20 @@ use Kanboard\Controller\BaseController;
 
 class BoardNotesController extends BaseController
 {
-
     private function resolveUserId()
     {
         $user_id = ''; // init empty string
         $use_cached = $this->request->getStringParam('use_cached');
 
-        if (!empty($use_cached) && isset($_SESSION['cached_user_id'])) // use cached
-        {
+        if (!empty($use_cached) && isset($_SESSION['cached_user_id'])) { // use cached
             $user_id = $_SESSION['cached_user_id'];
         }
 
-        if (empty($user_id)) // try get param from URL
-        {
+        if (empty($user_id)) { // try get param from URL
             $user_id = $this->request->getStringParam('user_id');
         }
 
-        if (empty($user_id)) // as last resort get the current user
-        {
+        if (empty($user_id)) { // as last resort get the current user
             $user_id = $this->getUser()['id'];
         }
 
@@ -35,66 +31,56 @@ class BoardNotesController extends BaseController
     private function resolveProject($user_id)
     {
         $project_id = $this->request->getIntegerParam('project_cus_id');
-        if (empty($project_id))
-        {
+        if (empty($project_id)) {
             $project_id = $this->request->getIntegerParam('project_id');
         }
         $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
         // search requested project VS access
-        foreach($projectsAccess as $projectAccess)
-        {
-            if ($projectAccess['project_id'] == $project_id) break;
+        foreach ($projectsAccess as $projectAccess) {
+            if ($projectAccess['project_id'] == $project_id) {
+                break;
+            }
         }
 
         // if we didn't find the requested project, switch by default to the first one (i.e. General custom)
-        if ($projectAccess['project_id'] != $project_id)
-        {
+        if ($projectAccess['project_id'] != $project_id) {
             $projectAccess = $projectsAccess[0];
         }
 
-        if ($projectAccess['is_custom'])
-        {
+        if ($projectAccess['is_custom']) {
             // assemble a fake custom project
-            return array("id" => $project_id, "name" => $projectAccess['project_name'], "is_custom" => True);
-        }
-        else
-        {
+            return array("id" => $project_id, "name" => $projectAccess['project_name'], "is_custom" => true);
+        } else {
             // get all the data of existing project and mark it as NOT custom
             $project = $this->boardNotesModel->boardNotesGetProjectById($project_id);
-            $project['is_custom'] = False;
+            $project['is_custom'] = false;
             return $project;
         }
     }
 
-    private function boardNotesShowProject_Internal($is_refresh)
+    private function boardNotesShowProjectInternal($is_refresh)
     {
         $user = $this->getUser();
         $user_id = $this->resolveUserId();
 
-        if ($is_refresh)
-        {
+        if ($is_refresh) {
             $project = $this->resolveProject($user_id);
-        }
-        else
-        {
+        } else {
             $project = $this->getProject();
-            $project['is_custom'] = False;
+            $project['is_custom'] = false;
         }
         $project_id = $project['id'];
 
         $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
-    	if ($project['is_custom'])
-    	{
+        if ($project['is_custom']) {
             $categories = $this->boardNotesModel->boardNotesGetAllCategories();
-    	}
-    	else
-    	{
+        } else {
             $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
-    	}
+        }
         $columns = $this->boardNotesModel->boardNotesGetColumns($project_id);
-    	$swimlanes = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
+        $swimlanes = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
         $data = $this->boardNotesModel->boardNotesShowProject($project_id, $user_id);
 
         return $this->response->html($this->helper->layout->app('BoardNotes:project/data', array(
@@ -117,12 +103,12 @@ class BoardNotesController extends BaseController
 
     public function boardNotesShowProject()
     {
-        $this->boardNotesShowProject_Internal(False);
+        $this->boardNotesShowProjectInternal(false);
     }
 
     public function boardNotesRefreshProject()
     {
-        $this->boardNotesShowProject_Internal(True);
+        $this->boardNotesShowProjectInternal(true);
     }
 
     public function boardNotesShowAll()
@@ -131,26 +117,22 @@ class BoardNotesController extends BaseController
         $user_id = $this->resolveUserId();
 
         $tab_id = $this->request->getIntegerParam('tab_id');
-        if (empty($tab_id))
-        {
+        if (empty($tab_id)) {
             $tab_id = 0;
         }
 
         $projectsAccess = $this->boardNotesModel->boardNotesGetAllProjectIds($user_id);
 
-    	if ($tab_id > 0 && !$projectsAccess[$tab_id - 1]['is_custom'])
-    	{
-    	    $project_id = $projectsAccess[$tab_id - 1]['project_id'];
+        if ($tab_id > 0 && !$projectsAccess[$tab_id - 1]['is_custom']) {
+            $project_id = $projectsAccess[$tab_id - 1]['project_id'];
             $categories = $this->boardNotesModel->boardNotesGetCategories($project_id);
             $columns  = $this->boardNotesModel->boardNotesGetColumns($project_id);
             $swimlanes  = $this->boardNotesModel->boardNotesGetSwimlanes($project_id);
-    	}
-    	else
-    	{
+        } else {
             $categories = $this->boardNotesModel->boardNotesGetAllCategories();
-        	$columns  = array();
-        	$swimlanes  = array();
-    	}
+            $columns  = array();
+            $swimlanes  = array();
+        }
         $data = $this->boardNotesModel->boardNotesShowAll($projectsAccess, $user_id);
 
         return $this->response->html($this->helper->layout->dashboard('BoardNotes:dashboard/data', array(
@@ -168,7 +150,7 @@ class BoardNotesController extends BaseController
 
     public function boardNotesDeleteNote()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
@@ -180,7 +162,7 @@ class BoardNotesController extends BaseController
 
     public function boardNotesDeleteAllDoneNotes()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
@@ -190,27 +172,27 @@ class BoardNotesController extends BaseController
 
     public function boardNotesAddNote()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
-    	$is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
-    	$title = $this->request->getStringParam('title');
-    	$description = $this->request->getStringParam('description');
-    	$category = $this->request->getStringParam('category');
+        $is_active = $this->request->getStringParam('is_active'); // Not needed when new is added
+        $title = $this->request->getStringParam('title');
+        $description = $this->request->getStringParam('description');
+        $category = $this->request->getStringParam('category');
 
-    	$validation = $this->boardNotesModel->boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category);
+        $validation = $this->boardNotesModel->boardNotesAddNote($project_id, $user_id, $is_active, $title, $description, $category);
         return $validation;
     }
 
     public function boardNotesTransferNote()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
-    	$note_id = $this->request->getStringParam('note_id');
-    	$target_project_id = $this->request->getStringParam('target_project_id');
+        $note_id = $this->request->getStringParam('note_id');
+        $target_project_id = $this->request->getStringParam('target_project_id');
 
         $validation = $this->boardNotesModel->boardNotesTransferNote($project_id, $user_id, $note_id, $target_project_id);
         return $validation;
@@ -218,16 +200,16 @@ class BoardNotesController extends BaseController
 
     public function boardNotesUpdateNote()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
-    	$note_id = $this->request->getStringParam('note_id');
+        $note_id = $this->request->getStringParam('note_id');
 
-    	$is_active = $this->request->getStringParam('is_active');
-    	$title = $this->request->getStringParam('title');
-    	$description = $this->request->getStringParam('description');
-    	$category = $this->request->getStringParam('category');
+        $is_active = $this->request->getStringParam('is_active');
+        $title = $this->request->getStringParam('title');
+        $description = $this->request->getStringParam('description');
+        $category = $this->request->getStringParam('category');
 
         $validation = $this->boardNotesModel->boardNotesUpdateNote($project_id, $user_id, $note_id, $is_active, $title, $description, $category);
         return $validation;
@@ -235,7 +217,7 @@ class BoardNotesController extends BaseController
 
     public function boardNotesAnalytics()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
@@ -249,7 +231,7 @@ class BoardNotesController extends BaseController
 
     public function boardNotesToTask()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 
@@ -270,7 +252,7 @@ class BoardNotesController extends BaseController
             'swimlane_id' => $swimlane_id,
         ));
 
-    	return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
+        return $this->response->html($this->helper->layout->app('BoardNotes:project/post', array(
             //'title' => t('Post'),
             'task_id' => $task_id,
             'project_name' => $this->projectModel->getById($project_id)["name"],
@@ -285,7 +267,7 @@ class BoardNotesController extends BaseController
 
     public function boardNotesUpdatePosition()
     {
-    	$user_id = $this->resolveUserId();
+        $user_id = $this->resolveUserId();
         $project = $this->resolveProject($user_id);
         $project_id = $project['id'];
 

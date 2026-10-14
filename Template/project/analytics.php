@@ -29,24 +29,24 @@ $ana_active1 = "0";
 $ana_active2 = "0";
 $ana_total = "0";
 foreach ($analyticsData as $qq) {
-  if ($qq['is_active'] == "0") {
-    $ana_active0++;
-  }
-  if ($qq['is_active'] == "1") {
-    $ana_active1++;
-  }
-  if ($qq['is_active'] == "2") {
-    $ana_active2++;
-  }
-  $ana_total++;
+    if ($qq['is_active'] == "0") {
+        $ana_active0++;
+    }
+    if ($qq['is_active'] == "1") {
+        $ana_active1++;
+    }
+    if ($qq['is_active'] == "2") {
+        $ana_active2++;
+    }
+    $ana_total++;
 }
 
-$ana_active0_per = (($ana_active0/$ana_total)*100);
-$ana_active0_per = number_format((float)$ana_active0_per, 2, '.', '');
-$ana_active1_per = (($ana_active1/$ana_total)*100);
-$ana_active1_per = number_format((float)$ana_active1_per, 2, '.', '');
-$ana_active2_per = (($ana_active2/$ana_total)*100);
-$ana_active2_per = number_format((float)$ana_active2_per, 2, '.', '');
+$ana_active0_per = (($ana_active0 / $ana_total) * 100);
+$ana_active0_per = number_format((float) $ana_active0_per, 2, '.', '');
+$ana_active1_per = (($ana_active1 / $ana_total) * 100);
+$ana_active1_per = number_format((float) $ana_active1_per, 2, '.', '');
+$ana_active2_per = (($ana_active2 / $ana_total) * 100);
+$ana_active2_per = number_format((float) $ana_active2_per, 2, '.', '');
 
 $chart_metrics = '[';
 $chart_metrics .= '{"column_title":"Open","nb_tasks":' . $ana_active1 . ',"percentage":' . $ana_active1_per . '},';

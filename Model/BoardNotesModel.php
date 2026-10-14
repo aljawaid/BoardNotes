@@ -12,14 +12,16 @@ use Kanboard\Model\CategoryModel;
 
 class BoardNotesModel extends Base
 {
-    const TABLEnotes = 'boardnotes';
-    const TABLEnotescus = 'boardnotes_cus';
-    const TABLEprojects = ProjectModel::TABLE;
-    const TABLEtasks = TaskModel::TABLE;
-    const TABLEcolumns = ColumnModel::TABLE;
-    const TABLEswimlanes = SwimlaneModel::TABLE;
-    const TABLEaccess = ProjectUserRoleModel::TABLE;
-    const TABLEcategories = CategoryModel::TABLE;
+    // phpcs:disable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase -- Preserve the established public constant API.
+    public const TABLEnotes = 'boardnotes';
+    public const TABLEnotescus = 'boardnotes_cus';
+    public const TABLEprojects = ProjectModel::TABLE;
+    public const TABLEtasks = TaskModel::TABLE;
+    public const TABLEcolumns = ColumnModel::TABLE;
+    public const TABLEswimlanes = SwimlaneModel::TABLE;
+    public const TABLEaccess = ProjectUserRoleModel::TABLE;
+    public const TABLEcategories = CategoryModel::TABLE;
+    // phpcs:enable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
 
     // Show single note
     public function boardNotesShowNote($note_id)
@@ -71,12 +73,14 @@ class BoardNotesModel extends Base
     public function boardNotesGetProjectIds($user_id)
     {
         $projectIds = $this->db->table(self::TABLEaccess)
-            ->columns(self::TABLEaccess.'.project_id', 'alias_projects_table.name AS project_name')
+            ->columns(self::TABLEaccess . '.project_id', 'alias_projects_table.name AS project_name')
             ->eq('user_id', $user_id)
             ->left(self::TABLEprojects, 'alias_projects_table', 'id', self::TABLEaccess, 'project_id')
             ->asc('project_name')
             ->findAll();
-        foreach($projectIds as &$projectId){ $projectId['is_custom'] = False; }
+        foreach ($projectIds as &$projectId) {
+            $projectId['is_custom'] = false;
+        }
         return $projectIds;
     }
 
@@ -84,9 +88,11 @@ class BoardNotesModel extends Base
     public function boardNotesGetCustomProjectIds()
     {
         $projectIds = $this->db->table(self::TABLEnotescus)
-            ->columns(self::TABLEnotescus.'.project_id', self::TABLEnotescus.'.project_name')
+            ->columns(self::TABLEnotescus . '.project_id', self::TABLEnotescus . '.project_name')
             ->findAll();
-        foreach($projectIds as &$projectId){ $projectId['is_custom'] = True; }
+        foreach ($projectIds as &$projectId) {
+            $projectId['is_custom'] = true;
+        }
         return $projectIds;
     }
 
@@ -103,7 +109,7 @@ class BoardNotesModel extends Base
     public function boardNotesGetCategories($project_id)
     {
         return $this->db->table(self::TABLEcategories)
-            ->columns(self::TABLEcategories.'.id', self::TABLEcategories.'.name', self::TABLEcategories.'.project_id', self::TABLEcategories.'.color_id')
+            ->columns(self::TABLEcategories . '.id', self::TABLEcategories . '.name', self::TABLEcategories . '.project_id', self::TABLEcategories . '.color_id')
             ->eq('project_id', $project_id)
             ->asc('name')
             ->findAll();
@@ -113,7 +119,7 @@ class BoardNotesModel extends Base
     public function boardNotesGetAllCategories()
     {
         return $this->db->table(self::TABLEcategories)
-            ->columns(self::TABLEcategories.'.id', self::TABLEcategories.'.name', self::TABLEcategories.'.project_id', self::TABLEcategories.'.color_id')
+            ->columns(self::TABLEcategories . '.id', self::TABLEcategories . '.name', self::TABLEcategories . '.project_id', self::TABLEcategories . '.color_id')
             ->asc('name')
             ->findAll();
     }
@@ -122,7 +128,7 @@ class BoardNotesModel extends Base
     public function boardNotesGetColumns($project_id)
     {
         return $this->db->table(self::TABLEcolumns)
-            ->columns(self::TABLEcolumns.'.id', self::TABLEcolumns.'.title')
+            ->columns(self::TABLEcolumns . '.id', self::TABLEcolumns . '.title')
             ->eq('project_id', $project_id)
             ->asc('position')
             ->findAll();
@@ -132,7 +138,7 @@ class BoardNotesModel extends Base
     public function boardNotesGetSwimlanes($project_id)
     {
         $swimlanes = $this->db->table(self::TABLEswimlanes)
-            ->columns(self::TABLEswimlanes.'.id', self::TABLEswimlanes.'.name')
+            ->columns(self::TABLEswimlanes . '.id', self::TABLEswimlanes . '.name')
             ->eq('project_id', $project_id)
             ->asc('position')
             ->findAll();
@@ -143,14 +149,16 @@ class BoardNotesModel extends Base
     // Show all notes
     public function boardNotesShowAll($projectsAccess, $user_id)
     {
-        foreach ($projectsAccess as $u) $uids[] = $u['project_id'];
+        foreach ($projectsAccess as $u) {
+            $uids[] = $u['project_id'];
+        }
         $projectsAccess = implode(", ", $uids);
         substr_replace($projectsAccess, "", -2);
         $projectsAccess = explode(', ', $projectsAccess);
 
         return $this->db->table(self::TABLEnotes)
             ->eq('user_id', $user_id)
-            ->in(self::TABLEnotes.'.project_id', $projectsAccess)
+            ->in(self::TABLEnotes . '.project_id', $projectsAccess)
             ->desc('project_id')
             ->desc('is_active')
             ->desc('position')
