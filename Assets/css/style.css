@@ -1,11 +1,11 @@
 /* General */
 
 .button a {
-    border-bottom: 1px solid #777;
-    border-left: 1px solid #000;
-    border-right: 1px solid #333;
-    border-top: 1px solid #000;
-    color: #000;
+    border-bottom: 1px solid #777777;
+    border-left: 1px solid #000000;
+    border-right: 1px solid #333333;
+    border-top: 1px solid #000000;
+    color: #000000;
     display: block;
     height: 2.5em;
     padding: 0 1em;
@@ -16,7 +16,7 @@
 .mainholder {
     width: 700px;
     font: 13px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-    color: #999;
+    color: #999999;
     -webkit-font-smoothing: antialiased;
     position: relative;
     font-weight: 300;
@@ -46,8 +46,8 @@ input[type="text"] {
     width: 80%;
     font-size: 16px;
     border: none;
-    color: #000 !important;
-    background-color: #777 !important;
+    color: #000000 !important;
+    background-color: #777777 !important;
     padding: 0 0;
     margin-top: 0;
     height: auto;
@@ -55,13 +55,13 @@ input[type="text"] {
     text-decoration: none;
 }
 
-input[type=text]::selection {
-  background: rgba(82,168,236,.8);
+input[type="text"]::selection {
+  background: rgb(82,168,236,.8);
 }
 
-input[type=text]:focus {
-    color: #fff !important;
-    border-color: rgba(82,168,236,.8);
+input[type="text"]:focus {
+    color: #ffffff !important;
+    border-color: rgb(82,168,236,.8);
     outline: 0;
     border-bottom: 1px solid gray;
     box-shadow: none;
@@ -69,7 +69,7 @@ input[type=text]:focus {
 }
 
 input::placeholder {
-  color: #bbb !important;
+  color: #bbbbbb !important;
 }
 
 label {
@@ -119,22 +119,22 @@ label {
 
 .liNote {
     padding: 5px 10px 12px 15px!important;
-    background-color: rgba(246, 246, 246, 0.7);
+    background-color: rgb(246, 246, 246, 0.7);
 }
 
 .liNewNote {
     padding: 5px 10px 12px 15px!important;
-    background-color: rgba(246, 246, 246, 0.9);
+    background-color: rgb(246, 246, 246, 0.9);
 }
 
 .labelNewNote {
-    font-weight: 700;
+    font-weight: bold;
     padding-bottom: 5px;
 }
 
 .textareaNewNote {
     display: inline-block;
-    color: #999;
+    color: #999999;
 }
 
 .noteTitle {
@@ -145,7 +145,7 @@ label {
     margin-top: 0;
     padding-left: 10px;
     height: 20px;
-    border: 0px !important;
+    border: 0 !important;
 }
 
 .noteDescriptionClass {
@@ -223,13 +223,13 @@ label {
 }
 
 .noteDoneDesignText {
-    color: #555;
+    color: #555555;
     text-decoration: line-through;
 }
 
 .noteDoneDesignTextarea {
-    color: #555;
-    border: 1px solid #555 !important;
+    color: #555555;
+    border: 1px solid #555555 !important;
     text-decoration: line-through;
 }
 
@@ -256,7 +256,7 @@ textarea {
 }
 
 textarea::selection {
-    background: rgba(82,168,236,.8);
+    background: rgb(82,168,236,.8);
 }
 
 .textareaDescription {
@@ -268,13 +268,13 @@ textarea::selection {
 
 .textareaDescriptionSelected {
     display: inline-block;
-    color: #000 !important;
-    background-color: #777;
+    color: #000000 !important;
+    background-color: #777777;
     text-decoration: none;
 }
 
 .textareaDescriptionSelected:focus {
-    color: #fff !important;
+    color: #ffffff !important;
 }
 
 .catSelector {
@@ -288,14 +288,14 @@ textarea::selection {
     padding: 0 5px 0 5px;
     border-radius: 5px;
     color: #1f1f1f;
-    background: #999;
+    background: #999999;
 }
 
 
 /* Style for report.php */
 
 .page-headerName {
- font-family: 'Helvetica', Arial, sans-serif;
+ font-family: Helvetica, Arial, sans-serif;
  font-size: 50px;
  line-height: 55px;
 }
@@ -307,7 +307,7 @@ textarea::selection {
 }
 
 .reportTitle {
-    color: #ddd;
+    color: #dddddd;
 }
 
 .singleReportHide {
@@ -330,23 +330,23 @@ textarea::selection {
 
 .tableReport {
     border-bottom: none;
-    border-left: 1px solid #ccc;
+    border-left: 1px solid #cccccc;
     border-right: none;
     border-top: none;
 }
 
 .theadReport {
-   font-family: 'Helvetica', Arial, sans-serif;
+   font-family: Helvetica, Arial, sans-serif;
    font-size: 14px;
    line-height: 16px;
 }
 
 .thReport {
-   border-top: 1px solid #ccc;
+   border-top: 1px solid #cccccc;
    padding-left: 10px;
    border-left: none;
-   border-bottom: 1px solid #ccc;
-   background-color: rgba(37, 37, 37, 0.75);
+   border-bottom: 1px solid #cccccc;
+   background-color: rgb(37, 37, 37, 0.75);
 }
 
 .thReportNr {
@@ -355,7 +355,7 @@ textarea::selection {
 }
 
 .thReportStatus {
-    border-right: 1px solid #ccc;
+    border-right: 1px solid #cccccc;
     width: 45px;
 }
 
@@ -367,14 +367,14 @@ textarea::selection {
     display: inline-block;
     margin-left: 10px;
     padding: 10px 10px 10px 10px;
-    background-color: #555;
-    border: 0px;
+    background-color: #555555;
+    border: 0;
     white-space:pre-wrap;
 }
 
 
 .tdReport {
-   background-color: rgba(92, 92, 92, 0.50);
+   background-color: rgb(92, 92, 92, 0.50);
 }
 
 .tdReportNr {
@@ -394,7 +394,7 @@ textarea::selection {
 
 .tdReportStatus {
     border-left:none;
-    border-right: 1px solid #ccc;;
+    border-right: 1px solid #cccccc;
 }
 
 
@@ -409,6 +409,7 @@ textarea::selection {
     height: 25px;
     margin: 0 -1px .2em 0;
 }
+
 .ui-tabs-vertical .ui-tabs-nav li {
     height: 25px;
     overflow:hidden;
@@ -419,7 +420,7 @@ textarea::selection {
     .mainholder {
         width: auto;
         font: 12px 'Helvetica Neue', Helvetica, Arial, sans-serif;
-        color: #999;
+        color: #999999;
         -webkit-font-smoothing: antialiased;
         position: relative;
         font-weight: 300;
