@@ -28,10 +28,10 @@ foreach (array(
     }
 }
 
-if (strpos($changelog, 'Version 0.1.1') === false || strpos($changelog, 'issue #2') === false) {
+if (strpos($changelog, 'Version 0.1.2') === false || strpos($changelog, 'issue #2') === false) {
     $failures[] = 'The release history does not record the hardening and issue closure.';
 }
-if (strpos($plugin, "return '0.1.1';") === false) {
+if (strpos($plugin, "return '0.1.2';") === false) {
     $failures[] = 'Plug-in metadata does not match the documented release.';
 }
 

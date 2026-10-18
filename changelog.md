@@ -1,3 +1,9 @@
+Version 0.1.2
+-------------
+
+* Make default custom projects and indexes idempotent so interrupted database migrations can safely retry.
+* Replace privileged database triggers with portable orphan-note cleanup after user or project deletion.
+
 Version 0.1.1
 -------------
 

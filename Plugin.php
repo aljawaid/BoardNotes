@@ -32,6 +32,9 @@ class Plugin extends Base
         if ($language !== 'en_US') {
             Translator::load($language, __DIR__ . '/Locale');
         }
+
+        // Trigger-free cleanup avoids privileged DDL while removing notes orphaned by core deletions.
+        $this->boardNotesModel->boardNotesCleanupOrphans();
     }
 
     public function getClasses()
@@ -53,7 +56,7 @@ class Plugin extends Base
     }
     public function getPluginVersion()
     {
-        return '0.1.1';
+        return '0.1.2';
     }
     public function getCompatibleVersion()
     {

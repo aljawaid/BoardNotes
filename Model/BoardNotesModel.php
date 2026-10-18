@@ -28,6 +28,28 @@ class BoardNotesModel extends Base
     public const TABLEcategories = CategoryModel::TABLE;
     // phpcs:enable Generic.NamingConventions.UpperCaseConstantName.ClassConstantNotUpperCase
 
+    /**
+     * Remove private notes whose owner or real/custom project no longer exists.
+     *
+     * Related test: tests/DatabaseMigrationTest.php.
+     */
+    public function boardNotesCleanupOrphans()
+    {
+        $usersCleaned = $this->db->execute(
+            'DELETE FROM boardnotes
+             WHERE NOT EXISTS (SELECT 1 FROM users WHERE users.id = boardnotes.user_id)'
+        );
+        $projectsCleaned = $this->db->execute(
+            'DELETE FROM boardnotes
+             WHERE NOT EXISTS (SELECT 1 FROM projects WHERE projects.id = boardnotes.project_id)
+             AND NOT EXISTS (
+                 SELECT 1 FROM boardnotes_cus WHERE boardnotes_cus.project_id = boardnotes.project_id
+             )'
+        );
+
+        return $usersCleaned !== false && $projectsCleaned !== false;
+    }
+
     // Return one note only when its owner and project scope both match.
     public function boardNotesGetNote($project_id, $user_id, $note_id)
     {
