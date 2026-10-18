@@ -1,7 +1,16 @@
-/* BoardNotes workspace component: theme-aware note editing, ordering and reports. */
+/* BoardNotes workspace component: theme-aware note editing, ordering and reports.
+ * Related test: tests/ThemeLayoutContractTest.php.
+ */
 .boardnotes {
     color: var(--color-primary);
     max-width: 72rem;
+}
+
+.boardnotes,
+.boardnotes *,
+.boardnotes *::before,
+.boardnotes *::after {
+    box-sizing: border-box;
 }
 
 .boardnotes__header,

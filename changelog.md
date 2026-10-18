@@ -1,3 +1,8 @@
+Version 0.1.4
+-------------
+
+* Keep full-width note controls inside narrow screens by applying scoped border-box sizing.
+
 Version 0.1.3
 -------------
 
