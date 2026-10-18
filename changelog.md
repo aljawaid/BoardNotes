@@ -1,3 +1,8 @@
+Version 0.1.1
+-------------
+
+* Standardise release documentation and package validation for current Kanboard installations.
+
 Version 0.1.0
 -------------
 
