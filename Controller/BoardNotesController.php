@@ -355,7 +355,7 @@ class BoardNotesController extends BaseController
         return $this->response->json(array(
             'success' => true,
             'task_id' => (int) $task_id,
-            'task_url' => $this->helper->url->href('TaskViewController', 'show', array('task_id' => $task_id)),
+            'task_url' => $this->helper->url->to('TaskViewController', 'show', array('task_id' => $task_id)),
             'note_removed' => $note_removed,
             'message' => $remove_note && ! $note_removed
                 ? t('boardnotes.task_partial')

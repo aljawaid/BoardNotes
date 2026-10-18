@@ -1,3 +1,8 @@
+Version 0.1.3
+-------------
+
+* Fix task-conversion redirects so the created task opens without HTML-escaped query separators.
+
 Version 0.1.2
 -------------
 

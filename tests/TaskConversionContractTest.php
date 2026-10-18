@@ -22,10 +22,15 @@ foreach (array(
     "\$this->request->getRawValue('remove_note') === '1'",
     "'note_removed' => \$note_removed",
     "'task_id' => (int) \$task_id",
+    "\$this->helper->url->to('TaskViewController', 'show'",
 ) as $snippet) {
     if (strpos($controller, $snippet) === false) {
         $failures[] = 'Missing task conversion contract: ' . $snippet;
     }
+}
+
+if (strpos($controller, "'task_url' => \$this->helper->url->href(") !== false) {
+    $failures[] = 'The JSON task redirect still contains an HTML-escaped URL.';
 }
 
 if ($failures !== array()) {
