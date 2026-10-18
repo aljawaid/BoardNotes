@@ -3,12 +3,12 @@
 /**
  * Verify BoardNotes documentation remains current and preserves original attribution.
  *
- * Related files: README.md, CHANGELOG and Plugin.php.
+ * Related files: README.md, changelog.md and Plugin.php.
  */
 
 $pluginRoot = dirname(__DIR__);
 $readme = file_get_contents($pluginRoot . '/README.md');
-$changelog = file_get_contents($pluginRoot . '/CHANGELOG');
+$changelog = file_get_contents($pluginRoot . '/changelog.md');
 $plugin = file_get_contents($pluginRoot . '/Plugin.php');
 $failures = array();
 
