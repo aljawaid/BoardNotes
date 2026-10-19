@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.0.1
+
+_(most recent changes are listed on top):_
+- FIX: Restore BoardNotes PHPCS Compliance
+
+
 ## v1.0.0
 
 _(most recent changes are listed on top):_

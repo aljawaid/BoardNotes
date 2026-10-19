@@ -21,6 +21,7 @@ foreach (array(
     '## Security & Privacy',
     '## Troubleshooting',
     '## Authors & Contributors',
+    'BoardNotes 1.0.1 requires Kanboard 1.2.54 or later and PHP 8.1 or later.',
     'TTJ (ThomasTJ)',
     'rel="noopener noreferrer"',
 ) as $snippet) {
@@ -30,6 +31,8 @@ foreach (array(
 }
 
 foreach (array(
+    '## v1.0.1',
+    '- FIX: Restore BoardNotes PHPCS Compliance',
     '## v1.0.0',
     '- FIX: Finalise BoardNotes 1.0.0 Release Metadata',
     '## v0.1.4',
@@ -55,7 +58,7 @@ foreach (array(
 }
 if (strpos(
     $normalisedChangelog,
-    "# Changelog\n\n## v1.0.0\n\n_(most recent changes are listed on top):_\n- "
+    "# Changelog\n\n## v1.0.1\n\n_(most recent changes are listed on top):_\n- "
 ) !== 0) {
     $failures[] = 'The changelog does not use the shared family heading and list format.';
 }
@@ -67,7 +70,7 @@ preg_match_all('/\n\n\n## v/', $normalisedChangelog, $versionSeparators);
 if (count($versionHeadings[0]) !== count($versionSeparators[0]) + 1) {
     $failures[] = 'The changelog must keep two blank lines between version sections.';
 }
-if (strpos($plugin, "return '1.0.0';") === false) {
+if (strpos($plugin, "return '1.0.1';") === false) {
     $failures[] = 'Plug-in metadata does not match the documented release.';
 }
 

@@ -2,7 +2,7 @@
 
 BoardNotes adds private, project-specific notes to <a href="https://kanboard.org/" rel="noopener noreferrer">Kanboard</a>. Notes can remain informal or be converted into tasks when they are ready for action.
 
-> **Important:** BoardNotes 1.0.0 requires Kanboard 1.2.54 or later and PHP 8.1 or later. Back up the Kanboard database before upgrading. Notes belong to individual users and are not a shared project discussion area.
+> **Important:** BoardNotes 1.0.1 requires Kanboard 1.2.54 or later and PHP 8.1 or later. Back up the Kanboard database before upgrading. Notes belong to individual users and are not a shared project discussion area.
 
 ## Features
 
