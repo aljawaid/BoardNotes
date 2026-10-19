@@ -2,7 +2,7 @@
 
 BoardNotes adds private, project-specific notes to <a href="https://kanboard.org/" rel="noopener noreferrer">Kanboard</a>. Notes can remain informal or be converted into tasks when they are ready for action.
 
-> **Important:** BoardNotes 0.1.0 requires Kanboard 1.2.54 or later and PHP 8.1 or later. Back up the Kanboard database before upgrading. Notes belong to individual users and are not a shared project discussion area.
+> **Important:** BoardNotes 1.0.0 requires Kanboard 1.2.54 or later and PHP 8.1 or later. Back up the Kanboard database before upgrading. Notes belong to individual users and are not a shared project discussion area.
 
 ## Features
 
@@ -74,7 +74,7 @@ Do not add API credentials or edit a Kanboard base URL. BoardNotes uses Kanboard
 4. Clear any application or PHP opcode cache used by the installation.
 5. Repeat the note visibility and edit checks before returning the service to users.
 
-Rolling back plug-in files without restoring the matching database backup is not recommended after schema migration 2 has run.
+Rolling back plug-in files without restoring the matching database backup is not recommended after schema migration 3 has run.
 
 ## Security & Privacy
 

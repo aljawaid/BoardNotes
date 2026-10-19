@@ -1,62 +1,75 @@
-Version 0.1.4
--------------
+# Changelog
 
-* Keep full-width note controls inside narrow screens by applying scoped border-box sizing.
+## v1.0.0
 
-Version 0.1.3
--------------
-
-* Fix task-conversion redirects so the created task opens without HTML-escaped query separators.
-
-Version 0.1.2
--------------
-
-* Make default custom projects and indexes idempotent so interrupted database migrations can safely retry.
-* Replace privileged database triggers with portable orphan-note cleanup after user or project deletion.
-
-Version 0.1.1
--------------
-
-* Standardise release documentation and package validation for current Kanboard installations.
-
-Version 0.1.0
--------------
-
-* Enforce authenticated note ownership, project access and CSRF protection.
-* Replace legacy jQuery fragments, inline code and fixed Kanboard paths with generated routes and native browser controls.
-* Preserve notes until optional task conversion has completed successfully.
-* Add empty-safe analytics, escaped reports, responsive theme-aware styling and English translation catalogues.
-* Add schema migration 2 for indexes, portable seed data and user/project lifecycle cleanup.
-* Add PHP 8.1-8.5 contract tests and update Super-Linter to immutable v9.0.0.
-* Complete and close the structure and naming work tracked in issue #2.
-
-Version 0.0.5
--------------
-
-* Filtering options for report generation
-
-Version 0.0.4
--------------
-
-* Create report over task (todo: add filter)
-* JS encodeURIComponent() added to title and description on export note
-* Minor testing with changes in style.css
+_(most recent changes are listed on top):_
+- FIX: Finalise BoardNotes 1.0.0 Release Metadata
 
 
-Version 0.0.3
--------------
+## v0.1.4
 
-* Export notes to task (categories is not exported)
-
-
-Version 0.0.2
--------------
-
-* Un-doing note (note done, click again, undone) - wrong variable in sql call
-* Font size made smaller on desktop (13px) and mobile (11px)
+_(most recent changes are listed on top):_
+- FIX: BUG: Contain BoardNotes Narrow Layout
 
 
-Version 0.0.1
--------------
+## v0.1.3
 
-* Initial release
+_(most recent changes are listed on top):_
+- FIX: BUG: Correct BoardNotes Task Redirect
+
+
+## v0.1.2
+
+_(most recent changes are listed on top):_
+- FIX: BUG: Repair BoardNotes Database Installation
+
+
+## v0.1.1
+
+_(most recent changes are listed on top):_
+- DOCS: Standardise BoardNotes Changelog Filename
+
+
+## v0.1.0
+
+_(most recent changes are listed on top):_
+- FIX: DEPENDENCY: Modernise BoardNotes Quality Gates
+- FIX: BUG: Harden BoardNotes Database Lifecycle
+- SECURITY FIX: Modernise BoardNotes Workflows And Interface
+- SECURITY FIX: Enforce BoardNotes Ownership and Project Access
+- FIX: Remove BoardNotes Stylelint Findings
+- FIX: Remove BoardNotes PHPCS Findings
+- FIX: Declare Current Kanboard Compatibility
+
+
+## v0.0.5
+
+_(most recent changes are listed on top):_
+- Filtering options for report generation
+
+
+## v0.0.4
+
+_(most recent changes are listed on top):_
+- Create report over task (todo: add filter)
+- JS encodeURIComponent() added to title and description on export note
+- Minor testing with changes in style.css
+
+
+## v0.0.3
+
+_(most recent changes are listed on top):_
+- Export notes to task (categories is not exported)
+
+
+## v0.0.2
+
+_(most recent changes are listed on top):_
+- Un-doing note (note done, click again, undone) - wrong variable in sql call
+- Font size made smaller on desktop (13px) and mobile (11px)
+
+
+## v0.0.1
+
+_(most recent changes are listed on top):_
+- Initial release
